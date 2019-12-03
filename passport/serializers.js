@@ -7,10 +7,10 @@ passport.serializeUser((loggedInUser, cb) => {
 
 passport.deserializeUser((userIdFromSession, cb) => {
   User.findById(userIdFromSession)
-  .then(userDocument => {
-    cb(null, userDocument);
-  })
-  .catch(err => {
-    cb(err);
-  })
+    .then(userDocument => {
+      cb(null, userDocument);
+    })
+    .catch(err => {
+      cb(err);
+    });
 });
