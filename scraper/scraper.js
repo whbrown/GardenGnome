@@ -57,10 +57,37 @@ colour.forEach(season => {
 });
 
 /* sunlight */
-const sun = allPlantInfo.querySelector('.sun');
+const [...sun] = allPlantInfo.querySelector(
+  '.sun'
+).firstElementChild.firstElementChild.children;
+schemaObject.sunlight = {};
+const sunNeeds = sun[1].innerText;
+schemaObject.sunlight.sunNeeds = sunNeeds;
+const [...otherSunlightInfo] = sun[2].querySelectorAll('p');
+otherSunlightInfo.forEach(topic => {
+  const [topicTitle, ...topicDescription] = topic.innerText.split('\n');
+  schemaObject.sunlight[topicTitle] = topicDescription.join('');
+});
 
 /* soil */
-const soil = allPlantInfo.querySelector('.soil');
+const [...soil] = allPlantInfo.querySelector(
+  '.soil'
+).firstElementChild.firstElementChild.children;
+schemaObject.soil = {};
+let [...soilTypes] = soil[1].firstElementChild.children;
+soilTypes = soilTypes.map(li => li.innerText);
+schemaObject.soil.soilTypes = soilTypes;
+
+let [...otherSoilInfo] = soil[2].firstElementChild.children;
+otherSoilInfo.forEach(li => {
+  const [
+    topicTitle,
+    ...topicDescription
+  ] = li.firstElementChild.innerText.split('\n');
+  schemaObject.soil[topicTitle] = topicDescription.join('');
+  const [...topicTypesArray] = topicDescription.join('').split(', ');
+  schemaObject.soil[`${topicTitle}Types`] = topicTypesArray;
+});
 
 /* size */
 const size = allPlantInfo.querySelector('.size');
