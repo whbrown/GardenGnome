@@ -28,7 +28,7 @@ class Login extends Component {
         // lift the data up to the App state
         this.props.setUser(data);
         // redirect to "/projects"
-        this.props.history.push("/projects");
+        this.props.history.push("/");
       }
     });
   };
@@ -37,32 +37,28 @@ class Login extends Component {
     return (
       <div>
         <h2>Login</h2>
-        <Form onSubmit={this.handleSubmit}>
-          <Form.Group>
-            <Form.Label htmlFor="username">Username: </Form.Label>
-            <Form.Control
-              type="text"
-              name="username"
-              id="username"
-              value={this.state.username}
-              onChange={this.handleChange}
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label htmlFor="password">Password: </Form.Label>
-            <Form.Control
-              type="password"
-              name="password"
-              id="password"
-              value={this.state.password}
-              onChange={this.handleChange}
-            />
-          </Form.Group>
+        <form onSubmit={this.handleSubmit}>
+          <label htmlFor="username">Username: </label>
+          <input
+            type="text"
+            name="username"
+            id="username"
+            value={this.state.username}
+            onChange={this.handleChange}
+          />
+          <label htmlFor="password">Password: </label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            value={this.state.password}
+            onChange={this.handleChange}
+          />
           {this.state.error && (
-            <Alert variant="danger">{this.state.error}</Alert>
+            <p variant="danger">{this.state.error}</p>
           )}
-          <Button type="submit">Log in</Button>
-        </Form>
+          <button type="submit">Log in</button>
+        </form>
       </div>
     );
   }

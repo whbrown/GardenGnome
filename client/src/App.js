@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom'
 import './App.css';
-import Homepage from "./components/Homepage.js";
+import Homepage from "./components/Homepage";
+import Signup from "./components/Signup";
+import Login from "./components/Login";
+import Navbar from "./components/Navbar";
 
 class App extends Component {
   state = {
@@ -17,8 +20,14 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <h1>Garden Gnome</h1>
-        <Route exact path="/" component={Homepage} />
+        <Route exact path="/" render={props => <Homepage {...props} setUser={this.setUser} />} />
+        <Route exact path="/login"
+          render={props => <Login {...props} setUser={this.setUser} />} />
+        <Route exact path="/signup"
+          // component={Signup}
+          render={props => <Signup {...props} setUser={this.setUser} />} />
+        <Route path="/"
+          render={props => <Navbar {...props} user={this.state.user} setUser={this.setUser} />} />
       </div>
     );
   }

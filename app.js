@@ -65,7 +65,7 @@ app.use(passport.session());
 
 app.use(cors({
   credentials: true,
-  origin: ['http://localhost:3001'] // <== this will be the URL of our React app (it will be running on port 3000)
+  origin: ['http://localhost:3000'] // <== this will be the URL of our React app (it will be running on port 3000)
 }));
 
 // ROUTES MIDDLEWARE STARTS HERE:
