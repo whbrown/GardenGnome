@@ -10,24 +10,38 @@ const Navbar = props => {
     props.setUser(null);
   };
 
-  console.log(props)
   return (
     <nav className="navbar fixed-bottom navbar-light bg-light container-fluid" style={{ margin: "0", padding: "0" }}>
       {props.user ? (
         <>
-          <div className="navbar-nav row-fluid" style={{ width: "100%", display: "flex", flexDirection: "row" }}>
-            <Link className="nav-item nav-link col-2.2" to="/">MY GARDEN</Link>
-            <Link className="nav-item nav-link col-2.2" to="/">LOCAL GNOMES</Link>
-            <Link className="nav-item nav-link col-2.2" to="/">DISCOVER</Link>
-            <Link className="nav-item nav-link col-2.2" to="/">SEARCH PLANTS</Link>
-            <Link className="nav-item nav-link col-2.2" to="/" onClick={handleLogout}>LOGOUT</Link>
+          <div className="navbar-nav row-fluid">
+            <Link className="nav-item nav-link col-2.2" to="/mygarden">
+              <img src="../../assets/leaf.svg" alt="my garden" className="navIcon" />
+              MY GARDEN
+              </Link>
+            <Link className="nav-item nav-link col-2.2" to="/">
+              <img src="../../assets/map.svg" alt="local gnomes" className="navIcon" />
+              LOCAL GNOMES</Link>
+            <Link className="nav-item nav-link col-2.2" to="/">
+              <img src="../../assets/star.svg" alt="discover" className="navIcon" />
+              DISCOVER</Link>
+            <Link className="nav-item nav-link col-2.2" to="/">
+              <img src="../../assets/search.svg" alt="search plants" className="navIcon" />
+              SEARCH PLANTS</Link>
+            <Link className="nav-item nav-link col-2.2" to="/" onClick={handleLogout}>
+              <img src="../../assets/logout.svg" alt="" className="navIcon" />
+              LOGOUT</Link>
           </div>
         </>
       ) : (
           <>
-            <div className="navbar-nav row-fluid" style={{ width: "100%", display: "flex", flexDirection: "row", justifyContent: "space-around" }}>
-              <Link className="nav-item nav-link" to="/">DISCOVER</Link>
-              <Link className="nav-item nav-link" to="/">SEARCH PLANTS</Link>
+            <div className="navbar-nav row-fluid">
+              <Link className="nav-item nav-link" to="/">
+                <img src="../../assets/star.svg" alt="discover" className="navIcon" />
+                DISCOVER</Link>
+              <Link className="nav-item nav-link" to="/">
+                <img src="../../assets/search.svg" alt="search plants" className="navIcon" />
+                SEARCH PLANTS</Link>
             </div>
           </>
         )}

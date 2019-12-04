@@ -42,6 +42,7 @@ app.use(cookieParser());
 
 // default value for title local
 app.locals.title = 'Garden Gnome server';
+app.use(express.static(path.join(__dirname, "public")));
 
 // Enable authentication using session + passport
 const MongoStore = require('connect-mongo')(session);
