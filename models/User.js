@@ -6,6 +6,9 @@ const userSchema = new Schema(
   {
     username: String,
     password: String,
+    city: String,
+    suburb: String,
+    garden: []
   },
   {
     timestamps: {

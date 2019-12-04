@@ -1,67 +1,77 @@
 const express = require('express');
-const passport = require('passport');
-
 const router = express.Router();
+
+const passport = require('passport');
 const bcrypt = require('bcrypt');
+
+// USE the User MODEL!
 const User = require('../models/User');
 
-// Bcrypt to encrypt passwords
-const bcryptSalt = 10;
-
-router.get('/login', (req, res, next) => {
-  res.render('auth/login', { message: req.flash('error') });
-});
-
-router.post(
-  '/login',
-  passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/auth/login',
-    failureFlash: true,
-    passReqToCallback: true,
-  })
-);
-
-router.get('/signup', (req, res, next) => {
-  res.render('auth/signup');
-});
-
+// SIGNING UP:
 router.post('/signup', (req, res, next) => {
-  const { username } = req.body;
-  const { password } = req.body;
-  if (username === '' || password === '') {
-    res.render('auth/signup', { message: 'Indicate username and password' });
-    return;
+  const { username, password } = req.body;
+
+  if (!username) {
+    return res.status(400).json({ message: "Username is invalid" });
+  }
+  if (password.length < 6) {
+    return res.status(400).json({ message: "Password must have at least 6 characters" });
   }
 
-  User.findOne({ username }, 'username', (err, user) => {
-    if (user !== null) {
-      res.render('auth/signup', { message: 'The username already exists' });
-      return;
-    }
-
-    const salt = bcrypt.genSaltSync(bcryptSalt);
-    const hashPass = bcrypt.hashSync(password, salt);
-
-    const newUser = new User({
-      username,
-      password: hashPass,
+  User.findOne({ username: username })
+    .then(found => {
+      if (found) {
+        return res.status(400).json({ message: "Username is already taken" });
+      }
+      return bcrypt
+        .genSalt()
+        .then(salt => {
+          return bcrypt.hash(password, salt);
+        })
+        .then(hash => {
+          return User.create({ username: username, password: hash });
+        })
+        .then(newUser => {
+          // passport login
+          req.login(newUser, err => {
+            if (err) res.status(500).json(err);
+            else res.json(newUser);
+          });
+        });
+    })
+    .catch(err => {
+      res.status(500).json(err);
     });
-
-    newUser
-      .save()
-      .then(() => {
-        res.redirect('/');
-      })
-      .catch(err => {
-        res.render('auth/signup', { message: 'Something went wrong' });
-      });
-  });
 });
 
-router.get('/logout', (req, res) => {
+// LOGGING IN:
+router.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user) => {
+    if (err) {
+      return res.status(500).json({ message: "Error while authenticating" });
+    }
+    if (!user) {
+      // no user found with username or password didn't match
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+    // passport req.login
+    req.login(user, err => {
+      if (err) res.status(500).json(err);
+      res.status(200).json(user);
+    });
+  })(req, res, next);
+});
+
+// LOGGING OUT:
+router.delete("/logout", (req, res) => {
+  // passport logout function
   req.logout();
-  res.redirect('/');
+  res.status(200).json({ message: "Successful logout" });
+});
+
+// CHECKING IF LOGGED IN - for CONDITIONAL RENDERING
+router.get("/loggedin", (req, res) => {
+  res.json(req.user);
 });
 
 module.exports = router;

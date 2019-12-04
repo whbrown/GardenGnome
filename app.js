@@ -3,15 +3,18 @@ require('dotenv').config();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const express = require('express');
-const favicon = require('serve-favicon');
-const hbs = require('hbs');
+// const favicon = require('serve-favicon');
 const mongoose = require('mongoose');
 const logger = require('morgan');
 const path = require('path');
 
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
+
+const session = require('express-session');
+const passport = require('passport')
+require("./configs/passport");
+
+const cors = require('cors');
 
 mongoose
   .connect('mongodb://localhost/gardengnome', { useNewUrlParser: true })
@@ -41,6 +44,8 @@ app.use(cookieParser());
 app.locals.title = 'Garden Gnome server';
 
 // Enable authentication using session + passport
+const MongoStore = require('connect-mongo')(session);
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -50,14 +55,25 @@ app.use(
   })
 );
 app.use(flash());
-require('./passport')(app);
+
+// USE passport.initialize() and passport.session() HERE:
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// USE CORS to allow React to run through different PORT in conjunction
+
+app.use(cors({
+  credentials: true,
+  origin: ['http://localhost:3001'] // <== this will be the URL of our React app (it will be running on port 3000)
+}));
+
+// ROUTES MIDDLEWARE STARTS HERE:
 
 const index = require('./routes/index');
-
 app.use('/', index);
 
 const authRoutes = require('./routes/auth');
-
-app.use('/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 
 module.exports = app;
