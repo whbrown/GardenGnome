@@ -1,4 +1,4 @@
-const schemaObject = {};
+const plantSchema = {};
 
 // narrow down total search area for each selection for efficiency
 const allPlantInfo = document.querySelector(`.ajaxSearchDetails`);
@@ -7,7 +7,7 @@ const allPlantInfo = document.querySelector(`.ajaxSearchDetails`);
 const [...characteristics] = allPlantInfo
   .querySelector('.char')
   .querySelector('ul').children;
-schemaObject.characteristics = {};
+plantSchema.characteristics = {};
 characteristics.forEach(characteristic => {
   const characteristicTypes = {
     Foliage: 'foliage',
@@ -20,19 +20,19 @@ characteristics.forEach(characteristic => {
   // filter out any empty strings from description due to sequential new lines
   description = description.filter(value => value);
   if (characteristicTypes[characteristicTitle]) {
-    schemaObject.characteristics[
+    plantSchema.characteristics[
       characteristicTypes[characteristicTitle]
     ] = description.join('');
   } else {
-    schemaObject.characteristics[characteristicTitle] = description.join('');
+    plantSchema.characteristics[characteristicTitle] = description.join('');
   }
 });
 
-/* colour */
+// * colour
 const [...colour] = allPlantInfo.querySelector(
   '.plant-characteristics'
 ).children;
-schemaObject.colour = {};
+plantSchema.colour = {};
 colour.forEach(season => {
   const seasonNames = {
     'Colour in Autumn': 'autumn',
@@ -42,7 +42,7 @@ colour.forEach(season => {
   };
   let [seasonTitle, ...colourInfo] = season.children;
   colourInfo = colourInfo[0];
-  schemaObject.colour[seasonNames[seasonTitle.innerText]] = {};
+  plantSchema.colour[seasonNames[seasonTitle.innerText]] = {};
 
   let [...colourBySeasonByType] = colourInfo.children;
   [...colourBySeasonByType] = colourBySeasonByType;
@@ -50,48 +50,87 @@ colour.forEach(season => {
     let [colourName, ...plantPart] = li.children;
     const plantPartKey = plantPart.reduce((key, p) => key + p.innerText, '');
     const colourNameValue = colourName.querySelector('.tooltip').innerText;
-    schemaObject.colour[seasonNames[seasonTitle.innerText]][
+    plantSchema.colour[seasonNames[seasonTitle.innerText]][
       plantPartKey
     ] = colourNameValue;
   });
 });
 
-/* sunlight */
+// * sunlight
 const [...sun] = allPlantInfo.querySelector(
   '.sun'
 ).firstElementChild.firstElementChild.children;
-schemaObject.sunlight = {};
+plantSchema.sunlight = {};
 const sunNeeds = sun[1].innerText;
-schemaObject.sunlight.sunNeeds = sunNeeds;
+plantSchema.sunlight.sunNeeds = sunNeeds;
+const sunTopicNames = {
+  Aspect: 'aspect',
+  Exposure: 'exposure',
+};
 const [...otherSunlightInfo] = sun[2].querySelectorAll('p');
 otherSunlightInfo.forEach(topic => {
   const [topicTitle, ...topicDescription] = topic.innerText.split('\n');
-  schemaObject.sunlight[topicTitle] = topicDescription.join('');
+  if (sunTopicNames[topicTitle]) {
+    plantSchema.sunlight[sunTopicNames[topicTitle]] = topicDescription.join('');
+  } else {
+    plantSchema.sunlight[topicTitle.toLowerCase()] = topicDescription.join('');
+  }
 });
 
-/* soil */
+// * soil
 const [...soil] = allPlantInfo.querySelector(
   '.soil'
 ).firstElementChild.firstElementChild.children;
-schemaObject.soil = {};
+plantSchema.soil = {};
 let [...soilTypes] = soil[1].firstElementChild.children;
 soilTypes = soilTypes.map(li => li.innerText);
-schemaObject.soil.soilTypes = soilTypes;
+plantSchema.soil.soilTypes = soilTypes;
 
 let [...otherSoilInfo] = soil[2].firstElementChild.children;
+const soilTopicNames = {
+  Moisture: 'moisture',
+  Soil: 'soil',
+  pH: 'pH',
+};
 otherSoilInfo.forEach(li => {
   const [
     topicTitle,
     ...topicDescription
   ] = li.firstElementChild.innerText.split('\n');
-  schemaObject.soil[topicTitle] = topicDescription.join('');
+  if (soilTopicNames[topicTitle]) {
+    plantSchema.soil[soilTopicNames[topicTitle]] = topicDescription.join('');
+  } else {
+    plantSchema.soil[topicTitle.toLowerCase()] = topicDescription.join('');
+  }
   const [...topicTypesArray] = topicDescription.join('').split(', ');
-  schemaObject.soil[`${topicTitle}Types`] = topicTypesArray;
+  plantSchema.soil[`${topicTitle.toLowerCase()}Types`] = topicTypesArray;
 });
 
-/* size */
-const size = allPlantInfo.querySelector('.size');
-
+// * size
+const size = allPlantInfo.querySelector('.size').firstElementChild
+  .firstElementChild;
+plantSchema.size = {};
+let [...sizeInfo] = size.querySelector('.results-size').children;
+const sizeTopicNames = {
+  'Ultimate height': 'ultimateHeight',
+  'Ultimate spread': 'ultimateSpread',
+  'Time to ultimate height': 'timeToUltimateHeight',
+};
+sizeInfo.forEach(li => {
+  const [
+    sizePropTitle,
+    ...sizePropDescription
+  ] = li.firstElementChild.innerText.split('\n');
+  if (sizeTopicNames[sizePropTitle]) {
+    plantSchema.size[sizeTopicNames[sizePropTitle]] = sizePropDescription.join(
+      ''
+    );
+  } else {
+    plantSchema.size[sizePropTitle.toLowerCase()] = sizePropDescription.join(
+      ''
+    );
+  }
+});
 // * How to grow, how to care
 
 const [...howToDivs] = allPlantInfo.getElementsByClassName(`how-to`);
@@ -111,7 +150,7 @@ howToDivs.forEach(howToDiv => {
   const children = [...howToDiv.children];
 
   const [howToTitle, ...instructions] = children;
-  schemaObject[howToTypes[howToTitle.innerText]] = {};
+  plantSchema[howToTypes[howToTitle.innerText]] = {};
   [...instructions].forEach(instruction => {
     // ? change information into spread in case any instructions have more than one \n ... need to check random pages to see if this is an issue
     const [instructionTitle, information] = instruction.innerText.split('\n');
@@ -119,10 +158,10 @@ howToDivs.forEach(howToDiv => {
     // for Pests instructionTitle, grab out array of the pests (within anchor tags)
     if (instructionTitle === 'Pests') {
       const [...pests] = instruction.getElementsByTagName('A');
-      schemaObject[howToTypes[howToTitle.innerText]].pestList = [];
+      plantSchema[howToTypes[howToTitle.innerText]].pestList = [];
       if (pests.length) {
         for (let pest of pests) {
-          schemaObject[howToTypes[howToTitle.innerText]].pestList.push(
+          plantSchema[howToTypes[howToTitle.innerText]].pestList.push(
             pest.innerText
           );
         }
@@ -130,22 +169,22 @@ howToDivs.forEach(howToDiv => {
     }
     if (instructionTitle === 'Diseases') {
       const [...diseases] = instruction.getElementsByTagName('A');
-      schemaObject[howToTypes[howToTitle.innerText]].diseaseList = [];
+      plantSchema[howToTypes[howToTitle.innerText]].diseaseList = [];
       if (diseases.length) {
         for (let disease of diseases) {
-          schemaObject[howToTypes[howToTitle.innerText]].diseaseList.push(
+          plantSchema[howToTypes[howToTitle.innerText]].diseaseList.push(
             disease.innerText
           );
         }
       }
     }
     if (instructionTypes[instructionTitle]) {
-      schemaObject[howToTypes[howToTitle.innerText]][
+      plantSchema[howToTypes[howToTitle.innerText]][
         instructionTypes[instructionTitle]
       ] = information;
     } else {
-      schemaObject[howToTypes[howToTitle.innerText]][
-        instructionTitle
+      plantSchema[howToTypes[howToTitle.innerText]][
+        instructionTitle.toLowerCase()
       ] = information;
     }
   });
