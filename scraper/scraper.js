@@ -1,7 +1,10 @@
 const schemaObject = {};
 
+// narrow down total search area for each selection for efficiency
+const allPlantInfo = document.querySelector(`.ajaxSearchDetails`);
+
 // characteristics
-const [...characteristics] = document
+const [...characteristics] = allPlantInfo
   .querySelector('.char')
   .querySelector('ul').children;
 schemaObject.characteristics = {};
@@ -24,43 +27,47 @@ characteristics.forEach(characteristic => {
     schemaObject.characteristics[characteristicTitle] = description.join('');
   }
 });
-// colour
-const [...colour] = document
-  .querySelector('.colour')
-  .querySelector('ul').children;
+
+/* colour */
+const [...colour] = allPlantInfo.querySelector(
+  '.plant-characteristics'
+).children;
 schemaObject.colour = {};
-colour.forEach(characteristic => {
-  const characteristicTypes = {
-    Foliage: 'foliage',
-    Habit: 'habit',
-    Hardiness: 'hardiness',
+colour.forEach(season => {
+  const seasonNames = {
+    'Colour in Autumn': 'autumn',
+    'Colour in Spring': 'spring',
+    'Colour in Summer': 'summer',
+    'Colour in Winter': 'winter',
   };
-  let [characteristicTitle, ...description] = characteristic.innerText.split(
-    '\n'
-  );
-  // filter out any empty strings from description due to sequential new lines
-  description = description.filter(value => value);
-  if (characteristicTypes[characteristicTitle]) {
-    schemaObject.colour[
-      characteristicTypes[characteristicTitle]
-    ] = description.join('');
-  } else {
-    schemaObject.colour[characteristicTitle] = description.join('');
-  }
+  let [seasonTitle, ...colourInfo] = season.children;
+  colourInfo = colourInfo[0];
+  schemaObject.colour[seasonNames[seasonTitle.innerText]] = {};
+
+  let [...colourBySeasonByType] = colourInfo.children;
+  [...colourBySeasonByType] = colourBySeasonByType;
+  colourBySeasonByType.forEach(li => {
+    let [colourName, ...plantPart] = li.children;
+    const plantPartKey = plantPart.reduce((key, p) => key + p.innerText, '');
+    const colourNameValue = colourName.querySelector('.tooltip').innerText;
+    schemaObject.colour[seasonNames[seasonTitle.innerText]][
+      plantPartKey
+    ] = colourNameValue;
+  });
 });
 
-// sunlight
-const sun = document.querySelector('.sun');
+/* sunlight */
+const sun = allPlantInfo.querySelector('.sun');
 
-// soil
-const soil = document.querySelector('.soil');
+/* soil */
+const soil = allPlantInfo.querySelector('.soil');
 
-// size
-const size = document.querySelector('.size');
+/* size */
+const size = allPlantInfo.querySelector('.size');
 
 // * How to grow, how to care
 
-const [...howToDivs] = document.getElementsByClassName(`how-to`);
+const [...howToDivs] = allPlantInfo.getElementsByClassName(`how-to`);
 howToDivs.forEach(howToDiv => {
   const howToTypes = {
     'How to grow': 'howToGrow',
@@ -75,7 +82,7 @@ howToDivs.forEach(howToDiv => {
     'Suggested planting locations and garden types': 'plantingLocation',
   };
   const children = [...howToDiv.children];
-  console.log(children);
+
   const [howToTitle, ...instructions] = children;
   schemaObject[howToTypes[howToTitle.innerText]] = {};
   [...instructions].forEach(instruction => {
