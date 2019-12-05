@@ -77,4 +77,7 @@ app.use('/', index);
 const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
 
+const plantRoutes = require("./routes/plants");
+app.use("/api/plants", plantRoutes);
+
 module.exports = app;

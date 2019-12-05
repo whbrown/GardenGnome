@@ -6,6 +6,7 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Navbar from "./components/Navbar";
 import MyGarden from "./components/MyGarden";
+import Plants from "./components/Plants"
 
 // MAKING PUBLIC FOLDER STATIC?
 // const express = require("express");
@@ -36,6 +37,8 @@ class App extends Component {
           render={props => <Signup {...props} setUser={this.setUser} />} />
         <Route path="/mygarden"
           render={props => <MyGarden {...props} user={this.state.user} setUser={this.setUser} />} />
+        <Route exact path="/plants"
+          render={props => <Plants {...props} />} />
 
         {/* NavBar Below */}
         <Route path="/"

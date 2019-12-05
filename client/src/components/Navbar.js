@@ -25,7 +25,7 @@ const Navbar = props => {
             <Link className="nav-item nav-link col-2.2" to="/">
               <img src="../../assets/star.svg" alt="discover" className="navIcon" />
               DISCOVER</Link>
-            <Link className="nav-item nav-link col-2.2" to="/">
+            <Link className="nav-item nav-link col-2.2" to="/plants">
               <img src="../../assets/search.svg" alt="search plants" className="navIcon" />
               SEARCH PLANTS</Link>
             <Link className="nav-item nav-link col-2.2" to="/" onClick={handleLogout}>
