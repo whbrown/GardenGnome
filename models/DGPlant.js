@@ -7,6 +7,7 @@ const DGplantSchema = new Schema(
     plantLatinName: String,
     plantCommonNames: [String],
     plantImageURL: String,
+    additionalPhotos: [String],
     taxonomicInfo: {
       plantFamily: String,
       plantGenus: String,
