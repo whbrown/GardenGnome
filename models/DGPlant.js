@@ -51,5 +51,3 @@ const DGplantSchema = new Schema(
 
 const DGPlant = mongoose.model('DGPlant', DGplantSchema);
 module.exports = DGPlant;
-
-console.log('Mongoose has finished scraping and is going to sleep!');
