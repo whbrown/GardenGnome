@@ -10,16 +10,23 @@
   "dependencies": {
     "axios": "^0.19.0",
     "bcrypt": "^3.0.0",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "cheerio": "^1.0.0-rc.3",
     "connect-ensure-login": "^0.1.1",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^2.0.1",
     "cookie-parser": "^1.4.3",
+    "cors": "^2.8.5",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
+<<<<<<< HEAD
     "express-session": "^1.15.6",
     "jsdom": "^15.2.1",
+=======
+    "express-session": "^1.17.0",
+    "hbs": "^4.0.1",
+>>>>>>> 1d5be75be35bc87bbdf58218aed12e73b1f35998
     "mongoose": "^5.2.10",
     "morgan": "^1.9.0",
     "node-sass-middleware": "^0.11.0",
