@@ -61,6 +61,7 @@ const plantSchema = new Schema(
     plantImageURL: String,
     RHSID: Number,
     detailsPercentage: Number,
+    // comments: []
   },
   {
     timestamps: {

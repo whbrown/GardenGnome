@@ -6,8 +6,9 @@ const Plant = require('../models/Plant');
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
 
 (async () => {
+  // add { headless: false } as launch param
   const browser = await puppeteer.launch();
-  for (let RHSID = 1; RHSID < 100000; RHSID++) {
+  for (let RHSID = 9062; RHSID < 100000; RHSID++) {
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(99999999);
     await page.goto(
@@ -306,7 +307,6 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
             grabPlantImage,
           ];
           for (let i = 0; i <= scrapeFunctions.length; i++) {
-            console.log(i);
             try {
               scrapeFunctions[i](plantSchema, allPlantInfo);
               if (
