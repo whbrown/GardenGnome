@@ -101,7 +101,7 @@ const scrapeDG = url =>
         const plantsFiles = document.querySelector('.plants-files');
         try {
           plantSchema = {};
-          plantSchema.detailsPercentage = 0 / 9;
+          let detailsPercentage = 0 / 9;
           const scrapeFunctions = [
             grabPlantName,
             grabTaxonomicInfo,
@@ -120,25 +120,27 @@ const scrapeDG = url =>
               ) {
                 break;
               }
-              plantSchema.detailsPercentage += Number((1 / 9).toFixed(2));
+              detailsPercentage += Number((1 / 9).toFixed(2));
             } catch (e) {
               // delete plantSchema.null;
               console.dir(e);
             }
           }
+          plantSchema.detailsPercentage = detailsPercentage;
           if (plantSchema.plantLatinName) {
-            if (plantSchema.detailsPercentage === 0.99) {
+            if (detailsPercentage === 0.99) {
               // dumb floats
-              plantSchema.detailsPercentage = 1;
+              detailsPercentage = 1;
             }
             // console.dir('found');
             console.log('sending to DB');
+            plantSchema.detailsPercentage = detailsPercentage;
             return plantSchema;
           }
         } catch (e) {
           console.log(e);
         }
-        return plantSchema;
+        // return plantSchema;
       }
       return res.status;
     })
@@ -153,7 +155,7 @@ const sendData = (plantData, DGID) => {
   // console.log(plantData);
   DGPlant.create({ ...plantData, DGID: Number(DGID) })
     .then(res => {
-      console.log(`mongoose:`, res);
+      // console.log(`mongoose:`, res);
       console.dir(`success: ${DGID}`);
     })
     .catch(e => {
@@ -161,14 +163,17 @@ const sendData = (plantData, DGID) => {
     });
 };
 
-for (let DGID = 1; DGID < 5; DGID++) {
-  scrapeDG(`https://davesgarden.com/guides/pf/go/${DGID}`)
-    .then(response =>
-      // send to db
-      sendData(response, DGID)
-    )
-    .then(res => {
-      console.log(`response from database: ${res}`);
-    })
-    .catch(e => console.log(e));
+for (let DGID = 1; DGID < 300000; DGID++) {
+  setTimeout(() => {
+    scrapeDG(`https://davesgarden.com/guides/pf/go/${DGID}`)
+      .then(response =>
+        // send to db
+        sendData(response, DGID)
+      )
+      .then(res => {
+        // do something with response? celebrate?
+        // console.log(`response from database: ${res}`);
+      })
+      .catch(e => console.log(e));
+  }, 2000);
 }

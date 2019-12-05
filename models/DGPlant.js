@@ -39,6 +39,7 @@ const DGplantSchema = new Schema(
       { rating: String, commentHeader: String, commentText: String },
     ],
     DGID: Number,
+    detailsPercentage: Number,
   },
   {
     timestamps: {
