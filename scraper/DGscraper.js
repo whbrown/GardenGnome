@@ -12,8 +12,10 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
 
 (async () => {
   // add { headless: false } as launch param
+
+  // ! update plants 1 thru 380 (they have img: https://davesgarden.comhttps://davesgarden.com/guides/pf/thumbnail.php?image=2004/08/21/ownedbycats/c4e384.jpg&widht=700&height=312)
   const browser = await puppeteer.launch();
-  for (let DGID = 1; DGID < 100; DGID++) {
+  for (let DGID = 3243; DGID < 999999; DGID++) {
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(99999999);
     page.setJavaScriptEnabled(false);
@@ -22,7 +24,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
       new Promise(function(resolve) {
         setTimeout(resolve, time);
       });
-    await delay(1500);
+    // await delay(1000);
     try {
       let plantData = await page.evaluate(() => {
         // * // * // * //
@@ -55,7 +57,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
         const grabPlantImage = (schema, plantsFiles) => {
           const img = plantsFiles.querySelector('.plantfiles-gallery-image img')
             .src;
-          schema.plantImageURL = `https://davesgarden.com${img}`;
+          schema.plantImageURL = img;
           return schema;
         };
 
@@ -77,10 +79,11 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
             '.plant-body'
           ).children;
           let currentProp;
-          const props = assortedInfo.reduce((plantProps, el) => {
+          assortedInfo.forEach(el => {
             currentProp = currentProp || null;
-            if (el.textContent === 'Unknown - Tell us') return plantProps;
-            if (el.tagName === 'H4') {
+            if (el.textContent === 'Unknown - Tell us') {
+              // pass
+            } else if (el.tagName === 'H4') {
               const h4 = el.textContent;
               currentProp = makeCamelCase(
                 el.textContent.slice(0, h4.length - 1)
@@ -88,14 +91,13 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
             } else {
               let info = el.textContent;
               if (currentProp === 'hardiness') info = info.replace(/�/g, '°');
-              plantProps[currentProp] = plantProps[currentProp]
-                ? plantProps[currentProp].concat([info])
+              schema[currentProp] = schema[currentProp]
+                ? schema[currentProp].concat([info])
                 : [info];
             }
-            delete plantProps.regiona;
-            return plantProps;
-          }, {});
-          plantSchema = { ...schema, ...props };
+            delete schema.regiona;
+            return schema;
+          });
           return schema;
         };
 

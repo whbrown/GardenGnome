@@ -8,7 +8,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
 (async () => {
   // add { headless: false } as launch param
   const browser = await puppeteer.launch();
-  for (let RHSID = 9062; RHSID < 100000; RHSID++) {
+  for (let RHSID = 14154; RHSID < 100000; RHSID++) {
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(99999999);
     await page.goto(
@@ -18,7 +18,6 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
       new Promise(function(resolve) {
         setTimeout(resolve, time);
       });
-    await delay(1000);
     try {
       let plantData = await page.evaluate(() => {
         // * // * // * //
