@@ -9,6 +9,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
   const browser = await puppeteer.launch();
   for (let RHSID = 1; RHSID < 100000; RHSID++) {
     const page = await browser.newPage();
+    page.setDefaultNavigationTimeout(999999999);
     await page.goto(
       `https://www.rhs.org.uk/Plants/${RHSID}/i-Viburnum-opulus-i/Details`
     );
@@ -37,6 +38,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
       // * plant name
       const grabPlantName = (schema, allPlantInfo) => {
         schema.detailsPercentage = 0 / 9;
+        schema.RHSID = RHSID;
         const [plantLatinName, plantCommonName] = allPlantInfo.querySelector(
           '.ib'
         ).children;
@@ -333,7 +335,10 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
         console.dir(`success: ${RHSID}`);
         page.close();
       })
-      .catch(e => console.dir(e));
+      .catch(e => {
+        console.dir(e);
+        page.close();
+      });
     // console.dir(plantData);
     // array.push(plantData);
     // page.close();
