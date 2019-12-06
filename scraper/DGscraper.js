@@ -15,7 +15,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
 
   // ! update plants 1 thru 380 (they have img: https://davesgarden.comhttps://davesgarden.com/guides/pf/thumbnail.php?image=2004/08/21/ownedbycats/c4e384.jpg&widht=700&height=312)
   const browser = await puppeteer.launch();
-  const mostRecentPlant = await DGPlant.findOne({}).sort({DGID: -1})
+  const mostRecentPlant = await DGPlant.findOne({}).sort({ DGID: -1 });
   for (let DGID = mostRecentPlant.DGID + 1; DGID < 999999; DGID++) {
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(99999999);
@@ -60,27 +60,31 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
             .src;
           schema.plantImageURL = img;
           schema.additionalPhotos = [];
-          const [...additionalPhotos] = plantsFiles.querySelector('.plantfiles-gallery-thumbnails ul').children;
-          additionalPhotos.forEach((photo)=> {
+          const [...additionalPhotos] = plantsFiles.querySelector(
+            '.plantfiles-gallery-thumbnails ul'
+          ).children;
+          additionalPhotos.forEach(photo => {
             schema.additionalPhotos.push(photo.querySelector('img').src);
-          })
+          });
           return schema;
         };
 
         const grabTaxonomicInfo = (schema, plantsFiles) => {
           const topicKeys = {
-              'Family': 'plantFamily',
-              'Genus': 'plantGenus',
-              'Species': 'plantSpecies',
-              'Cultivar': 'plantCultivar',
-              'Additional cultivar information': 'additionalCultivarInformation',
-              'Hybridized': 'plantHybridizer',
-              'Registered or introduced': 'yearRegisteredOrIntroduced',
-          }
+            Family: 'plantFamily',
+            Genus: 'plantGenus',
+            Species: 'plantSpecies',
+            Cultivar: 'plantCultivar',
+            'Additional cultivar information': 'additionalCultivarInformation',
+            Hybridized: 'plantHybridizer',
+            'Registered or introduced': 'yearRegisteredOrIntroduced',
+          };
           schema.taxonomicInfo = {};
-          [...taxonomicInfo] = plantsFiles.querySelector(`.plant-details tbody`).children;
+          [...taxonomicInfo] = plantsFiles.querySelector(
+            `.plant-details tbody`
+          ).children;
 
-          taxonomicInfo.forEach((topic) => {
+          taxonomicInfo.forEach(topic => {
             const topicTitle = topic.firstChild.innerText;
             let topicValue = topic.lastChild.textContent.split('  ')[0];
             if (topicTitle === 'Registered or introduced:') {
@@ -91,9 +95,11 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
               }
             }
             if (topicKeys[topicTitle.split(':')[0]]) {
-              schema.taxonomicInfo[topicKeys[topicTitle.split(':')[0]]] = topicValue;
+              schema.taxonomicInfo[
+                topicKeys[topicTitle.split(':')[0]]
+              ] = topicValue;
             }
-          })
+          });
           return schema;
         };
 
@@ -183,6 +189,16 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
         }
         // * // * // * //
       });
+      try {
+        for (let prop of Object.keys(plantData)) {
+          // ! this doesn't seem to work unfortunately... will need to clean DB docs when seeding heroku
+          if (JSON.stringify(plantData[prop]) === JSON.stringify([''])) {
+            delete plantData[prop];
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
       DGPlant.create({ ...plantData, DGID: Number(DGID) })
         .then(() => {
           // console.dir(plantData);

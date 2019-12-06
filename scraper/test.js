@@ -183,7 +183,12 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
         }
         // * // * // * //
       });
-      console.log(`success ${DGID}`);
+      for (let prop of Object.keys(plantData)) {
+        if (JSON.stringify(plantData[prop]) === JSON.stringify([ '' ])) {
+          delete plantData[prop]
+        }
+      }
+      // console.log(plantData);
     } catch (e) {
       console.log(e);
       page.close();
