@@ -15,6 +15,9 @@ const passport = require('passport');
 require('./configs/passport');
 
 const cors = require('cors');
+// Enable authentication using session + passport
+const MongoStore = require('connect-mongo')(session);
+const appName = require('./package.json').name;
 
 mongoose
   .connect('mongodb://localhost/gardengnome', { useNewUrlParser: true })
@@ -28,7 +31,7 @@ mongoose
   });
 
 const debug = require('debug')(
-  `${app_name}:${path.basename(__filename).split('.')[0]}`
+  `${appName}:${path.basename(__filename).split('.')[0]}`
 );
 
 const app = express();
@@ -41,11 +44,7 @@ app.use(cookieParser());
 
 // default value for title local
 app.locals.title = 'Garden Gnome server';
-app.use(express.static(path.join(__dirname, "public")));
-
-// Enable authentication using session + passport
-const MongoStore = require('connect-mongo')(session);
-const app_name = require('./package.json').name;
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(
   session({
