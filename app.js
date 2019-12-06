@@ -11,10 +11,13 @@ const path = require('path');
 const flash = require('connect-flash');
 
 const session = require('express-session');
-const passport = require('passport')
-require("./configs/passport");
+const passport = require('passport');
+require('./configs/passport');
 
 const cors = require('cors');
+// Enable authentication using session + passport
+const MongoStore = require('connect-mongo')(session);
+const app_name = require('./package.json').name;
 
 mongoose
   .connect('mongodb://localhost/gardengnome', { useNewUrlParser: true })
@@ -27,7 +30,6 @@ mongoose
     console.error('Error connecting to mongo', err);
   });
 
-const app_name = require('./package.json').name;
 const debug = require('debug')(
   `${app_name}:${path.basename(__filename).split('.')[0]}`
 );
@@ -42,10 +44,7 @@ app.use(cookieParser());
 
 // default value for title local
 app.locals.title = 'Garden Gnome server';
-app.use(express.static(path.join(__dirname, "public")));
-
-// Enable authentication using session + passport
-const MongoStore = require('connect-mongo')(session);
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(
   session({
@@ -64,20 +63,25 @@ app.use(passport.session());
 
 // USE CORS to allow React to run through different PORT in conjunction
 
-app.use(cors({
-  credentials: true,
-  origin: ['http://localhost:3000'] // <== this will be the URL of our React app (it will be running on port 3000)
-}));
+app.use(
+  cors({
+    credentials: true,
+    origin: ['http://localhost:3000'], // <== this will be the URL of our React app (it will be running on port 3000)
+  })
+);
 
 // ROUTES MIDDLEWARE STARTS HERE:
 
 const index = require('./routes/index');
+
 app.use('/', index);
 
 const authRoutes = require('./routes/auth');
+
 app.use('/api/auth', authRoutes);
 
-const plantRoutes = require("./routes/plants");
-app.use("/api/plants", plantRoutes);
+const plantRoutes = require('./routes/plants');
+
+app.use('/api/plants', plantRoutes);
 
 module.exports = app;
