@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom'
+import { Route } from 'react-router-dom';
 import './App.css';
 import Homepage from "./components/Homepage";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Navbar from "./components/Navbar";
 import MyGarden from "./components/MyGarden";
-import Plants from "./components/Plants"
+import Plants from "./components/Plants";
+import axios from "axios";
 
 // MAKING PUBLIC FOLDER STATIC?
 // const express = require("express");

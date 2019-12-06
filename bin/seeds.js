@@ -7,6 +7,10 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 
+const plants = require("../../Gnome Assets/gardengnomeplantDBexport.json")
+
+console.log(plants.length)
+
 const bcryptSalt = 10;
 
 mongoose

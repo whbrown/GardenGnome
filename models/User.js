@@ -9,7 +9,7 @@ const userSchema = new Schema(
     password: String,
     city: String,
     neighbourhood: String,
-    garden: [],
+    garden: [{ type: Schema.Types.ObjectId, ref: 'PersonalPlant' }],
     GPS: {
       long: Number,
       lat: Number
