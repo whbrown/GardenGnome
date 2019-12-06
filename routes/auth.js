@@ -69,7 +69,12 @@ router.delete('/logout', (req, res) => {
 });
 
 // CHECKING IF LOGGED IN - for CONDITIONAL RENDERING
+<<<<<<< HEAD
 router.get('/loggedin', (req, res) => {
+=======
+router.get("/loggedin", (req, res) => {
+  console.log(req.user)
+>>>>>>> a7b22729c9bca7343f9df57688c6724a265c0807
   res.json(req.user);
 });
 

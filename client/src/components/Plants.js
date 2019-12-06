@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-// import PlantList from "./PlantList";
+import PlantList from "./PlantList";
 import PlantSearch from "./PlantSearch";
 
 class Plants extends Component {
@@ -17,7 +17,7 @@ class Plants extends Component {
   getPlants = (searchQuery) => {
     // axios
     //   .get("http://localhost:5555/api/projects")
-    console.log('send database query', searchQuery);
+    console.log('send axios database query', searchQuery);
     axios
       .get("/api/plants/" + searchQuery)
       .then(response => {
@@ -46,7 +46,7 @@ class Plants extends Component {
     return (
       <div className="plants-container">
         <h2>Find a plant</h2>
-        {/* <PlantList projects={this.state.plants} /> */}
+        <PlantList projects={this.state.filteredPlants} />
         <PlantSearch getPlants={this.getPlants} newQuery={this.newQuery} searchQuery={this.state.searchQuery} />
       </div>
     );

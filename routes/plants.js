@@ -12,7 +12,7 @@ router.get('/:id', (req, res) => {
     .limit(50)
     .exec()
     .then(plants => {
-      console.log('SUCCESSFUL FIND');
+      console.log("SUCCESSFUL Router.get FIND: ", plants)
       res.json(plants);
     })
     .catch(err => {

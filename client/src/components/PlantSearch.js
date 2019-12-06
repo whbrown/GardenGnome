@@ -7,23 +7,21 @@ class PlantSearch extends Component {
   };
 
   handleChange = event => {
-    // this.setState({
-    //   [event.target.name]: event.target.value
-    // });
-    this.props.newQuery(event.target.value)
+    // Changes parent's state property - "searchQuery"
+    this.props.newQuery(event.target.value);
+    // Parent's axios request based on searchQuery
+    this.props.getPlants();
   }
 
-  handleSubmit = event => {
-    event.preventDefault();
-    axios.get('/api/plants', {
+  // handleSubmit = event => {
+  //   event.preventDefault();
+  //   axios.get('/api/plants', {
 
-    })
-  }
+  //   })
+  // }
+
 
   // method = debounce(() => {
-
-
-
 
   render() {
     return (
