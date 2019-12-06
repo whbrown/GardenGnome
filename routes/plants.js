@@ -8,7 +8,7 @@ router.get("/:id", (req, res) => {
   const plantName = req.params.id
   Plant.find({ plantCommonName: { "$regex": plantName, "$options": "i" } }).limit(50).exec()
     .then(plants => {
-      console.log("SUCCESSFUL FIND")
+      console.log("SUCCESSFUL Router.get FIND: ", plants)
       res.json(plants);
     })
     .catch(err => {
