@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
+
 const { Schema } = mongoose;
+
 const plantSchema = new Schema(
   {
     plantLatinName: String,
@@ -68,5 +70,6 @@ const plantSchema = new Schema(
     },
   }
 );
+
 const Plant = mongoose.model('Plant', plantSchema);
 module.exports = Plant;

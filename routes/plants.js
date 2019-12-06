@@ -1,12 +1,16 @@
-const express = require("express");
+const express = require('express');
+
 const router = express.Router();
-const Plant = require("../models/Plant");
+const Plant = require('../models/Plant');
 
 // GET /api/plants
-router.get("/:id", (req, res) => {
+router.get('/:id', (req, res) => {
   // return all plants matching search query
-  const plantName = req.params.id
-  Plant.find({ plantCommonName: { "$regex": plantName, "$options": "i" } }).limit(50).exec()
+  const plantName = req.params.id;
+  Plant.find({ plantCommonName: /chinese/i })
+    // Plant.find({ plantCommonName: { $regex: plantName, $options: 'i' } })
+    .limit(50)
+    .exec()
     .then(plants => {
       console.log("SUCCESSFUL Router.get FIND: ", plants)
       res.json(plants);
@@ -16,7 +20,7 @@ router.get("/:id", (req, res) => {
     });
 });
 
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 // GET /api/plants/:id
 // router.get("/:id", (req, res) => {
 //   // return 1 plant w/ a given id
