@@ -2,17 +2,64 @@ const express = require('express');
 
 const router = express.Router();
 const mongoose = require('mongoose');
-const Plant = require('../models/Plant');
+const DGPlant = require('../models/DGPlant');
+const getLevenshteinDistance = require('../utils/getLevenshteinDistance');
 
 // GET /api/plants
 router.get('/:id', (req, res) => {
   // return all plants matching search query
-  const plantName = req.params.id;
-  Plant.find({ plantCommonName: { $regex: plantName, $options: 'i' } })
-    .limit(50)
+  const searchQuery = req.params.id;
+  console.log('searching for: ', searchQuery);
+  // Plant.find({ plantCommonName: /`${searchQuery}`/i })
+  const searchRegExp = new RegExp(searchQuery, 'i');
+  DGPlant.find({
+    $or: [
+      { plantLatinName: searchRegExp },
+      { plantCommonNames: { $in: [searchRegExp] } },
+      { 'taxonomicInfo.plantGenus': searchRegExp },
+    ],
+  })
+    .sort({ plantComments: -1 })
+    .limit(100)
     .exec()
     .then(plants => {
-      console.log("SUCCESSFUL Router.get FIND: ", plants)
+      console.log(searchQuery);
+      // const exactMatch = new RegExp(`^${searchQuery}$`, 'i');
+      const plantVsQueryLevenschteinDistance = (plant, query) => {
+        let names = [];
+
+        names = names
+          .concat(plant.plantCommonNames)
+          .concat([plant.plantLatinName])
+          .concat(
+            plant.taxonomicInfo.plantGenus
+              .match(/[a-zA-Z-]+/g)
+              .filter(word => !word.includes('-'))
+          )
+          .concat(
+            plant.taxonomicInfo.plantFamily
+              .match(/[a-zA-Z-]+/g)
+              .filter(word => !word.includes('-'))
+          );
+
+        return Math.min(
+          ...names.map(name => {
+            const words = name.match(/\w+/g);
+            return Math.min(
+              ...words.map(word =>
+                getLevenshteinDistance(query.toLowerCase(), word.toLowerCase())
+              )
+            );
+          })
+        );
+      };
+
+      plants.sort(
+        (a, b) =>
+          plantVsQueryLevenschteinDistance(a, searchQuery) -
+          plantVsQueryLevenschteinDistance(b, searchQuery)
+      );
+      console.log('SUCCESSFUL Router.get FIND: ', plants);
       res.json(plants);
     })
     .catch(err => {

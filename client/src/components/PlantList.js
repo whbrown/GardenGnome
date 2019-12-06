@@ -1,19 +1,34 @@
 import React, {Component} from "react";
 
-const PlantList = props => {
-  return (
-    <div>
-      {props.projects.map(project => {
-        return (
-          <div key={project._id}>
-            <h3>
-              {project.title}
-            </h3>
-          </div>
-        );
-      })}
-    </div>
-  );
+class PlantList extends Component {
+
+  // componentDidUpdate() {
+  //   console.log('filtered plants:',  this.props.plants);
+  //   console.log('update')
+  // }
+
+
+  render() {
+    console.log(this.props.plants.length)
+    console.log(this.props.plants)
+    return (
+      <div>
+        {this.props.plants ? this.props.plants.map((plant, index) => {
+          const commonName = plant.plantCommonNames.length > 1 ? plant.plantCommonNames[1] : plant.plantCommonNames[0];
+          return (
+            <div key={plant._id}>
+              <h3>
+                {`${index}.`} {plant.plantLatinName}
+              </h3>
+              <h4>{commonName}</h4>
+              {/* <img src={plant.plantImageURL} /> */}
+              <br/>
+            </div>)
+    }) : 'test'
+        }
+      </div>
+    );
+  }
 };
 
 

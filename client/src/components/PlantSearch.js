@@ -1,16 +1,17 @@
 import React, { Component } from "react";
-import axios from 'axios'
+import axios from 'axios';
+import AwesomeDebouncePromise from 'awesome-debounce-promise';
 
 class PlantSearch extends Component {
-  state = {
-    query: ""
-  };
+  // debounces the axios requests to plant database, resolving only the last promise stored up to 500ms after last input, whereupon the GET request is then made
+  searchAPIDebounced = AwesomeDebouncePromise(this.props.getPlants, 300);
 
-  handleChange = event => {
+  handleChange = async event => {
     // Changes parent's state property - "searchQuery"
-    this.props.newQuery(event.target.value);
+    await this.props.setQuery(event.target.value);
     // Parent's axios request based on searchQuery
-    this.props.getPlants();
+    const response = await this.searchAPIDebounced(this.props.searchQuery);
+    await this.props.setFilteredPlants(response.data);
   }
 
   // handleSubmit = event => {
