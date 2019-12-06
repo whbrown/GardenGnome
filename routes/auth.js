@@ -71,6 +71,7 @@ router.delete("/logout", (req, res) => {
 
 // CHECKING IF LOGGED IN - for CONDITIONAL RENDERING
 router.get("/loggedin", (req, res) => {
+  console.log(req.user)
   res.json(req.user);
 });
 
