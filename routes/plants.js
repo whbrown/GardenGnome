@@ -1,14 +1,14 @@
 const express = require('express');
 
 const router = express.Router();
+const mongoose = require('mongoose');
 const Plant = require('../models/Plant');
 
 // GET /api/plants
 router.get('/:id', (req, res) => {
   // return all plants matching search query
   const plantName = req.params.id;
-  Plant.find({ plantCommonName: /chinese/i })
-    // Plant.find({ plantCommonName: { $regex: plantName, $options: 'i' } })
+  Plant.find({ plantCommonName: { $regex: plantName, $options: 'i' } })
     .limit(50)
     .exec()
     .then(plants => {
@@ -20,7 +20,6 @@ router.get('/:id', (req, res) => {
     });
 });
 
-const mongoose = require('mongoose');
 // GET /api/plants/:id
 // router.get("/:id", (req, res) => {
 //   // return 1 plant w/ a given id
