@@ -1,7 +1,17 @@
 import React, { Component } from "react";
 // import { Link } from "react-router-dom";
 import axios from 'axios'
+import H2 from './reuse/H2'
+import H3 from './reuse/H3'
+import H4 from './reuse/H4'
+import PlantCard from './reuse/PlantCard'
+import UserCard from './reuse/UserCard'
+import styled, { css } from 'styled-components'
 
+
+const Img = styled.img`
+  width: 100px;
+`
 
 class MyGarden extends Component {
 
@@ -28,22 +38,29 @@ class MyGarden extends Component {
   componentDidMount() {
     this.renderMyGarden();
   }
-
   render() {
-
     return (
-      <div>
-        <h2>My Garden</h2>
+      <div style={{ marginBottom: "80px", padding: "1rem" }}>
+        <H2 textAlign="left" margin="(65px 0 0 0)">My Garden</H2>
+        <UserCard>
+          <img src="https://www.stickpng.com/assets/thumbs/585e4beacb11b227491c3399.png" alt="" style={{ width: "50px" }} />
+          <H3 textAlign="left">{this.props.user.username}</H3>
+        </UserCard>
+        <div style={{ width: "100%", display: "flex", justifyContent: "space-around" }}>
+          <H4>My Plants</H4>
+          <H4>Followers</H4>
+          <H4>Following</H4>
+        </div>
         {this.props.user.garden.map(plant => {
           /* Placeholder names until users can be populated with actual plants. Key should also be updated to ID when ready */
           console.log("IDENTIFY THE PLANT ATTRIBUTES: ", plant.plantId)
           // Avoids the initial render error where user's plantId is NULL and throws an error
           return (plant.plantId && (
-            <div key={plant._id}>
-              <h4> {plant.name}</h4>
-              <h3>{plant.plantId.plantCommonName}</h3>
-              <img src={plant.plantId.plantImageURL} alt="" />
-            </div>)
+            <PlantCard key={plant._id}>
+              <h3> {plant.name}</h3>
+              <h4>{plant.plantId.plantCommonName}</h4>
+              <Img src={plant.plantId.plantImageURL} alt="" />
+            </PlantCard>)
           )
         })}
         {/* Placeholder button which  */}

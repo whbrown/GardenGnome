@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import '../App.css';
+
 
 
 class Homepage extends Component {
@@ -11,7 +13,7 @@ class Homepage extends Component {
 
   render() {
     return (
-      <div>
+      <div className="homepage">
         <img src="../../assets/gnome.svg" alt="Garden Gnome" style={{ width: "30vw" }} />
         <h2>Gnome</h2>
         <p>Your pocket guide to growing healthy and happy plants. Access our database of over 300,000 plants and their in-depth information on care and maintenance</p>

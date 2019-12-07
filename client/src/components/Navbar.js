@@ -1,6 +1,33 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { logout } from "../services/auth";
+import styled, { css } from 'styled-components'
+
+/* ---------------------------------------------------------- STYLED COMPONENTS --------------------------------------------------------- */
+
+const Nav = styled.nav`
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  height: 60px;
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  font-size: 12px;
+;
+  box-shadow: 0 -1px 5px rgba(0,0,0,.1);
+`
+const P = styled.p`
+  /* color: ${props => props.color}; */
+  color: rgb(37, 37, 37);
+`
+
+const Img = styled.img`
+  height: ${props => props.height};
+`
+
+/* ---------------------------------------------------------- NAVBAR RENDERING ---------------------------------------------------------- */
 
 const Navbar = props => {
   const handleLogout = () => {
@@ -11,41 +38,43 @@ const Navbar = props => {
   };
 
   return (
-    <nav className="navbar fixed-bottom navbar-light bg-light container-fluid" style={{ margin: "0", padding: "0" }}>
+    <Nav className="navbar-nav fixed-bottom container-fluid">
       {props.user ? (
         <>
-          <div className="navbar-nav row-fluid">
-            <Link className="nav-item nav-link col-2.2" to="/mygarden">
-              <img src="../../assets/leaf.svg" alt="my garden" className="navIcon" />
-              MY GARDEN
-              </Link>
-            <Link className="nav-item nav-link col-2.2" to="/">
-              <img src="../../assets/map.svg" alt="local gnomes" className="navIcon" />
-              LOCAL GNOMES</Link>
-            <Link className="nav-item nav-link col-2.2" to="/">
-              <img src="../../assets/star.svg" alt="discover" className="navIcon" />
-              DISCOVER</Link>
-            <Link className="nav-item nav-link col-2.2" to="/plants">
-              <img src="../../assets/search.svg" alt="search plants" className="navIcon" />
-              SEARCH PLANTS</Link>
-            <Link className="nav-item nav-link col-2.2" to="/" onClick={handleLogout}>
-              <img src="../../assets/logout.svg" alt="" className="navIcon" />
-              LOGOUT</Link>
-          </div>
+          <Link className="nav-item nav-link" to="/mygarden">
+            <Img src="../../assets/leaf.svg" alt="my garden" height="30px" />
+            <P>Garden</P >
+          </Link>
+          <Link className="nav-item nav-link" to="/">
+            <Img src="../../assets/map.svg" alt="local gnomes" height="30px" />
+            <P>Gnomes</P >
+          </Link>
+          <Link className="nav-item nav-link" to="/plants">
+            <Img src="../../assets/search.svg" alt="search plants" height="30px" />
+            <P>Search</P >
+          </Link>
+          <Link className="nav-item nav-link" to="/">
+            <Img src="../../assets/star.svg" alt="discover" height="30px" />
+            <P>Discover</P >
+          </Link>
+          <Link className="nav-item nav-link" to="/" onClick={handleLogout}>
+            <Img src="../../assets/logout.svg" alt="" height="30px" />
+            <P>Logout</P >
+          </Link>
         </>
       ) : (
           <>
-            <div className="navbar-nav row-fluid">
-              <Link className="nav-item nav-link" to="/">
-                <img src="../../assets/star.svg" alt="discover" className="navIcon" />
-                DISCOVER</Link>
-              <Link className="nav-item nav-link" to="/">
-                <img src="../../assets/search.svg" alt="search plants" className="navIcon" />
-                SEARCH PLANTS</Link>
-            </div>
+            <Link className="nav-item nav-link" to="/">
+              <Img src="../../assets/star.svg" alt="discover" height="30px" />
+              <P>Discover</P >
+            </Link>
+            <Link className="nav-item nav-link" to="/">
+              <Img src="../../assets/search.svg" alt="search plants" height="30px" />
+              <P>Search</P >
+            </Link>
           </>
         )}
-    </nav>
+    </Nav>
   );
 };
 
