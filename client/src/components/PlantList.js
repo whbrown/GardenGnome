@@ -9,11 +9,11 @@ class PlantList extends Component {
 
 
   render() {
-    console.log(this.props.plants.length)
-    console.log(this.props.plants)
+    // console.log(this.props.plants.length)
+    // console.log(this.props.plants)
     return (
       <div>
-        {this.props.plants ? this.props.plants.map((plant, index) => {
+        {this.props.plants ? this.props.plants.slice(0, 5).map((plant, index) => {
           const commonName = plant.plantCommonNames.length > 1 ? plant.plantCommonNames[1] : plant.plantCommonNames[0];
           return (
             <div key={plant._id}>
@@ -21,10 +21,9 @@ class PlantList extends Component {
                 {`${index}.`} {plant.plantLatinName}
               </h3>
               <h4>{commonName}</h4>
-              {/* <img src={plant.plantImageURL} /> */}
-              <br/>
+              <img alt={plant.plantImageURL} />
             </div>)
-    }) : 'test'
+    }) : ''
         }
       </div>
     );

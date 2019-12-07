@@ -189,16 +189,6 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
         }
         // * // * // * //
       });
-      try {
-        for (let prop of Object.keys(plantData)) {
-          // ! this doesn't seem to work unfortunately... will need to clean DB docs when seeding heroku
-          if (JSON.stringify(plantData[prop]) === JSON.stringify([''])) {
-            delete plantData[prop];
-          }
-        }
-      } catch (e) {
-        console.log(e);
-      }
       DGPlant.create({ ...plantData, DGID: Number(DGID) })
         .then(() => {
           // console.dir(plantData);

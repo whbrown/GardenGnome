@@ -36,18 +36,18 @@ const getLevenshteinDistance = (a, b) => {
   return matrix[b.length][a.length];
 };
 
-let plant = {};
-plant.taxonomicInfo = {};
+// let plant = {};
+// plant.taxonomicInfo = {};
 
-plant.plantCommonNames = [
-  'Salvia',
-  'Autumn Sage',
-  'Cherry Sage',
-  "Gregg Salvia 'Rosea'",
-];
-plant.plantLatinName = 'Cryptanthus ';
-plant.taxonomicInfo.plantGenus = 'Bromeliaceae (bro-mee-lee-AY-see-ee)';
-plant.taxonomicInfo.plantFamily = 'Cryptanthus (krip-TAN-thus)';
+// plant.plantCommonNames = [
+//   'Salvia',
+//   'Autumn Sage',
+//   'Cherry Sage',
+//   "Gregg Salvia 'Rosea'",
+// ];
+// plant.plantLatinName = 'Cryptanthus ';
+// plant.taxonomicInfo.plantGenus = 'Bromeliaceae (bro-mee-lee-AY-see-ee)';
+// plant.taxonomicInfo.plantFamily = 'Cryptanthus (krip-TAN-thus)';
 
 const plantVsQueryLevenschteinDistance = (plant, query) => {
   let names = [];
@@ -69,13 +69,43 @@ const plantVsQueryLevenschteinDistance = (plant, query) => {
   return Math.min(
     ...names.map(name => {
       const words = name.match(/\w+/g);
+      // const words = name.replace(/\W+/gi, '')
+      // console.log(words);
       return Math.min(
-        ...words.map(word =>
+        ...words.map(word => {
+          // get levenschtein for full name & component words, return whichever is smaller
           getLevenshteinDistance(query.toLowerCase(), word.toLowerCase())
+        }
         )
       );
     })
   );
 };
 
-console.log(plantVsQueryEditDistance(plant, 'sage'));
+
+// console.log(`devil's breath`.replace(/\W+/gi, '')) 
+// .replace("^\s+|\s+$", "");
+
+// const search = ``.replace(/\W+/gi, '');
+// console.log(search);
+
+// function escapeRegex(text) {
+//   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+// }
+// const regex = new RegExp(escapeRegex(search), 'gi');
+// console.log(regex);
+// console.log(regex.test(``Gregg Salvia 'Rosea'``.replace(/\W+/gi, '').toLowerCase()))
+const a = {
+  plantCommonNames: ["Diascia", "Twinspur 'Hannah Rose'"]
+}
+const b = {
+  plantCommonNames: ["Shrub Rose", "Buck Roses Collection 'Aunt Honey'"]
+}
+const words = b.plantCommonNames[0].match(/\w+/g)
+console.log(b.plantCommonNames[0].match(/\w+/g))
+
+console.log(Math.min(
+  ...words.map(word =>
+    getLevenshteinDistance('rose'.toLowerCase(), word.toLowerCase())
+  )
+));

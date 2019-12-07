@@ -10,6 +10,12 @@ router.get('/:id', (req, res) => {
   // return all plants matching search query
   const searchQuery = req.params.id;
   console.log('searching for: ', searchQuery);
+  function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+  }
+
+  
+
   // Plant.find({ plantCommonName: /`${searchQuery}`/i })
   const searchRegExp = new RegExp(searchQuery, 'i');
   DGPlant.find({
@@ -20,7 +26,7 @@ router.get('/:id', (req, res) => {
     ],
   })
     .sort({ plantComments: -1 })
-    .limit(100)
+    .limit(200)
     .exec()
     .then(plants => {
       console.log(searchQuery);
@@ -53,13 +59,28 @@ router.get('/:id', (req, res) => {
           })
         );
       };
-
+      // console.time();
+      console.time('sort results')
       plants.sort(
-        (a, b) =>
-          plantVsQueryLevenschteinDistance(a, searchQuery) -
+        (a, b) => {
+          // check if exact levenschtein match on first common name
+          if (Math.min(
+            ...a.plantCommonNames[0].match(/\w+/g).map(word =>
+              getLevenshteinDistance(word.toLowerCase(),searchQuery.toLowerCase())
+            )
+          ) === 0) return -1;
+          // check levenschtein match for all other names
+          return plantVsQueryLevenschteinDistance(a, searchQuery) -
           plantVsQueryLevenschteinDistance(b, searchQuery)
-      );
-      console.log('SUCCESSFUL Router.get FIND: ', plants);
+        }
+        )
+        .sort((a, b) => {
+          if (a.plantImageURL && !b.plantImageURL) return -1;
+          else if (b.plantImageURL && !a.plantImageURL) return 1;
+        })
+        ;
+        // console.log('SUCCESSFUL Router.get FIND: ', plants);
+        console.timeEnd('sort results')
       res.json(plants);
     })
     .catch(err => {
