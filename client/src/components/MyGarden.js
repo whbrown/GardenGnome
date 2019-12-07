@@ -19,6 +19,7 @@ class MyGarden extends Component {
     axios
       .get('/api/plants/mygarden')
       .then(response => {
+        console.log("SUCCESSFUL GET REQUEST OF USER", response)
         this.props.setUser(response.data)
       })
   }
@@ -38,6 +39,7 @@ class MyGarden extends Component {
   componentDidMount() {
     this.renderMyGarden();
   }
+
   render() {
     return (
       <div style={{ marginBottom: "80px", padding: "1rem" }}>
@@ -52,8 +54,6 @@ class MyGarden extends Component {
           <H4>Following</H4>
         </div>
         {this.props.user.garden.map(plant => {
-          /* Placeholder names until users can be populated with actual plants. Key should also be updated to ID when ready */
-          console.log("IDENTIFY THE PLANT ATTRIBUTES: ", plant.plantId)
           // Avoids the initial render error where user's plantId is NULL and throws an error
           return (plant.plantId && (
             <PlantCard key={plant._id}>

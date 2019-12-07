@@ -27,7 +27,7 @@ class App extends Component {
   };
 
   render() {
-    // console.log("CURRENT USER: ", this.state.user)
+    console.log("CURRENT USER: ", this.state.user)
     return (
       <div className="App">
         <Route exact path="/" render={props => <Homepage {...props} user={this.state.user} setUser={this.setUser} />} />

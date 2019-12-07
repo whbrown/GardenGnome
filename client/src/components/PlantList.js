@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 
 class PlantList extends Component {
 
@@ -24,7 +24,7 @@ class PlantList extends Component {
               {/* <img alt={plant.plantImageURL} /> */}
               <p>{plant.plantImageURL}</p>
             </div>)
-    }) : ''
+        }) : ''
         }
       </div>
     );
