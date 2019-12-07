@@ -30,7 +30,7 @@ router.get('/:id', (req, res) => {
       // if (!plants.length) return res.json(null);
       if (!plants.length && searchQuery.split(' ').length > 1) {
         console.log('split ')
-        let searchRegExp = new RegExp(searchQuery.split(' ')[0], 'i');
+        searchRegExp = new RegExp(searchQuery.split(' ')[0], 'i');
         return DGPlant.find({
           $or: [
             { plantLatinName: searchRegExp },
