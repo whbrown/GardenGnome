@@ -6,7 +6,7 @@ import PlantSearch from "./PlantSearch";
 class Plants extends Component {
   state = {
     filteredPlants: [],
-    searchQuery: ""
+    searchQuery: ``
     // back to top button
   };
 
@@ -23,8 +23,9 @@ class Plants extends Component {
   };
 
   setQuery = (searchQuery) => {
+    const sanitizedInput = searchQuery.replace(/[<>.,/;:+_*&^%$#@!`~{}[\]|\\]/g, '');
     this.setState({
-      searchQuery: searchQuery
+      searchQuery: sanitizedInput
     }, () => console.log(this.state.searchQuery))
   }
 

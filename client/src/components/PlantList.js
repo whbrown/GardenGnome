@@ -21,7 +21,8 @@ class PlantList extends Component {
                 {`${index}.`} {plant.plantLatinName}
               </h3>
               <h4>{commonName}</h4>
-              <img alt={plant.plantImageURL} />
+              {/* <img alt={plant.plantImageURL} /> */}
+              <p>{plant.plantImageURL}</p>
             </div>)
     }) : ''
         }

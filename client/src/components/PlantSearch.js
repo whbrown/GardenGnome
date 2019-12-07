@@ -27,6 +27,7 @@ class PlantSearch extends Component {
   render() {
     return (
       <div>
+        <h2>Ask the Gnome for a plant by name (scientific or common) and he'll quickly check his database of over 150,000 plants!</h2>
         {/* <label htmlFor="">Search by name: </label> */}
         <input
           type="text"

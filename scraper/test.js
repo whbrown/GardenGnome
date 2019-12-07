@@ -95,17 +95,37 @@ const plantVsQueryLevenschteinDistance = (plant, query) => {
 // const regex = new RegExp(escapeRegex(search), 'gi');
 // console.log(regex);
 // console.log(regex.test(``Gregg Salvia 'Rosea'``.replace(/\W+/gi, '').toLowerCase()))
-const a = {
-  plantCommonNames: ["Diascia", "Twinspur 'Hannah Rose'"]
-}
-const b = {
-  plantCommonNames: ["Shrub Rose", "Buck Roses Collection 'Aunt Honey'"]
-}
-const words = b.plantCommonNames[0].match(/\w+/g)
-console.log(b.plantCommonNames[0].match(/\w+/g))
+// const a = {
+//   plantCommonNames: ["Diascia", "Twinspur 'Hannah Rose'"]
+// }
+// const b = {
+//   plantCommonNames: ["Shrub Rose", "Buck Roses Collection 'Aunt Honey'"]
+// }
+// const plantName = b.plantCommonNames[0].match(/([\w\s])+/g)[0]
+// const searchQuery = 'Rose';
+// // const firstCommonName = b.plantCommonNames[1].match(/\w+/g)
+// console.log(plantName)
+// console.log(plantName.match(/\w+/g))
 
-console.log(Math.min(
-  ...words.map(word =>
-    getLevenshteinDistance('rose'.toLowerCase(), word.toLowerCase())
-  )
-));
+// $or: [
+//   { $or: [ { plantLatinName: new RegExp(firstSearchTerm, 'i') }, { plantLatinName: new RegExp(secondSearchTerm, 'i') } ] },
+//   { $or: [ { plantCommonNames: { $in: [new RegExp(firstSearchTerm, 'i')] } }, { plantCommonNames: { $in: [new RegExp(secondSearchTerm, 'i')] } } ] },
+//   { $or: [ { 'taxonomicInfo.plantGenus': new RegExp(firstSearchTerm, 'i') }, { 'taxonomicInfo.plantGenus': new RegExp(secondSearchTerm, 'i') } ] }
+// ],
+
+// console.log(Math.min(
+//   ...plantName.match(/\w+/g).map(word =>
+//     getLevenshteinDistance(word.toLowerCase(),searchQuery.toLowerCase())
+//   )
+// ));
+let searchQuery = 'beefmaster tomato';
+console.log(searchQuery.split(' ').length > 1
+// console.log(firstCommonName.match(/\w+/g))
+
+// console.log(Math.min(
+//   ...words.map(word =>
+//     getLevenshteinDistance('rose'.toLowerCase(), word.toLowerCase())
+//   )
+// ));
+
+// console.log(`apple 'something'`.replace(/[<>.,/;:+_*&^%$#@!`~{}[\]|\\]/g, ''))

@@ -34,4 +34,33 @@ const getLevenshteinDistance = (a, b) => {
   return matrix[b.length][a.length];
 };
 
+const plantVsQueryLevenschteinDistance = (plant, query) => {
+  let names = [];
+
+  names = names
+    .concat(plant.plantCommonNames)
+    .concat([plant.plantLatinName])
+    .concat(
+      plant.taxonomicInfo.plantGenus
+        .match(/[a-zA-Z-]+/g)
+        .filter(word => !word.includes('-'))
+    )
+    .concat(
+      plant.taxonomicInfo.plantFamily
+        .match(/[a-zA-Z-]+/g)
+        .filter(word => !word.includes('-'))
+    );
+
+  return Math.min(
+    ...names.map(name => {
+      const words = name.match(/\w+/g);
+      return Math.min(
+        ...words.map(word =>
+          getLevenshteinDistance(query.toLowerCase(), word.toLowerCase())
+        )
+      );
+    })
+  );
+};
+
 module.exports = getLevenshteinDistance;
