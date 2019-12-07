@@ -1,198 +1,131 @@
-/* eslint no-loop-func: 0 */
+// console.log(levenshteinDistance('rosa', 'rosa'));
 
-// const axios = require('axios');
-// const jsdom = require('jsdom');
-const puppeteer = require('puppeteer');
-const mongoose = require('mongoose');
-const DGPlant = require('../models/DGPlant');
+const getLevenshteinDistance = (a, b) => {
+  if (a.length === 0) return b.length;
+  if (b.length === 0) return a.length;
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
+  let matrix = [];
 
-// const { JSDOM } = jsdom;
-
-(async () => {
-  // add { headless: false } as launch param
-
-  // ! update plants 1 thru 380 (they have img: https://davesgarden.comhttps://davesgarden.com/guides/pf/thumbnail.php?image=2004/08/21/ownedbycats/c4e384.jpg&widht=700&height=312)
-  const browser = await puppeteer.launch();
-  const mostRecentPlant = await DGPlant.findOne({}).sort({DGID: -1})
-  for (let DGID = mostRecentPlant.DGID + 1; DGID < 999999; DGID++) {
-    const page = await browser.newPage();
-    page.setDefaultNavigationTimeout(99999999);
-    page.setJavaScriptEnabled(false);
-    await page.goto(`https://davesgarden.com/guides/pf/go/${DGID}`);
-    const delay = time =>
-      new Promise(function(resolve) {
-        setTimeout(resolve, time);
-      });
-    // await delay(1000);
-    try {
-      let plantData = await page.evaluate(() => {
-        // * // * // * //
-
-        const makeCamelCase = topicTitle => {
-          // make strings camelcase to use as prop keys in Plant model
-          const capitalize = string =>
-            string.charAt(0).toUpperCase() + string.slice(1);
-          let camelCaseKey = topicTitle.toLowerCase();
-          if (topicTitle.split(' ').length > 1) {
-            const wordArray = topicTitle.split(' ');
-            camelCaseKey = `${wordArray[0].toLowerCase()}${wordArray
-              .slice(1)
-              .map(word => capitalize(word))
-              .join('')}`;
+  // increment along the first column of each row
+  for (let i = 0; i <= b.length; i++) {
+    matrix[i] = [i];
+  }
+  
+  // increment each column in the first row
+  for (let j = 0; j <= a.length; j++) {
+    matrix[0][j] = j;
+  }
+  
+  // Fill in the rest of the matrix
+  for (let i = 1; i <= b.length; i++) {
+    for (let j = 1; j <= a.length; j++) {
+      if (b.charAt(i - 1) === a.charAt(j - 1)) {
+        matrix[i][j] = matrix[i - 1][j - 1];
+      } else {
+        matrix[i][j] = Math.min(
+          matrix[i - 1][j - 1] + 1, // substitution
+            matrix[i][j - 1] + 1, // insertion
+            matrix[i - 1][j] + 1 // deletion
+            );
           }
-          return camelCaseKey;
-        };
-
-        const grabPlantName = (schema, plantsFiles) => {
-          const plantLatinName = plantsFiles.querySelector('h2').textContent;
-          schema.plantLatinName = plantLatinName;
-          const plantCommonNames = plantsFiles
-            .querySelector('h1')
-            .textContent.split(', ');
-          schema.plantCommonNames = plantCommonNames;
-          return schema;
-        };
-
-        const grabPlantImage = (schema, plantsFiles) => {
-          const img = plantsFiles.querySelector('.plantfiles-gallery-image img')
-            .src;
-          schema.plantImageURL = img;
-          schema.additionalPhotos = [];
-          const [...additionalPhotos] = plantsFiles.querySelector('.plantfiles-gallery-thumbnails ul').children;
-          additionalPhotos.forEach((photo)=> {
-            schema.additionalPhotos.push(photo.querySelector('img').src);
-          })
-          return schema;
-        };
-
-        const grabTaxonomicInfo = (schema, plantsFiles) => {
-          const topicKeys = {
-              'Family': 'plantFamily',
-              'Genus': 'plantGenus',
-              'Species': 'plantSpecies',
-              'Cultivar': 'plantCultivar',
-              'Additional cultivar information': 'additionalCultivarInformation',
-              'Hybridized': 'plantHybridizer',
-              'Registered or introduced': 'yearRegisteredOrIntroduced',
-          }
-          schema.taxonomicInfo = {};
-          [...taxonomicInfo] = plantsFiles.querySelector(`.plant-details tbody`).children;
-
-          taxonomicInfo.forEach((topic) => {
-            const topicTitle = topic.firstChild.innerText;
-            let topicValue = topic.lastChild.textContent.split('  ')[0];
-            if (topicTitle === 'Registered or introduced:') {
-              try {
-                topicValue = Number(topicValue);
-              } catch (e) {
-                console.log(e);
-              }
-            }
-            if (topicKeys[topicTitle.split(':')[0]]) {
-              schema.taxonomicInfo[topicKeys[topicTitle.split(':')[0]]] = topicValue;
-            }
-          })
-          return schema;
-        };
-
-        const grabAssortedInfo = (schema, plantsFiles) => {
-          const [, ...assortedInfo] = plantsFiles.querySelector(
-            '.plant-body'
-          ).children;
-          let currentProp;
-          assortedInfo.forEach(el => {
-            currentProp = currentProp || null;
-            if (el.textContent === 'Unknown - Tell us') {
-              // pass
-            } else if (el.tagName === 'H4') {
-              const h4 = el.textContent;
-              currentProp = makeCamelCase(
-                el.textContent.slice(0, h4.length - 1)
-              );
-            } else {
-              let info = el.textContent;
-              if (currentProp === 'hardiness') info = info.replace(/�/g, '°');
-              schema[currentProp] = schema[currentProp]
-                ? schema[currentProp].concat([info])
-                : [info];
-            }
-            delete schema.regiona;
-            return schema;
-          });
-          return schema;
-        };
-
-        const grabComments = (schema, plantsFiles) => {
-          const [, ...comments] = plantsFiles.querySelector(
-            '.plant-ratings-table tbody'
-          ).children;
-          schema.plantComments = [];
-          comments.forEach(comment => {
-            const commentContainer = {};
-            const [rating, commentBody] = comment.children;
-            commentContainer.rating = rating.textContent;
-            const [commentHeader, commentText] = commentBody.children;
-            commentContainer.commentHeader = commentHeader.textContent;
-            commentContainer.commentText = commentText.firstChild.textContent;
-            schema.plantComments.push(commentContainer);
-          });
-          return schema;
-        };
-        try {
-          const allPlantInfo = document.querySelector('.plants-files');
-          let plantSchema = {};
-          plantSchema.detailsPercentage = 0 / 9;
-
-          const scrapeFunctions = [
-            grabPlantName,
-            grabTaxonomicInfo,
-            grabAssortedInfo,
-            grabPlantImage,
-            grabComments,
-          ];
-          for (let i = 0; i <= scrapeFunctions.length; i++) {
-            try {
-              scrapeFunctions[i](plantSchema, allPlantInfo);
-              if (
-                !plantSchema.plantLatinName
-                // || (i === 3 && !plantSchema.characteristics) // ! uncomment if scraping speed is an issue to short-circuit sparse pages early
-              ) {
-                break;
-              }
-              plantSchema.detailsPercentage += Number((1 / 9).toFixed(2));
-            } catch (e) {
-              console.dir(e);
-            }
-          }
-          // return plantSchema;
-          if (plantSchema.plantLatinName) {
-            if (plantSchema.detailsPercentage === 0.99) {
-              // dumb floats
-              plantSchema.detailsPercentage = 1;
-            }
-            console.dir('found');
-            return plantSchema;
-          }
-          console.dir('pass');
-          return null;
-        } catch (e) {
-          console.dir(e);
-          console.log(e);
-        }
-        // * // * // * //
-      });
-      for (let prop of Object.keys(plantData)) {
-        if (JSON.stringify(plantData[prop]) === JSON.stringify([ '' ])) {
-          delete plantData[prop]
         }
       }
-      // console.log(plantData);
-    } catch (e) {
-      console.log(e);
-      page.close();
-    }
-  }
-  await browser.close();
-})();
+      
+      console.log(matrix);
+  return matrix[b.length][a.length];
+};
+
+// let plant = {};
+// plant.taxonomicInfo = {};
+
+// plant.plantCommonNames = [
+//   'Salvia',
+//   'Autumn Sage',
+//   'Cherry Sage',
+//   "Gregg Salvia 'Rosea'",
+// ];
+// plant.plantLatinName = 'Cryptanthus ';
+// plant.taxonomicInfo.plantGenus = 'Bromeliaceae (bro-mee-lee-AY-see-ee)';
+// plant.taxonomicInfo.plantFamily = 'Cryptanthus (krip-TAN-thus)';
+
+const plantVsQueryLevenschteinDistance = (plant, query) => {
+  let names = [];
+
+  names = names
+    .concat(plant.plantCommonNames)
+    .concat([plant.plantLatinName])
+    .concat(
+      plant.taxonomicInfo.plantGenus
+        .match(/[a-zA-Z-]+/g)
+        .filter(word => !word.includes('-'))
+    )
+    .concat(
+      plant.taxonomicInfo.plantFamily
+        .match(/[a-zA-Z-]+/g)
+        .filter(word => !word.includes('-'))
+    );
+
+  return Math.min(
+    ...names.map(name => {
+      const words = name.match(/\w+/g);
+      // const words = name.replace(/\W+/gi, '')
+      // console.log(words);
+      return Math.min(
+        ...words.map(word => {
+          // get levenschtein for full name & component words, return whichever is smaller
+          getLevenshteinDistance(query.toLowerCase(), word.toLowerCase())
+        }
+        )
+      );
+    })
+  );
+};
+getLevenshteinDistance('this', 'that')
+
+
+// console.log(`devil's breath`.replace(/\W+/gi, '')) 
+// .replace("^\s+|\s+$", "");
+
+// const search = ``.replace(/\W+/gi, '');
+// console.log(search);
+
+// function escapeRegex(text) {
+//   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+// }
+// const regex = new RegExp(escapeRegex(search), 'gi');
+// console.log(regex);
+// console.log(regex.test(``Gregg Salvia 'Rosea'``.replace(/\W+/gi, '').toLowerCase()))
+// const a = {
+//   plantCommonNames: ["Diascia", "Twinspur 'Hannah Rose'"]
+// }
+// const b = {
+//   plantCommonNames: ["Shrub Rose", "Buck Roses Collection 'Aunt Honey'"]
+// }
+// const plantName = b.plantCommonNames[0].match(/([\w\s])+/g)[0]
+// const searchQuery = 'Rose';
+// // const firstCommonName = b.plantCommonNames[1].match(/\w+/g)
+// console.log(plantName)
+// console.log(plantName.match(/\w+/g))
+
+// $or: [
+//   { $or: [ { plantLatinName: new RegExp(firstSearchTerm, 'i') }, { plantLatinName: new RegExp(secondSearchTerm, 'i') } ] },
+//   { $or: [ { plantCommonNames: { $in: [new RegExp(firstSearchTerm, 'i')] } }, { plantCommonNames: { $in: [new RegExp(secondSearchTerm, 'i')] } } ] },
+//   { $or: [ { 'taxonomicInfo.plantGenus': new RegExp(firstSearchTerm, 'i') }, { 'taxonomicInfo.plantGenus': new RegExp(secondSearchTerm, 'i') } ] }
+// ],
+
+// console.log(Math.min(
+//   ...plantName.match(/\w+/g).map(word =>
+//     getLevenshteinDistance(word.toLowerCase(),searchQuery.toLowerCase())
+//   )
+// ));
+let searchQuery = 'beefmaster tomato';
+// console.log(searchQuery.split(' ').length > 1)
+// console.log(firstCommonName.match(/\w+/g))
+
+// console.log(Math.min(
+//   ...words.map(word =>
+//     getLevenshteinDistance('rose'.toLowerCase(), word.toLowerCase())
+//   )
+// ));
+
+// console.log(`apple 'something'`.replace(/[<>.,/;:+_*&^%$#@!`~{}[\]|\\]/g, ''))

@@ -6,35 +6,27 @@ import PlantSearch from "./PlantSearch";
 class Plants extends Component {
   state = {
     filteredPlants: [],
-    searchQuery: ""
+    searchQuery: ``
     // back to top button
   };
 
-  // componentWillUnmount() {
-  //   console.log("PROJECTS UNMOUNT");
-  // }
+  setFilteredPlants = (plants) => {
+    return this.setState({
+      filteredPlants: plants
+    })
+  } 
 
   getPlants = (searchQuery) => {
-    // axios
-    //   .get("http://localhost:5555/api/projects")
     console.log('send axios database query', searchQuery);
-    axios
-      .get("/api/plants/" + searchQuery)
-      .then(response => {
-        console.log(response.data)
-        this.setState({
-          filteredPlants: response.data
-        });
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    // return fetch("/api/plants/" + encodeURIComponent(searchQuery))
+    return axios.get("/api/plants/" + encodeURIComponent(searchQuery));
   };
 
-  newQuery = (searchQuery) => {
+  setQuery = (searchQuery) => {
+    const sanitizedInput = searchQuery.replace(/[<>.,/;:+_*&^%$#@!`~{}[\]|\\]/g, '');
     this.setState({
-      searchQuery: searchQuery
-    })
+      searchQuery: sanitizedInput
+    }, () => console.log(this.state.searchQuery))
   }
 
   componentDidMount() {
@@ -42,12 +34,11 @@ class Plants extends Component {
   }
 
   render() {
-    console.log(this.filteredPlants)
     return (
       <div className="plants-container">
         <h2>Find a plant</h2>
-        <PlantList projects={this.state.filteredPlants} />
-        <PlantSearch getPlants={this.getPlants} newQuery={this.newQuery} searchQuery={this.state.searchQuery} />
+        <PlantSearch getPlants={this.getPlants} setQuery={this.setQuery} searchQuery={this.state.searchQuery} setFilteredPlants={this.setFilteredPlants}/>
+        <PlantList plants={this.state.filteredPlants} />
       </div>
     );
   }

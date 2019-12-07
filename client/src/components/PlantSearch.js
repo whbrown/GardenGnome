@@ -1,16 +1,17 @@
 import React, { Component } from "react";
-// import axios from 'axios'
+import axios from 'axios';
+import AwesomeDebouncePromise from 'awesome-debounce-promise';
 
 class PlantSearch extends Component {
-  state = {
-    query: ""
-  };
+  // debounces the axios requests to plant database, resolving only the last promise stored up to 500ms after last input, whereupon the GET request is then made
+  searchAPIDebounced = AwesomeDebouncePromise(this.props.getPlants, 150);
 
-  handleChange = event => {
+  handleChange = async event => {
     // Changes parent's state property - "searchQuery"
-    this.props.newQuery(event.target.value);
+    await this.props.setQuery(event.target.value);
     // Parent's axios request based on searchQuery
-    this.props.getPlants();
+    const response = await this.searchAPIDebounced(this.props.searchQuery);
+    await this.props.setFilteredPlants(response.data);
   }
 
   // handleSubmit = event => {
@@ -26,13 +27,15 @@ class PlantSearch extends Component {
   render() {
     return (
       <div>
-        <label htmlFor="">Search by plant name</label>
+        <h2>Ask the Gnome for a plant by name (scientific or common) and he'll quickly check his database of over 150,000 plants!</h2>
+        {/* <label htmlFor="">Search by name: </label> */}
         <input
           type="text"
           name="query"
           id="query"
           onChange={this.handleChange}
-          value={this.props.searchQuery} />
+          value={this.props.searchQuery}
+          placeholder={"Start typing to search by name..."} />
       </div>
     );
   }
