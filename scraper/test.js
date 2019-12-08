@@ -1,31 +1,23 @@
 const mongoose = require('mongoose');
 // console.log(levenshteinDistance('rosa', 'rosa'));
 const DGPlant = require('../models/DGPlant');
+const Plant = require('../models/Plant');
 
 const properties = [
-  'category',
-  'class',
-  'height',
-  'spacing',
-  'hardiness',
-  'waterRequirements',
-  'sunExposure',
-  'whereToGrow',
-  'bloomColor',
-  'seedCollecting',
-  'bloomCharacteristics',
-  'foliage',
-  'foliageColor',
-  'bloomSize',
-  'bloomShape',
-  'flowerFragrance',
-  'bloomTime',
-  'danger',
-  'habit',
-  'patentInformation',
-  'otherDetails',
-  'propagationMethods',
-  'pruningInstructions',
+  'furtherDetails.horticulturalGroup',
+  'characteristics.foliage',
+  'characteristics.habit',
+  'characteristics.fragrance',
+  'characteristics.toxicity',
+  'characteristics.hardiness',
+  'sunlight.sunNeeds',
+  'sunlight.aspect',
+  'sunlight.exposure',
+  'soil.soilTypes',
+  'soil.moistureTypes',
+  'soil.phTypes',
+  'howToCare.pestList',
+  'howtoCare.diseaseList',
 ];
 
 mongoose
@@ -36,13 +28,13 @@ mongoose
     );
     const distinctProperties = {};
     for (let property of properties) {
-      DGPlant.find()
+      Plant.find()
         .distinct(property, (err, res) => {
           if (err) return console.error(err);
           // console.log(res);
           distinctProperties[property] = res;
         })
-        .then(() => console.log(JSON.stringify(distinctProperties)));
+        .then(() => console.log(JSON.stringify(distinctProperties), '\n'));
     }
     // (async () => {
     //   for (let property of properties) {
