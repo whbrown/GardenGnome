@@ -10,7 +10,7 @@ class PlantList extends Component {
 
   render() {
     // console.log(this.props.plants.length)
-    // console.log(this.props.plants)
+    console.log(this.props.plants)
     return (
       <div>
         {this.props.plants ? this.props.plants.slice(0, 5).map((plant, index) => {
@@ -21,10 +21,10 @@ class PlantList extends Component {
                 {`${index}.`} {plant.plantLatinName}
               </h3>
               <h4>{commonName}</h4>
-              {/* <img alt={plant.plantImageURL} /> */}
-              <p>{plant.plantImageURL}</p>
+              <img src={plant.plantImageURL} />
+              {/* <p>{plant.plantImageURL}</p> */}
             </div>)
-    }) : ''
+    }) : <p>Nothing found.</p>
         }
       </div>
     );

@@ -4,7 +4,7 @@ import AwesomeDebouncePromise from 'awesome-debounce-promise';
 
 class PlantSearch extends Component {
   // debounces the axios requests to plant database, resolving only the last promise stored up to 500ms after last input, whereupon the GET request is then made
-  searchAPIDebounced = AwesomeDebouncePromise(this.props.getPlants, 150);
+  searchAPIDebounced = AwesomeDebouncePromise(this.props.getPlants, 500);
 
   handleChange = async event => {
     // Changes parent's state property - "searchQuery"

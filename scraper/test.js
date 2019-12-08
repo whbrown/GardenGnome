@@ -1,4 +1,69 @@
+const mongoose = require('mongoose');
 // console.log(levenshteinDistance('rosa', 'rosa'));
+const DGPlant = require('../models/DGPlant');
+
+const properties = [
+  'category',
+  'class',
+  'height',
+  'spacing',
+  'hardiness',
+  'waterRequirements',
+  'sunExposure',
+  'whereToGrow',
+  'bloomColor',
+  'seedCollecting',
+  'bloomCharacteristics',
+  'foliage',
+  'foliageColor',
+  'bloomSize',
+  'bloomShape',
+  'flowerFragrance',
+  'bloomTime',
+  'danger',
+  'habit',
+  'patentInformation',
+  'otherDetails',
+  'propagationMethods',
+  'pruningInstructions',
+];
+
+mongoose
+  .connect('mongodb://localhost/gardengnome', { useNewUrlParser: true })
+  .then(x => {
+    console.log(
+      `Connected to Mongo! Database name: "${x.connections[0].name}"`
+    );
+    const distinctProperties = {};
+    for (let property of properties) {
+      DGPlant.find()
+        .distinct(property, (err, res) => {
+          if (err) return console.error(err);
+          // console.log(res);
+          distinctProperties[property] = res;
+        })
+        .then(() => console.log(JSON.stringify(distinctProperties)));
+    }
+    // (async () => {
+    //   for (let property of properties) {
+    //     await DGPlant.find().distinct(
+    //       [property],
+    //       (err, res) => (distinctProperties[property] = res)
+    //     );
+    //     // console.log(distinctProperties);
+    //   }
+    // })();
+  })
+  .catch(err => {
+    console.error('Error connecting to mongo', err);
+  });
+
+// console.log(distinctProperties);
+// DGPlant.find().distinct('_id', (err, res) => console.log(res));
+// DGPlant.find({}).distinct('waterRequirements.0', (err, res) => {
+//   if (err) return console.error(err);
+//   console.log(res);
+// });
 
 const getLevenshteinDistance = (a, b) => {
   if (a.length === 0) return b.length;
@@ -10,12 +75,12 @@ const getLevenshteinDistance = (a, b) => {
   for (let i = 0; i <= b.length; i++) {
     matrix[i] = [i];
   }
-  
+
   // increment each column in the first row
   for (let j = 0; j <= a.length; j++) {
     matrix[0][j] = j;
   }
-  
+
   // Fill in the rest of the matrix
   for (let i = 1; i <= b.length; i++) {
     for (let j = 1; j <= a.length; j++) {
@@ -24,14 +89,14 @@ const getLevenshteinDistance = (a, b) => {
       } else {
         matrix[i][j] = Math.min(
           matrix[i - 1][j - 1] + 1, // substitution
-            matrix[i][j - 1] + 1, // insertion
-            matrix[i - 1][j] + 1 // deletion
-            );
-          }
-        }
+          matrix[i][j - 1] + 1, // insertion
+          matrix[i - 1][j] + 1 // deletion
+        );
       }
-      
-      console.log(matrix);
+    }
+  }
+
+  // console.log(matrix);
   return matrix[b.length][a.length];
 };
 
@@ -73,17 +138,15 @@ const plantVsQueryLevenschteinDistance = (plant, query) => {
       return Math.min(
         ...words.map(word => {
           // get levenschtein for full name & component words, return whichever is smaller
-          getLevenshteinDistance(query.toLowerCase(), word.toLowerCase())
-        }
-        )
+          getLevenshteinDistance(query.toLowerCase(), word.toLowerCase());
+        })
       );
     })
   );
 };
-getLevenshteinDistance('this', 'that')
+getLevenshteinDistance('this', 'that');
 
-
-// console.log(`devil's breath`.replace(/\W+/gi, '')) 
+// console.log(`devil's breath`.replace(/\W+/gi, ''))
 // .replace("^\s+|\s+$", "");
 
 // const search = ``.replace(/\W+/gi, '');
@@ -118,7 +181,48 @@ getLevenshteinDistance('this', 'that')
 //     getLevenshteinDistance(word.toLowerCase(),searchQuery.toLowerCase())
 //   )
 // ));
-let searchQuery = 'beefmaster tomato';
+
+// [
+//   'Large-Flowered',
+//   "Hybrid Tea Rose 'Grande Amore'",
+//   'Rosa',
+//   'Rosa',
+//   'Rosaceae',
+// ][('Floribunda', "Hybrid Tea Rose 'Grey Dawn'", 'Rosa', 'Rosa', 'Rosaceae')];
+// let names = [
+//   'Floribunda',
+//   "Hybrid Tea Rose 'Grey Dawn'",
+//   'Rosa',
+//   'Rosa',
+//   'Rosaceae',
+// ];
+// let query = 'rose';
+// console.log(
+//   Math.min(
+//     ...(names = names.map(name => {
+//       // name.map((nameComponent) => {} )
+//       const [...words] = name.match(/\w+/g);
+//       console.log(words);
+//       return Math.min(
+//         ...words.map(word =>
+//           getLevenshteinDistance(query.toLowerCase(), word.toLowerCase())
+//         )
+//       );
+//     }))
+//   )
+// );
+
+// console.log(names);
+// let names = ['potato', 'rotato'];
+
+// let searchQuery = 'beefmaster tomato';
+// console.log(
+//   searchQuery
+//     .trim()
+//     .match(/\w+/g)
+//     .slice(1)
+//     .find(subsequentTerm => names.includes(subsequentTerm))
+// );
 // console.log(searchQuery.split(' ').length > 1)
 // console.log(firstCommonName.match(/\w+/g))
 
