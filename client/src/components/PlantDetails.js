@@ -9,9 +9,9 @@ export default class PlantDetails extends Component {
 
 
   async componentWillMount() {
-    // if (!this.props.selectedPlant._id) {
-    //   const selectedPlant = await axios.
-    // }
+    if (this.props.selectedPlant._id) {
+      const selectedPlant = await axios.get("/api/plants/details/" + encodeURIComponent(this.props.selectedPlant._id))
+    }
   }
 
   render() {

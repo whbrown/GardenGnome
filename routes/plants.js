@@ -95,12 +95,12 @@ const plantVsQueryLevenschteinDistance = (plant, query) => {
   );
 };
 
-// * GET /api/plant/:id
+// * GET /api/plants/search/id=:id&latinName=
 
-// * GET /api/plants/
-router.get('/:id', (req, res) => {
+// * GET /api/plants/search/q=
+router.get('/search/q=:q', (req, res) => {
   // return all plants matching search query
-  const searchQuery = req.params.id;
+  const searchQuery = req.params.q;
   console.log('req.params', req.params);
   // console.log('searching for: ', searchQuery);
   function escapeRegex(text) {
@@ -211,7 +211,12 @@ router.get('/:id', (req, res) => {
     });
 });
 
-// * GET /api/plants/:id
+// * GET /api/plants/details/:id
+
+router.get('/details/:id', (req, res) => {
+  const plantId = req.params.id;
+  DGPlant.findById();
+});
 // router.get("/:id", (req, res) => {
 //   // return 1 plant w/ a given id
 //   const plantId = req.params.id;
