@@ -6,7 +6,7 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Navbar from "./components/Navbar";
 import MyGarden from "./components/MyGarden";
-import Plants from "./components/Plants";
+import PlantSearch from "./components/PlantSearch";
 import PlantDetails from "./components/PlantDetails"
 import axios from "axios";
 
@@ -40,6 +40,10 @@ class App extends Component {
     });
   };
 
+  getSelectedPlant = () => {
+
+  }
+
   setSelectedPlant = (plant) => {
     const selectedPlant = {
       _id: plant._id,
@@ -72,9 +76,9 @@ class App extends Component {
             render={props => <Signup {...props} setUser={this.setUser} />} />
           <Route path="/mygarden"
             render={props => <MyGarden {...props} user={this.state.user} setUser={this.setUser} />} />
-          <Route exact path="/plants/:id" render={props => <PlantDetails {...props} selectedPlant={this.state.selectedPlant} />} />
-          <Route exact path="/plants"
-            render={props => <Plants {...props} setSelectedPlant={this.setSelectedPlant} />} />
+          <Route exact path="/plants/search"
+            render={props => <PlantSearch {...props} setSelectedPlant={this.setSelectedPlant} />} />
+          <Route exact path="/plants/:id" render={props => <PlantDetails {...props} selectedPlant={this.state.selectedPlant} getSelectedPlant={this.getSelectedPlant} />} />
         </Switch>
 
         {/* NavBar Below */}

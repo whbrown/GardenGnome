@@ -9,9 +9,10 @@ export default class PlantDetails extends Component {
 
 
   async componentWillMount() {
-    if (this.props.selectedPlant._id) {
-      const selectedPlant = await axios.get("/api/plants/details/" + encodeURIComponent(this.props.selectedPlant._id))
-    }
+    await this.props;
+    // if (this.props.selectedPlant._id) {
+    //   const selectedPlant = await axios.get("/api/plants/details/" + encodeURIComponent(this.props.selectedPlant._id))
+    // }
   }
 
   render() {
@@ -20,7 +21,7 @@ export default class PlantDetails extends Component {
 
     return (
       <div>
-        <Link to={`/plants/`}>Back</Link>
+        <Link to={`/plants/search`}>Back</Link>
         <H2>Details</H2>
         <PlantCard>
           <div>
