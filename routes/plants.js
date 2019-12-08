@@ -1,19 +1,19 @@
 const express = require('express');
 
 const router = express.Router();
+const mongoose = require('mongoose');
 const User = require('../models/User');
 const Plant = require('../models/Plant');
 const PersonalPlant = require('../models/PersonalPlant');
 
 // const mongoose = require('mongoose');
-const mongoose = require('mongoose');
 const DGPlant = require('../models/DGPlant');
 const getLevenshteinDistance = require('../utils/getLevenshteinDistance');
 
 // GET /api/plants/mygarden
-router.get("/mygarden", (req, res) => {
+router.get('/mygarden', (req, res) => 
   // Return your whole garden
-  return User.findById(req.user._id)
+   User.findById(req.user._id)
     .populate({
       path: "garden",
       // model: "PersonalPlant",
@@ -28,13 +28,13 @@ router.get("/mygarden", (req, res) => {
     })
     .catch(err => {
       res.status(500).json(err);
-    });
-});
+    })
+);
 
 // POST /api/plants
-router.post("/mygarden", (req, res) => {
+router.post('/mygarden', (req, res) => 
   // Add a plant to your garden
-  return PersonalPlant.create({
+   PersonalPlant.create({
     name: "My Abelia Engleriana",
     owner: req.user._id,
     plantId: "5de850e4d65f1b61b834191c",
@@ -61,21 +61,52 @@ router.post("/mygarden", (req, res) => {
     })
     .catch(err => {
       res.status(500).json(err);
-    });
-});
+    })
+);
+const plantVsQueryLevenschteinDistance = (plant, query) => {
+  let names = [];
+  names = names
+    .concat(plant.plantCommonNames)
+    .concat([plant.plantLatinName.trim()])
+    .concat(plant.taxonomicInfo.plantGenus.match(/[a-zA-Z-]+/g)[0].trim())
+    .concat(plant.taxonomicInfo.plantFamily.match(/[a-zA-Z-]+/g)[0].trim());
+  Math.min(
+    ...(names = names.map(name => {
+      const [...componentWords] = name.match(/[\w']+/g);
+
+      return Math.min(
+        ...componentWords.map(word =>
+          getLevenshteinDistance(query.toLowerCase(), word.toLowerCase())
+        )
+      );
+    }))
+  );
+};
 
 // GET /api/plants
 router.get('/:id', (req, res) => {
   // return all plants matching search query
   const searchQuery = req.params.id;
-  console.log('searching for: ', searchQuery);
+  // console.log('searching for: ', searchQuery);
   function escapeRegex(text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
   }
   // Plant.find({ plantCommonName: /`${searchQuery}`/i })
-  console.log('sending search', searchQuery)
-  let searchRegExp = new RegExp(searchQuery, 'i');
-  DGPlant.find({
+  // console.log('sending search', searchQuery);
+  // console.log('typeof search', typeof searchQuery);
+  if (searchQuery === 'undefined') {
+    return;
+  }
+  // const queryWords = searchQuery.trim().split(' ');
+  let processedSearchQuery = searchQuery.trim();
+  // console.log('split query:', searchQuery.trim().split(' ')[0]);
+  // let searchRegExp = new RegExp(searchQuery, 'i');
+  let searchRegExp = new RegExp(
+    escapeRegex(processedSearchQuery.split(' ')[0]),
+    'i'
+  );
+  console.log('search param:', searchRegExp);
+  return DGPlant.find({
     $or: [
       { plantLatinName: searchRegExp },
       { plantCommonNames: { $in: [searchRegExp] } },
@@ -83,87 +114,100 @@ router.get('/:id', (req, res) => {
     ],
   })
     .sort({ plantComments: -1 })
-    .limit(200)
+    .limit(300)
     .exec()
+    .then(
+      plants =>
+        // if (!plants.length) return res.json(null);
+        // if (!plants.length && searchQuery.split(' ').length > 1) {
+        //   console.log('split ');
+        //   searchRegExp = new RegExp(searchQuery.split(' ')[0], 'i');
+        //   return DGPlant.find({
+        //     $or: [
+        //       { plantLatinName: searchRegExp },
+        //       { plantCommonNames: { $in: [searchRegExp] } },
+        //       { 'taxonomicInfo.plantGenus': searchRegExp },
+        //     ],
+        //   })
+        //     .sort({ plantComments: -1 })
+        //     .limit(200)
+        //     .exec();
+        // }
+        plants
+    )
     .then(plants => {
-      // if (!plants.length) return res.json(null);
-      if (!plants.length && searchQuery.split(' ').length > 1) {
-        console.log('split ')
-        searchRegExp = new RegExp(searchQuery.split(' ')[0], 'i');
-        return DGPlant.find({
-          $or: [
-            { plantLatinName: searchRegExp },
-            { plantCommonNames: { $in: [searchRegExp] } },
-            { 'taxonomicInfo.plantGenus': searchRegExp },
-          ],
-        })
-          .sort({ plantComments: -1 })
-          .limit(200)
-          .exec()
-      }
-      return plants;
-    }).then(
-      plants => {
-        if (!plants.length) return res.json(null);
-        // TODO: if empty, split the searchQuery on spaces and make a new query with the first word, 
-        // returning that to the front end. compromise due to the inability of mongodb
-        // to handle fuzzy requests like elasticsearch
-        // const exactMatch = new RegExp(`^${searchQuery}$`, 'i');
-        const plantVsQueryLevenschteinDistance = (plant, query) => {
-          let names = [];
-
-          names = names
-            .concat(plant.plantCommonNames)
-            .concat([plant.plantLatinName])
-            .concat(
-              plant.taxonomicInfo.plantGenus
-                .match(/[a-zA-Z-]+/g)
-            )
-            .concat(
-              plant.taxonomicInfo.plantFamily
-                .match(/[a-zA-Z-]+/g)
-                .filter(word => !word.includes('-'))
-            );
-
-          return Math.min(
-            ...names.map(name => {
-              const words = name.match(/\w+/g);
-              return Math.min(
-                ...words.map(word =>
-                  getLevenshteinDistance(query.toLowerCase(), word.toLowerCase())
-                )
-              );
-            })
-          );
-        };
-        // console.time();
-        console.time('sort results')
-        plants.sort(
-          (a, b) => {
-            // check if exact levenschtein match on first common name, excluding cultivar name
-            const plantName = a.plantCommonNames[0].match(/([\w\s])+/g)[0].match(/\w+/g);
-            if (Math.min(
+      if (!plants.length) return res.json(null);
+      // TODO: if empty, split the searchQuery on spaces and make a new query with the first word,
+      // returning that to the front end. compromise due to the inability of mongodb
+      // to handle fuzzy requests like elasticsearch
+      // const exactMatch = new RegExp(`^${searchQuery}$`, 'i');
+      // console.time();
+      console.time('sort results');
+      plants
+        .sort((a, b) => {
+          // check if exact levenschtein match on first common name, excluding cultivar name
+          const plantName = a.plantCommonNames[0]
+            .match(/([\w\s])+/g)[0]
+            .match(/\w+/g);
+          if (
+            Math.min(
               ...plantName.map(word =>
-                getLevenshteinDistance(word.toLowerCase(), searchQuery.toLowerCase())
+                getLevenshteinDistance(
+                  word.toLowerCase(),
+                  processedSearchQuery.toLowerCase()
+                )
               )
-            ) === 0) return -1;
-            // check levenschtein match for all other names
-            return plantVsQueryLevenschteinDistance(a, searchQuery) -
-              plantVsQueryLevenschteinDistance(b, searchQuery)
-          }
-        )
-          .sort((a, b) => {
-            // final sort pass to prioritize plants with pictures (decent heuristic for relevance & looks nicer)
-            if (a.plantImageURL && !b.plantImageURL) return -1;
-            else if (b.plantImageURL && !a.plantImageURL) return 1;
-          })
-          ;
-        // console.log('SUCCESSFUL Router.get FIND: ', plants);
-        console.timeEnd('sort results')
-        return res.json(plants);
-      })
+            ) === 0
+          )
+            return -1;
+          // check levenschtein match for all other names
+          const levenschteinA = plantVsQueryLevenschteinDistance(
+            a,
+            processedSearchQuery
+          );
+          const levenschteinB = plantVsQueryLevenschteinDistance(
+            b,
+            processedSearchQuery
+          );
+          // if (levenschteinA - levenschteinB === 0 && queryWords.length > 1) {
+          //   const newQuery = queryWords[1];
+          //   return (
+          //     plantVsQueryLevenschteinDistance(a, newQuery) -
+          //     plantVsQueryLevenschteinDistance(b, newQuery)
+          //   );
+          // }
+          return levenschteinA - levenschteinB;
+        })
+        .sort((a, b) => {
+          // final sort pass to prioritize plants with pictures (decent heuristic for relevance & looks nicer)
+          if (a.plantImageURL && !b.plantImageURL) return -1;
+          if (b.plantImageURL && !a.plantImageURL) return 1;
+          return 0;
+          // const newQuery = queryWords[1];
+          // console.log(newQuery);
+          // return (
+          //   plantVsQueryLevenschteinDistance(a, newQuery) -
+          //   plantVsQueryLevenschteinDistance(b, newQuery)
+          // );
+          // return (
+          //   console.log()
+          //   plantVsQueryLevenschteinDistance(
+          //     a,
+          //     searchQuery.trim().split(' ')[1]
+          //   ) -
+          //   plantVsQueryLevenschteinDistance(
+          //     b,
+          //     searchQuery.trim().split(' ')[1]
+          //   )
+          // );
+        });
+      // console.log('SUCCESSFUL Router.get FIND: ', plants);
+      console.timeEnd('sort results');
+      return res.json(plants);
+    })
     .catch(err => {
-      return res.status(500).json(err);
+      console.error(err);
+      res.status(500).json(err);
     });
 });
 
