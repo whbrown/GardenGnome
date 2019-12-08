@@ -6,7 +6,7 @@ import PlantSearch from "./PlantSearch";
 class Plants extends Component {
   state = {
     filteredPlants: [],
-    searchQuery: ``
+    searchQuery: ``,
     // back to top button
   };
 
@@ -14,7 +14,9 @@ class Plants extends Component {
     return this.setState({
       filteredPlants: plants
     })
-  } 
+  }
+
+  // getCurrentPlant = () => 
 
   getPlants = (searchQuery) => {
     console.log('send axios database query', searchQuery);
@@ -38,7 +40,7 @@ class Plants extends Component {
       <div className="plants-container">
         <h2>Find a plant</h2>
         <PlantSearch getPlants={this.getPlants} setQuery={this.setQuery} searchQuery={this.state.searchQuery} setFilteredPlants={this.setFilteredPlants}/>
-        <PlantList plants={this.state.filteredPlants} />
+        <PlantList plants={this.state.filteredPlants} setSelectedPlant={this.props.setSelectedPlant} />
       </div>
     );
   }

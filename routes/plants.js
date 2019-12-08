@@ -1,29 +1,27 @@
 const express = require('express');
-
-const router = express.Router();
 const mongoose = require('mongoose');
 const User = require('../models/User');
-const Plant = require('../models/Plant');
-const PersonalPlant = require('../models/PersonalPlant');
-
-// const mongoose = require('mongoose');
+// const Plant = require('../models/Plant');
 const DGPlant = require('../models/DGPlant');
+const PersonalPlant = require('../models/PersonalPlant');
 const getLevenshteinDistance = require('../utils/getLevenshteinDistance');
+const colours = require('../utils/colours.json');
 
-// GET /api/plants/mygarden
-router.get('/mygarden', (req, res) => 
+const router = express.Router();
+// * GET /api/plants/mygarden
+router.get('/mygarden', (req, res) =>
   // Return your whole garden
-   User.findById(req.user._id)
+  User.findById(req.user._id)
     .populate({
-      path: "garden",
+      path: 'garden',
       // model: "PersonalPlant",
       populate: {
-        path: "plantId",
+        path: 'plantId',
         // model: "Plant"
-      }
+      },
     })
     .then(user => {
-      console.log("HELLOOOO?:", user)
+      console.log('HELLOOOO?:', user);
       res.status(200).json(user);
     })
     .catch(err => {
@@ -31,62 +29,79 @@ router.get('/mygarden', (req, res) =>
     })
 );
 
-// POST /api/plants
-router.post('/mygarden', (req, res) => 
+// * POST /api/plants
+router.post('/mygarden', (req, res) =>
   // Add a plant to your garden
-   PersonalPlant.create({
-    name: "My Abelia Engleriana",
+  PersonalPlant.create({
+    name: 'My Abelia Engleriana',
     owner: req.user._id,
-    plantId: "5de850e4d65f1b61b834191c",
-  }).then(personalPlant => {
-    // Update the user's document by adding the new plant into their garden array
-    return User.findByIdAndUpdate(req.user._id,
-      {
-        $push: { garden: personalPlant._id }
-      },
-      { new: true })
-      // Populate the array of plants in garden for use on the front end
-      .populate({
-        path: "garden",
-        // model: "PersonalPlant",
-        populate: {
-          path: "plantId",
-          model: "Plant"
-        }
-      })
+    plantId: '5de850e4d65f1b61b834191c',
   })
+    .then(personalPlant =>
+      // Update the user's document by adding the new plant into their garden array
+      User.findByIdAndUpdate(
+        req.user._id,
+        {
+          $push: { garden: personalPlant._id },
+        },
+        { new: true }
+      )
+        // Populate the array of plants in garden for use on the front end
+        .populate({
+          path: 'garden',
+          // model: "PersonalPlant",
+          populate: {
+            path: 'plantId',
+            model: 'Plant',
+          },
+        })
+    )
     .then(user => {
-      console.log('NEW USER WITH NEW PLANT ADDED TO GARDEN: ==> ', user)
+      console.log('NEW USER WITH NEW PLANT ADDED TO GARDEN: ==> ', user);
       res.status(200).json(user);
     })
     .catch(err => {
       res.status(500).json(err);
     })
 );
+
 const plantVsQueryLevenschteinDistance = (plant, query) => {
   let names = [];
+
   names = names
     .concat(plant.plantCommonNames)
-    .concat([plant.plantLatinName.trim()])
-    .concat(plant.taxonomicInfo.plantGenus.match(/[a-zA-Z-]+/g)[0].trim())
-    .concat(plant.taxonomicInfo.plantFamily.match(/[a-zA-Z-]+/g)[0].trim());
-  Math.min(
-    ...(names = names.map(name => {
-      const [...componentWords] = name.match(/[\w']+/g);
-
+    .concat([plant.plantLatinName])
+    .concat(
+      plant.taxonomicInfo.plantGenus
+        .match(/[a-zA-Z-]+/g)
+        .filter(word => !word.includes('-'))
+    )
+    .concat(
+      plant.taxonomicInfo.plantFamily
+        .match(/[a-zA-Z-]+/g)
+        .filter(word => !word.includes('-'))
+    )
+    .filter(word => word);
+  return Math.min(
+    ...names.map(name => {
+      const words = name.match(/\w+/g);
       return Math.min(
-        ...componentWords.map(word =>
+        ...words.map(word =>
+          // get levenschtein for full name & component words, return whichever is smaller
           getLevenshteinDistance(query.toLowerCase(), word.toLowerCase())
         )
       );
-    }))
+    })
   );
 };
 
-// GET /api/plants
+// * GET /api/plant/:id
+
+// * GET /api/plants/
 router.get('/:id', (req, res) => {
   // return all plants matching search query
   const searchQuery = req.params.id;
+  console.log('req.params', req.params);
   // console.log('searching for: ', searchQuery);
   function escapeRegex(text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
@@ -99,111 +114,96 @@ router.get('/:id', (req, res) => {
   }
   // const queryWords = searchQuery.trim().split(' ');
   let processedSearchQuery = searchQuery.trim();
+  console.log('processed search query is', processedSearchQuery);
   // console.log('split query:', searchQuery.trim().split(' ')[0]);
   // let searchRegExp = new RegExp(searchQuery, 'i');
-  let searchRegExp = new RegExp(
-    escapeRegex(processedSearchQuery.split(' ')[0]),
-    'i'
-  );
+  const splitQuery = processedSearchQuery.split(' ');
+  let searchRegExp =
+    colours.includes(splitQuery[1]) && splitQuery.length > 1
+      ? new RegExp(escapeRegex(splitQuery[1]), 'i')
+      : new RegExp(escapeRegex(splitQuery[0]), 'i');
   console.log('search param:', searchRegExp);
-  return DGPlant.find({
-    $or: [
-      { plantLatinName: searchRegExp },
-      { plantCommonNames: { $in: [searchRegExp] } },
-      { 'taxonomicInfo.plantGenus': searchRegExp },
-    ],
-  })
+  console.time('MongoDB request');
+  // TODO: add projections to limit data retrieval
+  return DGPlant.find(
+    {
+      $or: [
+        { plantLatinName: searchRegExp },
+        { plantCommonNames: { $in: [searchRegExp] } },
+        { 'taxonomicInfo.plantGenus': searchRegExp },
+      ],
+    },
+    {
+      plantLatinName: 1,
+      plantCommonNames: 1,
+      waterRequirements: 1,
+      taxonomicInfo: 1,
+      plantImageURL: 1,
+      hardiness: 1,
+      sunExposure: 1,
+      danger: 1,
+      _id: 1,
+    }
+  )
     .sort({ plantComments: -1 })
-    .limit(300)
+    .limit(2000)
     .exec()
-    .then(
-      plants =>
-        // if (!plants.length) return res.json(null);
-        // if (!plants.length && searchQuery.split(' ').length > 1) {
-        //   console.log('split ');
-        //   searchRegExp = new RegExp(searchQuery.split(' ')[0], 'i');
-        //   return DGPlant.find({
-        //     $or: [
-        //       { plantLatinName: searchRegExp },
-        //       { plantCommonNames: { $in: [searchRegExp] } },
-        //       { 'taxonomicInfo.plantGenus': searchRegExp },
-        //     ],
-        //   })
-        //     .sort({ plantComments: -1 })
-        //     .limit(200)
-        //     .exec();
-        // }
-        plants
-    )
+    .then(plants => {
+      console.timeEnd('MongoDB request');
+      return plants;
+    })
     .then(plants => {
       if (!plants.length) return res.json(null);
-      // TODO: if empty, split the searchQuery on spaces and make a new query with the first word,
-      // returning that to the front end. compromise due to the inability of mongodb
-      // to handle fuzzy requests like elasticsearch
-      // const exactMatch = new RegExp(`^${searchQuery}$`, 'i');
-      // console.time();
       console.time('sort results');
       plants
         .sort((a, b) => {
-          // check if exact levenschtein match on first common name, excluding cultivar name
-          const plantName = a.plantCommonNames[0]
-            .match(/([\w\s])+/g)[0]
-            .match(/\w+/g);
-          if (
-            Math.min(
-              ...plantName.map(word =>
-                getLevenshteinDistance(
-                  word.toLowerCase(),
-                  processedSearchQuery.toLowerCase()
-                )
-              )
-            ) === 0
-          )
-            return -1;
-          // check levenschtein match for all other names
-          const levenschteinA = plantVsQueryLevenschteinDistance(
-            a,
-            processedSearchQuery
-          );
-          const levenschteinB = plantVsQueryLevenschteinDistance(
-            b,
-            processedSearchQuery
-          );
-          // if (levenschteinA - levenschteinB === 0 && queryWords.length > 1) {
-          //   const newQuery = queryWords[1];
-          //   return (
-          //     plantVsQueryLevenschteinDistance(a, newQuery) -
-          //     plantVsQueryLevenschteinDistance(b, newQuery)
-          //   );
-          // }
+          const levenschteinA = processedSearchQuery
+            .toLowerCase()
+            .split(' ')
+            .reduce(
+              (levenschteinSum, componentQueryTerm) =>
+                levenschteinSum +
+                plantVsQueryLevenschteinDistance(a, componentQueryTerm),
+              0
+            );
+          const levenschteinB = processedSearchQuery
+            .toLowerCase()
+            .split(' ')
+            .reduce(
+              (levenschteinSum, componentQueryTerm) =>
+                // console.log(componentQueryTerm);
+                levenschteinSum +
+                plantVsQueryLevenschteinDistance(b, componentQueryTerm),
+              0
+            );
           return levenschteinA - levenschteinB;
         })
         .sort((a, b) => {
           // final sort pass to prioritize plants with pictures (decent heuristic for relevance & looks nicer)
           if (a.plantImageURL && !b.plantImageURL) return -1;
           if (b.plantImageURL && !a.plantImageURL) return 1;
+          const plantName = a.plantCommonNames[0]
+            .match(/([\w\s])+/g)[0]
+            .match(/\w+/g);
+          // console.log(plantName);
+          // ! comment out this sort if there's performance issues:
+          // maybe could have cultivar name give an extra cost in the levenstein implementation to bypass the need for this sort
+          if (
+            Math.min(
+              ...plantName.map(word =>
+                getLevenshteinDistance(
+                  word.toLowerCase(),
+                  searchQuery.toLowerCase()
+                )
+              )
+            ) === 0
+          )
+            return -1;
           return 0;
-          // const newQuery = queryWords[1];
-          // console.log(newQuery);
-          // return (
-          //   plantVsQueryLevenschteinDistance(a, newQuery) -
-          //   plantVsQueryLevenschteinDistance(b, newQuery)
-          // );
-          // return (
-          //   console.log()
-          //   plantVsQueryLevenschteinDistance(
-          //     a,
-          //     searchQuery.trim().split(' ')[1]
-          //   ) -
-          //   plantVsQueryLevenschteinDistance(
-          //     b,
-          //     searchQuery.trim().split(' ')[1]
-          //   )
-          // );
         });
-      // console.log('SUCCESSFUL Router.get FIND: ', plants);
+      console.log(`query returned ${plants.length} results.`);
       console.timeEnd('sort results');
-      return res.json(plants);
+      return res.json(plants.slice(0, 200));
     })
     .catch(err => {
       console.error(err);
@@ -211,7 +211,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
-// GET /api/plants/:id
+// * GET /api/plants/:id
 // router.get("/:id", (req, res) => {
 //   // return 1 plant w/ a given id
 //   const plantId = req.params.id;
