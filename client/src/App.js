@@ -20,6 +20,8 @@ import axios from "axios";
 class App extends Component {
   state = {
     user: this.props.user,
+    filteredPlants: [],
+    searchQuery: ``,
     selectedPlant: {
       _id: null,
       plantLatinName: '',
@@ -34,6 +36,19 @@ class App extends Component {
       }
     }
   };
+
+  setFilteredPlants = (plants) => {
+    return this.setState({
+      filteredPlants: plants
+    })
+  }
+
+  setQuery = (searchQuery) => {
+    const sanitizedInput = searchQuery.replace(/[<>.,/;:+_*&^%$#@!`~{}[\]|\\]/g, '');
+    this.setState({
+      searchQuery: sanitizedInput
+    }, () => console.log(this.state.searchQuery))
+  }
 
   setUser = user => {
     this.setState({
@@ -61,6 +76,7 @@ class App extends Component {
   }
 
   render() {
+    console.log('appjs state', this.state);
     return (
       <div className="App">
         <Switch>
@@ -75,7 +91,7 @@ class App extends Component {
           <Route path="/gnomes"
             render={props => <Gnomes {...props} user={this.state.user} setUser={this.setUser} />} />
           <Route exact path="/plants/search"
-            render={props => <PlantSearch {...props} setSelectedPlant={this.setSelectedPlant} />} />
+            render={props => <PlantSearch {...props} setQuery={this.setQuery} searchQuery={this.state.searchQuery} setFilteredPlants={this.setFilteredPlants} filteredPlants={this.state.filteredPlants} setSelectedPlant={this.setSelectedPlant} />} />
           <Route exact path="/plants/:id" render={props => <PlantDetails {...props} selectedPlant={this.state.selectedPlant} />} />
         </Switch>
 

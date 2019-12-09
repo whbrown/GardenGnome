@@ -5,23 +5,10 @@ import SearchBar from "./SearchBar";
 import BackButton from './reuse/BackButton'
 
 class PlantSearch extends Component {
-  state = {
-    filteredPlants: [],
-    searchQuery: ``,
-    // back to top button
-  };
 
   handleClick = () => {
     this.props.history.goBack()
   }
-
-  setFilteredPlants = (plants) => {
-    return this.setState({
-      filteredPlants: plants
-    })
-  }
-
-  // getCurrentPlant = () => 
 
   getPlants = (searchQuery) => {
     console.log('send axios database query', searchQuery);
@@ -29,25 +16,19 @@ class PlantSearch extends Component {
     return axios.get("/api/plants/search/" + encodeURIComponent(searchQuery));
   };
 
-  setQuery = (searchQuery) => {
-    const sanitizedInput = searchQuery.replace(/[<>.,/;:+_*&^%$#@!`~{}[\]|\\]/g, '');
-    this.setState({
-      searchQuery: sanitizedInput
-    }, () => console.log(this.state.searchQuery))
-  }
-
   componentDidMount() {
     this.getPlants();
   }
 
   render() {
+    // console.log('plantSearch props', this.props);
     return (
       <div className="plants-container">
         <BackButton src="../../assets/back-arrow.svg" alt="back-arrow" onClick={this.handleClick} />
         <h2>Find a plant</h2>
-        <SearchBar getPlants={this.getPlants} setQuery={this.setQuery} searchQuery={this.state.searchQuery} setFilteredPlants={this.setFilteredPlants} />
-        <PlantList plants={this.state.filteredPlants} setSelectedPlant={this.props.setSelectedPlant} />
-      </div>
+        <SearchBar getPlants={this.getPlants} setQuery={this.props.setQuery} searchQuery={this.props.searchQuery} setFilteredPlants={this.props.setFilteredPlants}/>
+        <PlantList filteredPlants={this.props.filteredPlants} setSelectedPlant={this.props.setSelectedPlant} />
+      </div >
     );
   }
 }

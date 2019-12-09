@@ -32,8 +32,8 @@ export default class PlantDetails extends Component {
   }
 
   render() {
-    console.log(this.props)
-    console.log('this.state:', this.state);
+    // console.log(this.props)
+    // console.log('this.state:', this.state);
 
 
 
