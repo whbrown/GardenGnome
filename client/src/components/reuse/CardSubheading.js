@@ -1,11 +1,11 @@
 import styled from 'styled-components'
 
-const H4 = styled.h4`
+const CardSubheading = styled.p`
   margin: 0 0.5rem;
-  font-size: 1.1rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  color: rgb(37, 54, 41);
+  color: rgb(110, 110, 110);
   text-align: ${props => props.textAlign};
 `
 
-export default H4
+export default CardSubheading

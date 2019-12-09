@@ -15,7 +15,7 @@ const Nav = styled.nav`
   flex-direction: row;
   justify-content: space-around;
   font-size: 12px;
-;
+  text-align: center;
   box-shadow: 0 -1px 5px rgba(0,0,0,.1);
 `
 const P = styled.p`
@@ -41,11 +41,11 @@ const Navbar = props => {
     <Nav className="navbar-nav fixed-bottom container-fluid">
       {props.user ? (
         <>
-          <Link className="nav-item nav-link" to="/mygarden">
+          <Link className="nav-item nav-link" to="/mygarden/myplants">
             <Img src="../../assets/leaf.svg" alt="my garden" height="30px" />
             <P>Garden</P >
           </Link>
-          <Link className="nav-item nav-link" to="/">
+          <Link className="nav-item nav-link" to="/gnomes">
             <Img src="../../assets/map.svg" alt="local gnomes" height="30px" />
             <P>Gnomes</P >
           </Link>

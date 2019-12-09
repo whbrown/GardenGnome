@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema(
   {
-    profileImage: String,
+    imageUrl: String,
     username: String,
     password: String,
     city: String,
@@ -16,6 +16,7 @@ const userSchema = new Schema(
     },
     followers: [String],
     following: [String],
+    wishList: [{ type: Schema.Types.ObjectId, ref: 'Plant' }],
     preferences: {
       plantingSetting: [String],
       soil: {

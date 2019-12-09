@@ -10,7 +10,7 @@ const User = require('../models/User');
 
 // SIGNING UP:
 router.post('/signup', (req, res, next) => {
-  const { username, password } = req.body;
+  const { username, password, imageUrl } = req.body;
 
   if (!username) {
     return res.status(400).json({ message: 'Username is invalid' });
@@ -29,7 +29,7 @@ router.post('/signup', (req, res, next) => {
       return bcrypt
         .genSalt()
         .then(salt => bcrypt.hash(password, salt))
-        .then(hash => User.create({ username, password: hash }))
+        .then(hash => User.create({ username, password: hash, imageUrl }))
         .then(newUser => {
           // passport login
           req.login(newUser, err => {

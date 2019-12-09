@@ -10,9 +10,10 @@ const mongoose = require('mongoose');
 const DGPlant = require('../models/DGPlant');
 const getLevenshteinDistance = require('../utils/getLevenshteinDistance');
 
+
+/* ------------------------------------------------------ Return your whole garden ------------------------------------------------------ */
 // GET /api/plants/mygarden
 router.get("/mygarden", (req, res) => {
-  // Return your whole garden
   return User.findById(req.user._id)
     .populate({
       path: "garden",
@@ -31,9 +32,9 @@ router.get("/mygarden", (req, res) => {
     });
 });
 
+/* ----------------------------------------------------- Add a plant to your garden ----------------------------------------------------- */
 // POST /api/plants
 router.post("/mygarden", (req, res) => {
-  // Add a plant to your garden
   return PersonalPlant.create({
     name: "My Abelia Engleriana",
     owner: req.user._id,
@@ -64,9 +65,18 @@ router.post("/mygarden", (req, res) => {
     });
 });
 
-// GET /api/plants
+/* ---------------------------------------------------- RETURN ALL USERS IN DATABASE ---------------------------------------------------- */
+// GET /api/plants/gnomes
+router.get('/gnomes', (req, res) => {
+  return User.find()
+    .then(users => {
+      res.json(users)
+    })
+})
+
+/* ----------------------------------------------- return all plants matching search query ---------------------------------------------- */
+// GET /api/plants/:id
 router.get('/:id', (req, res) => {
-  // return all plants matching search query
   const searchQuery = req.params.id;
   console.log('searching for: ', searchQuery);
   function escapeRegex(text) {
@@ -166,6 +176,8 @@ router.get('/:id', (req, res) => {
       return res.status(500).json(err);
     });
 });
+
+
 
 // GET /api/plants/:id
 // router.get("/:id", (req, res) => {

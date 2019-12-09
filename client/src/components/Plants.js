@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import axios from "axios";
 import PlantList from "./PlantList";
 import PlantSearch from "./PlantSearch";
+import PageHeading from './reuse/PageHeading'
+
 
 class Plants extends Component {
   state = {
@@ -14,7 +16,7 @@ class Plants extends Component {
     return this.setState({
       filteredPlants: plants
     })
-  } 
+  }
 
   getPlants = (searchQuery) => {
     console.log('send axios database query', searchQuery);
@@ -36,8 +38,8 @@ class Plants extends Component {
   render() {
     return (
       <div className="plants-container">
-        <h2>Find a plant</h2>
-        <PlantSearch getPlants={this.getPlants} setQuery={this.setQuery} searchQuery={this.state.searchQuery} setFilteredPlants={this.setFilteredPlants}/>
+        <PageHeading>Find a plant</PageHeading>
+        <PlantSearch getPlants={this.getPlants} setQuery={this.setQuery} searchQuery={this.state.searchQuery} setFilteredPlants={this.setFilteredPlants} />
         <PlantList plants={this.state.filteredPlants} />
       </div>
     );

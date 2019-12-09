@@ -73,15 +73,14 @@ app.use(
 // ROUTES MIDDLEWARE STARTS HERE:
 
 const index = require('./routes/index');
-
 app.use('/', index);
 
 const authRoutes = require('./routes/auth');
-
 app.use('/api/auth', authRoutes);
 
 const plantRoutes = require('./routes/plants');
-
 app.use('/api/plants', plantRoutes);
+
+app.use('/api', require('./routes/file-upload-routes'));
 
 module.exports = app;

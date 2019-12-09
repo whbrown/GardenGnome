@@ -11,7 +11,8 @@ const personalPlantSchema = new Schema(
       comment: String,
       user: { type: Schema.Types.ObjectId, ref: 'User' },
       date: Date
-    }]
+    }],
+    offering: { type: Boolean, default: false },
   },
   {
     timestamps: {

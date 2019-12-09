@@ -28,7 +28,7 @@ class Login extends Component {
         // lift the data up to the App state
         this.props.setUser(data);
         // redirect to "/projects"
-        this.props.history.push("/mygarden");
+        this.props.history.push("/mygarden/myplants");
       }
     });
   };
@@ -38,26 +38,35 @@ class Login extends Component {
       <div>
         <h2>Login</h2>
         <form onSubmit={this.handleSubmit}>
-          <label htmlFor="username">Username: </label>
-          <input
-            type="text"
-            name="username"
-            id="username"
-            value={this.state.username}
-            onChange={this.handleChange}
-          />
-          <label htmlFor="password">Password: </label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            value={this.state.password}
-            onChange={this.handleChange}
-          />
+          <div className="form-group">
+            <label htmlFor="username">Username</label>
+            <input
+              type="username"
+              name="username"
+              className="form-control"
+              id="username"
+              value={this.state.username}
+              onChange={this.handleChange} />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password: </label>
+            <input
+              type="password"
+              name="password"
+              className="form-control"
+              id="password"
+              value={this.state.password}
+              onChange={this.handleChange}
+            />
+          </div>
+          <div className="form-group form-check">
+            <input type="checkbox" className="form-check-input" id="geolocationCheck" />
+            <label className="form-check-label" for="geolocationCheck">Use my current location</label>
+          </div>
           {this.state.error && (
             <p variant="danger">{this.state.error}</p>
           )}
-          <button type="submit">Log in</button>
+          <button type="submit" className="btn btn-primary">Submit</button>
         </form>
       </div>
     );

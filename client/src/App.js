@@ -6,8 +6,9 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Navbar from "./components/Navbar";
 import MyGarden from "./components/MyGarden";
+import Gnomes from "./components/Gnomes";
 import Plants from "./components/Plants";
-import axios from "axios";
+// import axios from "axios";
 
 // MAKING PUBLIC FOLDER STATIC?
 // const express = require("express");
@@ -17,7 +18,7 @@ import axios from "axios";
 
 class App extends Component {
   state = {
-    user: this.props.user
+    user: this.props.user,
   };
 
   setUser = user => {
@@ -27,9 +28,8 @@ class App extends Component {
   };
 
   render() {
-    console.log("CURRENT USER: ", this.state.user)
     return (
-      <div className="App">
+      <div className="App" >
         <Route exact path="/" render={props => <Homepage {...props} user={this.state.user} setUser={this.setUser} />} />
         <Route exact path="/login"
           render={props => <Login {...props} setUser={this.setUser} />} />
@@ -38,6 +38,8 @@ class App extends Component {
           render={props => <Signup {...props} setUser={this.setUser} />} />
         <Route path="/mygarden"
           render={props => <MyGarden {...props} user={this.state.user} setUser={this.setUser} />} />
+        <Route path="/gnomes"
+          render={props => <Gnomes {...props} user={this.state.user} setUser={this.setUser} />} />
         <Route exact path="/plants"
           render={props => <Plants {...props} />} />
 
