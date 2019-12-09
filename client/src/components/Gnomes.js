@@ -24,6 +24,10 @@ class Gnomes extends Component {
     gnomes: []
   };
 
+  handleClick = () => {
+    this.props.history.goBack()
+  }
+
   componentDidMount() {
     axios
       .get('/api/plants/gnomes')
@@ -42,7 +46,7 @@ class Gnomes extends Component {
     return (
       <div style={{ marginBottom: "80px", padding: "1rem" }}>
         {/* PLACEHOLDER ---- back arrow to be a navigation function */}
-        <BackButton src="../../assets/back-arrow.svg" alt="back-arrow" />
+        <BackButton src="../../assets/back-arrow.svg" alt="back-arrow" onClick={this.handleClick} />
         <PageHeading textAlign="left" margin="(65px 0 0 0)">Local Gnomes</PageHeading>
         {this.state.gnomes.map(user => {
           return (<ProfileCard>

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import PlantList from "./PlantList";
 import SearchBar from "./SearchBar";
+import BackButton from './reuse/BackButton'
 
 class PlantSearch extends Component {
   state = {
@@ -9,6 +10,10 @@ class PlantSearch extends Component {
     searchQuery: ``,
     // back to top button
   };
+
+  handleClick = () => {
+    this.props.history.goBack()
+  }
 
   setFilteredPlants = (plants) => {
     return this.setState({
@@ -38,8 +43,9 @@ class PlantSearch extends Component {
   render() {
     return (
       <div className="plants-container">
+        <BackButton src="../../assets/back-arrow.svg" alt="back-arrow" onClick={this.handleClick} />
         <h2>Find a plant</h2>
-        <SearchBar getPlants={this.getPlants} setQuery={this.setQuery} searchQuery={this.state.searchQuery} setFilteredPlants={this.setFilteredPlants}/>
+        <SearchBar getPlants={this.getPlants} setQuery={this.setQuery} searchQuery={this.state.searchQuery} setFilteredPlants={this.setFilteredPlants} />
         <PlantList plants={this.state.filteredPlants} setSelectedPlant={this.props.setSelectedPlant} />
       </div>
     );
