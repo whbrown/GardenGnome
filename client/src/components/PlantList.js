@@ -13,10 +13,10 @@ class PlantList extends Component {
 
   render() {
     // console.log(this.props.plants.length)
-    console.log(this.props)
+    // console.log('plantList props', this.props)
     return (
       <div>
-        {this.props.plants ? this.props.plants.slice(0, 5).map((plant, index) => {
+        {this.props.filteredPlants ? this.props.filteredPlants.slice(0, 5).map((plant, index) => {
           const commonName = plant.plantCommonNames.length > 1 ? plant.plantCommonNames[1] : plant.plantCommonNames[0];
           return (
             <Link to={`/plants/${plant._id}`} onClick={() => this.props.setSelectedPlant(plant)} key={plant._id}>
@@ -29,7 +29,7 @@ class PlantList extends Component {
                 {/* <p>{plant.plantImageURL}</p> */}
               </PlantCard>
             </Link>)
-        }) : ''
+        }) : 'Nothing found.'
         }
       </div>
     );
