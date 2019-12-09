@@ -4,9 +4,9 @@ import axios from 'axios';
 import PageHeading from '../components/reuse/PageHeading';
 import H3 from '../components/reuse/H3';
 import PlantCard from '../components/reuse/PlantCard';
+import BackButton from './reuse/BackButton'
 
 export default class PlantDetails extends Component {
-
 
   state = {
     selectedPlantInfo: {
@@ -14,6 +14,11 @@ export default class PlantDetails extends Component {
       dgInfo: {}
     }
   }
+
+  handleClick = () => {
+    this.props.history.goBack()
+  }
+
   async componentWillMount() {
     await axios.get(`../api/plants/search/id=${this.props.selectedPlant._id}&latinName=${this.props.selectedPlant.plantLatinName}`).then((res) => {
       // console.log(res.data);
@@ -23,7 +28,6 @@ export default class PlantDetails extends Component {
       }
       this.setState({
         selectedPlantInfo: selectedPlantInfo
-
       })
     });
     // if (this.props.selectedPlant._id) {
@@ -34,12 +38,9 @@ export default class PlantDetails extends Component {
   render() {
     // console.log(this.props)
     // console.log('this.state:', this.state);
-
-
-
     return (
       <div>
-        <Link to={`/plants/search`}>Back</Link>
+        <BackButton src="../../assets/back-arrow.svg" alt="back-arrow" onClick={this.handleClick} />
         <PageHeading>Details</PageHeading>
         <PlantCard>
           <div>

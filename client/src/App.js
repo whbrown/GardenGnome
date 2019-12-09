@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
+import axios from "axios";
 import './App.css';
+
+// REACT COMPONENTS:
 import Homepage from "./components/Homepage";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Navbar from "./components/Navbar";
-import MyGarden from "./components/MyGarden";
+import UserGarden from "./components/UserGarden";
 import Gnomes from "./components/Gnomes";
 import PlantSearch from "./components/PlantSearch";
 import PlantDetails from "./components/PlantDetails"
-import axios from "axios";
+import UserPlants from "./components/UserPlants"
+import UserComments from "./components/UserComments"
+import UserWishlist from "./components/UserWishlist"
 
 // MAKING PUBLIC FOLDER STATIC?
 // const express = require("express");
@@ -20,6 +25,7 @@ import axios from "axios";
 class App extends Component {
   state = {
     user: this.props.user,
+    targetUser: {},
     filteredPlants: [],
     searchQuery: ``,
     selectedPlant: {
@@ -56,6 +62,12 @@ class App extends Component {
     });
   };
 
+  setTargetUser = user => {
+    this.setState({
+      targetUser: user
+    })
+  }
+
   setSelectedPlant = (plant) => {
     const selectedPlant = {
       _id: plant._id,
@@ -82,12 +94,28 @@ class App extends Component {
         <Switch>
           <Route exact path="/" render={props => <Homepage {...props} user={this.state.user} setUser={this.setUser} />} />
           <Route exact path="/login"
-            render={props => <Login {...props} setUser={this.setUser} />} />
+            render={props => <Login {...props} user={this.state.user} setUser={this.setUser} />} />
           <Route exact path="/signup"
-            // component={Signup}
             render={props => <Signup {...props} setUser={this.setUser} />} />
-          <Route path="/mygarden"
-            render={props => <MyGarden {...props} user={this.state.user} setUser={this.setUser} />} />
+          <Route exact path="/user/:id/plants"
+            // OPTION FOR SEXIER CODE: Set a state property where you trigger to render a choice of the 3 children of UserGarden
+            render={props => (
+              <UserGarden {...props} targetUser={this.state.targetUser} setTargetUser={this.setTargetUser}>
+                <UserPlants {...props} targetUser={this.state.targetUser} setTargetUser={this.setTargetUser} />
+              </UserGarden>
+            )} />
+          <Route exact path="/user/:id/comments"
+            render={props => (
+              <UserGarden {...props} targetUser={this.state.targetUser} setTargetUser={this.setTargetUser} >
+                <UserComments {...props} targetUser={this.state.targetUser} setTargetUser={this.setTargetUser} />
+              </UserGarden>
+            )} />
+          <Route exact path="/user/:id/wishlist"
+            render={props => (
+              <UserGarden {...props} targetUser={this.state.targetUser} setTargetUser={this.setTargetUser} >
+                <UserWishlist {...props} targetUser={this.state.targetUser} setTargetUser={this.setTargetUser} />
+              </UserGarden>
+            )} />
           <Route path="/gnomes"
             render={props => <Gnomes {...props} user={this.state.user} setUser={this.setUser} />} />
           <Route exact path="/plants/search"

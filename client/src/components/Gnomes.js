@@ -49,23 +49,28 @@ class Gnomes extends Component {
         <BackButton src="../../assets/back-arrow.svg" alt="back-arrow" onClick={this.handleClick} />
         <PageHeading textAlign="left" margin="(65px 0 0 0)">Local Gnomes</PageHeading>
         {this.state.gnomes.map(user => {
-          return (<ProfileCard>
-            <Img src={user.imageUrl} alt="profile picture" />
-            <div>
-              {/* ALL THIS is placeholder items which should be replaced with a MAP function of all the profiles in the user's KM vicinity */}
-              {/* Perhaps add a simple garden icon which changes depending on how many plants the user has in their garden */}
-              <CardHeading>{user.username}</CardHeading>
-              <CardText>Garden Size: ({user.garden.length})</CardText>
-              <div style={{ display: "flex" }}>
-                <CardSubheading>Seeking:</CardSubheading>
-                <CardText>Rose</CardText>
-              </div>
-              <div style={{ display: "flex" }}>
-                <CardSubheading>Offering:</CardSubheading>
-                <CardText>-</CardText>
-              </div>
-            </div>
-          </ProfileCard>)
+          console.log("USER INFORMATION FOR EACH CARD: ", user)
+          return (
+            <Link to={`/user/${user._id}/plants`}>
+              <ProfileCard>
+                <Img src={user.imageUrl} alt="profile picture" />
+                <div>
+                  {/* ALL THIS is placeholder items which should be replaced with a MAP function of all the profiles in the user's KM vicinity */}
+                  {/* Perhaps add a simple garden icon which changes depending on how many plants the user has in their garden */}
+                  <CardHeading>{user.username}</CardHeading>
+                  <CardText>Garden Size: ({user.garden.length})</CardText>
+                  <div style={{ display: "flex" }}>
+                    <CardSubheading>Seeking:</CardSubheading>
+                    <CardText>Rose</CardText>
+                  </div>
+                  <div style={{ display: "flex" }}>
+                    <CardSubheading>Offering:</CardSubheading>
+                    <CardText>-</CardText>
+                  </div>
+                </div>
+              </ProfileCard>
+            </Link>
+          )
         })}
       </div >
     )
