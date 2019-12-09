@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from 'axios';
-import H2 from '../components/reuse/H2';
+import PageHeading from '../components/reuse/PageHeading';
 import H3 from '../components/reuse/H3';
 import PlantCard from '../components/reuse/PlantCard';
 
@@ -40,18 +40,18 @@ export default class PlantDetails extends Component {
     return (
       <div>
         <Link to={`/plants/search`}>Back</Link>
-        <H2>Details</H2>
+        <PageHeading>Details</PageHeading>
         <PlantCard>
           <div>
-    {/* <H3>{'test'}</H3> */}
+            {/* <H3>{'test'}</H3> */}
             <code>
               {JSON.stringify(this.state.selectedPlantInfo.rhsInfo)}
-              </code>
-              <br/>
-              <code>
+            </code>
+            <br />
+            <code>
               {JSON.stringify(this.state.selectedPlantInfo.dgInfo)}
-              </code>
-              {/* {[this.state.selectedPlantInfo.rhsInfo, this.state.selectedPlantInfo.dgInfo]} */}
+            </code>
+            {/* {[this.state.selectedPlantInfo.rhsInfo, this.state.selectedPlantInfo.dgInfo]} */}
           </div>
         </PlantCard>
       </div>
