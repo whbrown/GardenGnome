@@ -8,8 +8,24 @@ import PlantCard from '../components/reuse/PlantCard';
 export default class PlantDetails extends Component {
 
 
+  state = {
+    selectedPlantInfo: {
+      rhsInfo: {},
+      dgInfo: {}
+    }
+  }
   async componentWillMount() {
-    await this.props;
+    await axios.get(`../api/plants/search/id=${this.props.selectedPlant._id}&latinName=${this.props.selectedPlant.plantLatinName}`).then((res) => {
+      // console.log(res.data);
+      const selectedPlantInfo = {
+        rhsInfo: res.data.rhsInfo,
+        dgInfo: res.data.dgInfo
+      }
+      this.setState({
+        selectedPlantInfo: selectedPlantInfo
+
+      })
+    });
     // if (this.props.selectedPlant._id) {
     //   const selectedPlant = await axios.get("/api/plants/details/" + encodeURIComponent(this.props.selectedPlant._id))
     // }
@@ -17,6 +33,8 @@ export default class PlantDetails extends Component {
 
   render() {
     console.log(this.props)
+    console.log('this.state:', this.state);
+
 
 
     return (
@@ -25,7 +43,15 @@ export default class PlantDetails extends Component {
         <H2>Details</H2>
         <PlantCard>
           <div>
-    <H3>{'test'}</H3>
+    {/* <H3>{'test'}</H3> */}
+            <code>
+              {JSON.stringify(this.state.selectedPlantInfo.rhsInfo)}
+              </code>
+              <br/>
+              <code>
+              {JSON.stringify(this.state.selectedPlantInfo.dgInfo)}
+              </code>
+              {/* {[this.state.selectedPlantInfo.rhsInfo, this.state.selectedPlantInfo.dgInfo]} */}
           </div>
         </PlantCard>
       </div>

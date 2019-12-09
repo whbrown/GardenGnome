@@ -40,10 +40,6 @@ class App extends Component {
     });
   };
 
-  getSelectedPlant = () => {
-
-  }
-
   setSelectedPlant = (plant) => {
     const selectedPlant = {
       _id: plant._id,
@@ -78,7 +74,7 @@ class App extends Component {
             render={props => <MyGarden {...props} user={this.state.user} setUser={this.setUser} />} />
           <Route exact path="/plants/search"
             render={props => <PlantSearch {...props} setSelectedPlant={this.setSelectedPlant} />} />
-          <Route exact path="/plants/:id" render={props => <PlantDetails {...props} selectedPlant={this.state.selectedPlant} getSelectedPlant={this.getSelectedPlant} />} />
+          <Route exact path="/plants/:id" render={props => <PlantDetails {...props} selectedPlant={this.state.selectedPlant} />} />
         </Switch>
 
         {/* NavBar Below */}

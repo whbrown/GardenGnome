@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const User = require('../models/User');
-// const Plant = require('../models/Plant');
+const Plant = require('../models/Plant');
 const DGPlant = require('../models/DGPlant');
 const PersonalPlant = require('../models/PersonalPlant');
 const getLevenshteinDistance = require('../utils/getLevenshteinDistance');
@@ -96,6 +96,37 @@ const plantVsQueryLevenschteinDistance = (plant, query) => {
 };
 
 // * GET /api/plants/search/id=:id&latinName=
+router.get('/search/id=:id&latinName=:latinName', (req, res) => {
+  console.log('found route');
+  const plantId = req.params.id;
+  const plantLatinName = req.params.latinName;
+  return Promise.all([
+    Plant.findOne({ plantLatinName: /plantLatinName/i }),
+    DGPlant.findById(plantId),
+  ])
+    .then(([rhsInfo, dgInfo]) => {
+      const genus = new RegExp(
+        `${plantLatinName.trim().match(/^\w+/)[0]} `,
+        'i'
+      );
+      console.log('genus:', genus);
+      if (!rhsInfo) {
+        return Promise.all([
+          Plant.findOne({ plantLatinName: genus }).sort({
+            detailsPercentage: -1,
+          }),
+          dgInfo,
+        ]);
+      }
+      return [rhsInfo, dgInfo];
+    })
+
+    .then(([rhsInfo, dgInfo]) => res.json({ rhsInfo, dgInfo }))
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json(err);
+    });
+});
 
 // * GET /api/plants/search/q=
 router.get('/search/q=:q', (req, res) => {
@@ -130,7 +161,7 @@ router.get('/search/q=:q', (req, res) => {
       $or: [
         { plantLatinName: searchRegExp },
         { plantCommonNames: { $in: [searchRegExp] } },
-        { 'taxonomicInfo.plantGenus': searchRegExp },
+        // { 'taxonomicInfo.plantGenus': searchRegExp },
       ],
     },
     {
@@ -211,12 +242,6 @@ router.get('/search/q=:q', (req, res) => {
     });
 });
 
-// * GET /api/plants/details/:id
-
-router.get('/details/:id', (req, res) => {
-  const plantId = req.params.id;
-  DGPlant.findById();
-});
 // router.get("/:id", (req, res) => {
 //   // return 1 plant w/ a given id
 //   const plantId = req.params.id;
