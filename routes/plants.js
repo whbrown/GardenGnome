@@ -129,7 +129,7 @@ router.get('/search/id=:id&latinName=:latinName', (req, res) => {
 });
 
 // * GET /api/plants/search/q=
-router.get('/search/q=:q', (req, res) => {
+router.get('/search/:q', (req, res) => {
   // return all plants matching search query
   const searchQuery = req.params.q;
   console.log('req.params', req.params);

@@ -21,7 +21,7 @@ class PlantSearch extends Component {
   getPlants = (searchQuery) => {
     console.log('send axios database query', searchQuery);
     // return fetch("/api/plants/" + encodeURIComponent(searchQuery))
-    return axios.get("/api/plants/search/q=" + encodeURIComponent(searchQuery));
+    return axios.get("/api/plants/search/" + encodeURIComponent(searchQuery));
   };
 
   setQuery = (searchQuery) => {
