@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import './App.css';
 import Homepage from "./components/Homepage";
 import Signup from "./components/Signup";
@@ -7,8 +7,9 @@ import Login from "./components/Login";
 import Navbar from "./components/Navbar";
 import MyGarden from "./components/MyGarden";
 import Gnomes from "./components/Gnomes";
-import Plants from "./components/Plants";
-// import axios from "axios";
+import PlantSearch from "./components/PlantSearch";
+import PlantDetails from "./components/PlantDetails"
+import axios from "axios";
 
 // MAKING PUBLIC FOLDER STATIC?
 // const express = require("express");
@@ -19,6 +20,19 @@ import Plants from "./components/Plants";
 class App extends Component {
   state = {
     user: this.props.user,
+    selectedPlant: {
+      _id: null,
+      plantLatinName: '',
+      plantCommonNames: [],
+      plantImageURL: '',
+      sunExposure: [],
+      waterRequirements: [],
+      taxonomicInfo: {
+        plantFamily: '',
+        plantGenus: '',
+        plantSpecies: '',
+      }
+    }
   };
 
   setUser = user => {
@@ -27,21 +41,43 @@ class App extends Component {
     });
   };
 
+  setSelectedPlant = (plant) => {
+    const selectedPlant = {
+      _id: plant._id,
+      plantLatinName: plant.plantLatinName,
+      plantCommonNames: plant.plantCommonNames,
+      plantImageURL: plant.plantImageURL,
+      sunExposure: plant.sunExposure,
+      waterRequirements: plant.waterRequirements,
+      taxonomicInfo: {
+        plantFamily: plant.taxonomicInfo.plantFamily,
+        plantGenus: plant.taxonomicInfo.plantGenus,
+        plantSpecies: plant.taxonomicInfo.plantSpecies,
+      }
+    }
+    this.setState({
+      selectedPlant: { ...selectedPlant }
+    }, () => console.log(this.state));
+  }
+
   render() {
     return (
-      <div className="App" >
-        <Route exact path="/" render={props => <Homepage {...props} user={this.state.user} setUser={this.setUser} />} />
-        <Route exact path="/login"
-          render={props => <Login {...props} setUser={this.setUser} />} />
-        <Route exact path="/signup"
-          // component={Signup}
-          render={props => <Signup {...props} setUser={this.setUser} />} />
-        <Route path="/mygarden"
-          render={props => <MyGarden {...props} user={this.state.user} setUser={this.setUser} />} />
-        <Route path="/gnomes"
-          render={props => <Gnomes {...props} user={this.state.user} setUser={this.setUser} />} />
-        <Route exact path="/plants"
-          render={props => <Plants {...props} />} />
+      <div className="App">
+        <Switch>
+          <Route exact path="/" render={props => <Homepage {...props} user={this.state.user} setUser={this.setUser} />} />
+          <Route exact path="/login"
+            render={props => <Login {...props} setUser={this.setUser} />} />
+          <Route exact path="/signup"
+            // component={Signup}
+            render={props => <Signup {...props} setUser={this.setUser} />} />
+          <Route path="/mygarden"
+            render={props => <MyGarden {...props} user={this.state.user} setUser={this.setUser} />} />
+          <Route path="/gnomes"
+            render={props => <Gnomes {...props} user={this.state.user} setUser={this.setUser} />} />
+          <Route exact path="/plants/search"
+            render={props => <PlantSearch {...props} setSelectedPlant={this.setSelectedPlant} />} />
+          <Route exact path="/plants/:id" render={props => <PlantDetails {...props} selectedPlant={this.state.selectedPlant} />} />
+        </Switch>
 
         {/* NavBar Below */}
         <Route path="/"

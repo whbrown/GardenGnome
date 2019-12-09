@@ -1,46 +1,49 @@
 import React, { Component } from "react";
-import axios from 'axios';
-import AwesomeDebouncePromise from 'awesome-debounce-promise';
+import axios from "axios";
+import PlantList from "./PlantList";
+import SearchBar from "./SearchBar";
 
 class PlantSearch extends Component {
-  // debounces the axios requests to plant database, resolving only the last promise stored up to 500ms after last input, whereupon the GET request is then made
-  searchAPIDebounced = AwesomeDebouncePromise(this.props.getPlants, 150);
+  state = {
+    filteredPlants: [],
+    searchQuery: ``,
+    // back to top button
+  };
 
-  handleChange = async event => {
-    // Changes parent's state property - "searchQuery"
-    await this.props.setQuery(event.target.value);
-    // Parent's axios request based on searchQuery
-    const response = await this.searchAPIDebounced(this.props.searchQuery);
-    await this.props.setFilteredPlants(response.data);
+  setFilteredPlants = (plants) => {
+    return this.setState({
+      filteredPlants: plants
+    })
   }
 
-  // handleSubmit = event => {
-  //   event.preventDefault();
-  //   axios.get('/api/plants', {
+  // getCurrentPlant = () => 
 
-  //   })
-  // }
+  getPlants = (searchQuery) => {
+    console.log('send axios database query', searchQuery);
+    // return fetch("/api/plants/" + encodeURIComponent(searchQuery))
+    return axios.get("/api/plants/search/" + encodeURIComponent(searchQuery));
+  };
 
+  setQuery = (searchQuery) => {
+    const sanitizedInput = searchQuery.replace(/[<>.,/;:+_*&^%$#@!`~{}[\]|\\]/g, '');
+    this.setState({
+      searchQuery: sanitizedInput
+    }, () => console.log(this.state.searchQuery))
+  }
 
-  // method = debounce(() => {
+  componentDidMount() {
+    this.getPlants();
+  }
 
   render() {
     return (
-      <div>
-        <h2>Ask the Gnome for a plant by name (scientific or common) and he'll quickly check his database of over 150,000 plants!</h2>
-        {/* <label htmlFor="">Search by name: </label> */}
-        <input
-          type="text"
-          name="query"
-          id="query"
-          onChange={this.handleChange}
-          value={this.props.searchQuery}
-          placeholder={"Start typing to search by name..."} />
+      <div className="plants-container">
+        <h2>Find a plant</h2>
+        <SearchBar getPlants={this.getPlants} setQuery={this.setQuery} searchQuery={this.state.searchQuery} setFilteredPlants={this.setFilteredPlants}/>
+        <PlantList plants={this.state.filteredPlants} setSelectedPlant={this.props.setSelectedPlant} />
       </div>
     );
   }
-  // });
 }
-
 
 export default PlantSearch;

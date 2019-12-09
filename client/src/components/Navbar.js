@@ -49,7 +49,7 @@ const Navbar = props => {
             <Img src="../../assets/map.svg" alt="local gnomes" height="30px" />
             <P>Gnomes</P >
           </Link>
-          <Link className="nav-item nav-link" to="/plants">
+          <Link className="nav-item nav-link" to="/plants/search">
             <Img src="../../assets/search.svg" alt="search plants" height="30px" />
             <P>Search</P >
           </Link>
