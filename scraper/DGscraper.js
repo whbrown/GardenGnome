@@ -16,7 +16,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
   // ! update plants 1 thru 380 (they have img: https://davesgarden.comhttps://davesgarden.com/guides/pf/thumbnail.php?image=2004/08/21/ownedbycats/c4e384.jpg&widht=700&height=312)
   const browser = await puppeteer.launch();
   const mostRecentPlant = await DGPlant.findOne({}).sort({ DGID: -1 });
-  for (let DGID = mostRecentPlant.DGID + 1; DGID < 999999; DGID++) {
+  for (let DGID = mostRecentPlant.DGID + 1; DGID < 252200; DGID++) {
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(99999999);
     page.setJavaScriptEnabled(false);

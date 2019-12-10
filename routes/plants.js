@@ -96,34 +96,52 @@ const plantVsQueryLevenschteinDistance = (plant, query) => {
   );
 };
 
+// * GET /api/plants/search/genus=:genus&waterRequirements=true
+router.get('/search/genus=:genus&waterRequirements=true', (req, res) => {
+  console.log('triggered water request route');
+  const { genus } = req.params;
+  DGPlant.findOne({ 'taxonomicInfo.plantGenus': new RegExp(`^${genus}`, 'i'), 'waterRequirements.0': { $exists: true } }, { waterRequirements: 1, taxonomicInfo: 1 }).then((plant) => {
+    console.log('water request processed: ', plant);
+    return res.json(plant);
+  });
+});
+
 /* ------------------------------------------------------- SEARCHING PLANT DETAILS ------------------------------------------------------ */
 // * GET /api/plants/search/id=:id&latinName=
 router.get('/search/id=:id&latinName=:latinName', (req, res) => {
   console.log('found route');
   const plantId = req.params.id;
   const plantLatinName = req.params.latinName;
+  let matchType = [];
+  const [, genus, species, ..._] = plantLatinName.trim().match(/(^\w+) ?(x \w+|\w+)?/);
+  console.log(
+    'trimmed and matched latin name',
+    plantLatinName.trim().match(/(^\w+) ?(x \w+|\w+)?/)
+  );
+  const latinNameRegex = species === undefined ? new RegExp(`${genus}`, 'i') : new RegExp(`${genus} ${species}`, 'i');
+  console.log(latinNameRegex);
   return Promise.all([
-    Plant.findOne({ plantLatinName: /plantLatinName/i }),
+    Plant.findOne({
+      plantLatinName: latinNameRegex,
+    }).sort({ detailsPercentage: -1 }),
     DGPlant.findById(plantId),
   ])
     .then(([rhsInfo, dgInfo]) => {
-      const genus = new RegExp(
-        `${plantLatinName.trim().match(/^\w+/)[0]} `,
-        'i'
-      );
-      console.log('genus:', genus);
+      const genusRegex = new RegExp(`${genus.trim()}`, 'i');
       if (!rhsInfo) {
+        console.log('genus:', genusRegex);
+        matchType = ['genus'];
         return Promise.all([
-          Plant.findOne({ plantLatinName: genus }).sort({
+          Plant.findOne({ plantLatinName: genusRegex }).sort({
             detailsPercentage: -1,
           }),
           dgInfo,
         ]);
       }
+      matchType = ['genus', 'species'];
       return [rhsInfo, dgInfo];
     })
-
-    .then(([rhsInfo, dgInfo]) => res.json({ rhsInfo, dgInfo }))
+    .then(([rhsInfo, dgInfo]) => res.json({ rhsInfo, dgInfo, matchType }))
     .catch(err => {
       console.error(err);
       return res.status(500).json(err);
@@ -132,12 +150,11 @@ router.get('/search/id=:id&latinName=:latinName', (req, res) => {
 
 /* ---------------------------------------------------- RETURN ALL USERS IN DATABASE ---------------------------------------------------- */
 // GET /api/plants/gnomes
-router.get('/gnomes', (req, res) => {
-  return User.find()
-    .then(users => {
-      res.json(users)
-    })
-})
+router.get('/gnomes', (req, res) =>
+  User.find().then(users => {
+    res.json(users);
+  })
+);
 
 /* ----------------------------------------------- return all plants matching search query ---------------------------------------------- */
 // * GET /api/plants/search/:q
@@ -253,8 +270,6 @@ router.get('/search/:q', (req, res) => {
       res.status(500).json(err);
     });
 });
-
-
 
 // GET /api/plants/:id
 // router.get("/:id", (req, res) => {
