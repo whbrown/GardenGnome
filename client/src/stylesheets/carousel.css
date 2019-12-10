@@ -1,0 +1,99 @@
+
+.carousel-container {
+  margin: 0 auto;
+  /* padding: 50px; */
+  max-height: 20%;
+  display: flex;
+}
+
+.slider {
+  justify-self: flex-start;
+  margin: 0 auto;
+  /* height: 100%; */
+  height: 20vh;
+}
+
+.carousel-btn {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+  border: 0;
+  vertical-align: middle;
+  text-decoration: none;
+  background: transparent;
+  /* padding: 20px 5px; */
+  color: #185C2A;
+  font-size: 2rem;
+}
+
+.carousel-btn span {
+  position: relative;
+  display: inline-block;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+}
+
+.previous:hover span {
+  transform: translateX(-10px) scale(1.2);
+}
+
+.next:hover span {
+  transform: translateX(10px) scale(1.2);
+}
+
+.slider-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.slider-nav li {
+  display: flex;
+  flex: 2;
+  text-align: center;
+}
+
+.carousel-img {
+  /* max-width: 100%; */
+  width: 100%;
+  display: none;
+  box-shadow: 10px 10px 20px 0 rgba(94,47,59,0.2);
+  margin: 0 auto;
+  border-radius: 5px;
+  max-height: 100%;
+  /* height: 100%; */
+}
+
+.carousel-img.active {
+  display: block;
+  animation: fadeImg 1s;
+  /* margin: auto; */
+}
+
+.arrow {
+  flex: 0 0 15%;
+}
+
+/* .slider-nav a {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+} */
+
+.slider-nav span {
+  display: block;
+  width: 100%;
+}
+
+@keyframes fadeImg {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

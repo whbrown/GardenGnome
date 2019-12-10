@@ -26,3 +26,11 @@ code {
   height: 30px
 }
 
+/* ================== */
+/* plant details page */
+/* ================== */
+
+.plantdetails-header {
+  display:flex;
+  
+}

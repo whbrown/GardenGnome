@@ -1,10 +1,11 @@
-import styled from 'styled-components'
+import styled, {ThemeProvider} from 'styled-components';
+import theme from './theme';
 
 const PageHeading = styled.h2`
   font-weight: 800;
-  color: rgb(37, 54, 41);
+  color: ${(props) => props.theme.black};
   margin: ${props => props.margin};
   text-align: ${props => props.textAlign};
-`
+`;
 
-export default PageHeading
+export default PageHeading;

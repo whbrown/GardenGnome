@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { Route } from 'react-router-dom';
-import { Link } from "react-router-dom";
+import { Route, Link } from 'react-router-dom';
 import styled from 'styled-components'
 import axios from 'axios'
 import MyPlants from './MyPlants'
