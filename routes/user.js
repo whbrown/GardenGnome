@@ -36,8 +36,9 @@ router.get('/:id/comments', (req, res) =>
       populate: {
         path: 'plantId',
         // model: "Plant"
-      },
+      }
     })
+    .populate("comments.user")
     .then(user => {
       res.status(200).json(user);
     })
@@ -45,6 +46,57 @@ router.get('/:id/comments', (req, res) =>
       res.status(500).json(err);
     })
 );
+
+/* ------------------------------------------------------ COMMENT on user's garden ------------------------------------------------------ */
+// * PUT /api/user/:id/comment
+router.put('/:id/comment', (req, res) => {
+  console.log("WHAT'S IN THE REQ.BODY when you add a comment??: ", req.body)
+  User.findByIdAndUpdate(
+    req.params.id,
+    {
+      $push: {
+        comments:
+        {
+          user: req.user._id,
+          comment: req.body.comment,
+          date: new Date()
+        }
+      },
+    },
+    { new: true },
+  )
+    .populate("comments.user")
+    .then(user => {
+      res.json(user);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    })
+});
+/* ------------------------------------------------------ DELETE A COMMENT ------------------------------------------------------ */
+// * PUT /api/user/:id/deleteComment
+router.put('/:id/deletecomment', (req, res) => {
+  console.log("WHAT'S IN THE REQ.BODY when you remove a comment??: ", req.body)
+  User.findByIdAndUpdate(
+    req.params.id,
+    {
+      $pull: {
+        comments:
+        {
+          _id: req.body.commentId,
+        }
+      },
+    },
+    { new: true },
+  )
+    .populate("comments.user")
+    .then(user => {
+      res.json(user);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    })
+});
 
 /* ----------------------------------------------- ADD TARGET-USER TO MY "FOLLOWING" ARRAY ---------------------------------------------- */
 router.patch('/:id/following', (req, res) =>
@@ -54,9 +106,18 @@ router.patch('/:id/following', (req, res) =>
       $push: { following: req.params.id },
     },
     { new: true }
-  ).then(user => {
-    res.status(200).json(user);
+  ).populate({
+    path: 'garden',
+    // model: "PersonalPlant",
+    populate: {
+      path: 'plantId',
+      // model: "Plant"
+    },
   })
+
+    .then(user => {
+      res.status(200).json(user);
+    })
     .catch(err => {
       res.status(500).json(err);
     })
@@ -70,7 +131,60 @@ router.patch('/:id/follow', (req, res) =>
       $push: { followers: req.user._id },
     },
     { new: true }
-  ).then(user => {
+  ).populate({
+    path: 'garden',
+    // model: "PersonalPlant",
+    populate: {
+      path: 'plantId',
+      // model: "Plant"
+    },
+  }).then(user => {
+    res.status(200).json(user);
+  })
+    .catch(err => {
+      res.status(500).json(err);
+    })
+)
+
+/* ----------------------------------------------- REMOVE TARGET-USER FROM MY "FOLLOWING" ARRAY ---------------------------------------------- */
+router.patch('/:id/unfollowing', (req, res) =>
+  User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $pull: { following: req.params.id },
+    },
+    { new: true }
+  ).populate({
+    path: 'garden',
+    // model: "PersonalPlant",
+    populate: {
+      path: 'plantId',
+      // model: "Plant"
+    },
+  }).then(user => {
+    res.status(200).json(user);
+  })
+    .catch(err => {
+      res.status(500).json(err);
+    })
+)
+
+/* -------------------------------------------- ADD MYSELF TO TARGET-USER'S "FOLLOWERS" ARRAY ------------------------------------------- */
+router.patch('/:id/unfollow', (req, res) =>
+  User.findByIdAndUpdate(
+    req.params.id,
+    {
+      $pull: { followers: req.user._id },
+    },
+    { new: true }
+  ).populate({
+    path: 'garden',
+    // model: "PersonalPlant",
+    populate: {
+      path: 'plantId',
+      // model: "Plant"
+    },
+  }).then(user => {
     res.status(200).json(user);
   })
     .catch(err => {
