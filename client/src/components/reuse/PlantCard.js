@@ -7,7 +7,8 @@ const PlantCard = styled.div`
   padding: 0.5rem;
   box-shadow: 0 0px 10px rgba(0,0,0,.1);
   display: flex;
-  justify-content: center;
+  flex-direction: row;
+  /* justify-content: center; */
   flex-wrap: wrap;
   max-width: 100vw;
 `

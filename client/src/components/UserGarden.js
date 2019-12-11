@@ -11,7 +11,6 @@ import H5 from './reuse/CardHeading'
 import UserCard from './reuse/UserCard'
 import BackButton from './reuse/BackButton'
 
-
 class UserGarden extends Component {
 
   handleClick = () => {
@@ -21,10 +20,26 @@ class UserGarden extends Component {
   followUser = () => {
     axios
       .patch(`/api/user/${this.props.match.params.id}/following`)
-      .then((yourUpdatedData) => { console.log("TargetUser added to your 'following' array: ", yourUpdatedData) })
+      .then((yourUpdatedInfo) => { console.log("TargetUser added to your 'following' array: ", yourUpdatedInfo) })
       .then(() => {
         axios.patch(`/api/user/${this.props.match.params.id}/follow`)
-          .then((followedUserData) => { console.log("Added yourself to TargetUser's 'followers' array: ", followedUserData) })
+          .then((followedUser) => {
+            this.props.setTargetUser(followedUser.data)
+            console.log("Added yourself to TargetUser's 'followers' array: ", followedUser)
+          })
+      })
+  }
+
+  unfollowUser = () => {
+    axios
+      .patch(`/api/user/${this.props.match.params.id}/unfollowing`)
+      .then((yourUpdatedInfo) => { console.log("TargetUser removed from your 'following' array: ", yourUpdatedInfo) })
+      .then(() => {
+        axios.patch(`/api/user/${this.props.match.params.id}/unfollow`)
+          .then((unfollowedUser) => {
+            this.props.setTargetUser(unfollowedUser.data)
+            console.log("Removed yourself from TargetUser's 'followers' array: ", unfollowedUser)
+          })
       })
   }
 
@@ -39,6 +54,7 @@ class UserGarden extends Component {
 
   // // Do a componentDidMount where you do a GET request for all the garden plants
   componentDidUpdate(prevProps) {
+    // if (prevProps.match.params.id !== this.props.match.params.id
     if (prevProps.match.params.id !== this.props.match.params.id
       // || prevProps.targetUser.followers !== this.props.targetUser.followers
     ) {
@@ -46,10 +62,7 @@ class UserGarden extends Component {
     }
   }
 
-
-
   render() {
-    console.log("CURRENT PROP", this.props.targetUser)
     return (
       <div style={{ marginBottom: "80px", padding: "1rem" }}>
         <BackButton src="../../assets/back-arrow.svg" alt="back-arrow" onClick={this.handleClick} />
@@ -66,9 +79,10 @@ class UserGarden extends Component {
               <H3>Following ({this.props.targetUser.following && this.props.targetUser.following.length})</H3>
             </div>
             {/* Conditional rendering of button - prevent you from following yourself */}
-            {this.props.match.params.id !== this.props.user._id &&
-              // both follows user AND re-renders the garden
-              < button onClick={() => { this.followUser(); this.renderMyGarden() }}>Follow</button>
+            {this.props.targetUser.followers && (this.props.match.params.id !== this.props.user._id) &&
+              // both follows/unfollows user AND re-renders the garden
+              (this.props.targetUser.followers.includes(this.props.user._id) ? < button onClick={() => { this.unfollowUser() }}>Unfollow</button> : < button onClick={() => { this.followUser() }}>Follow</button>
+              )
             }
           </div>
         </UserCard>

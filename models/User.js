@@ -19,9 +19,9 @@ const userSchema = new Schema(
     comments: [{
       user: { type: Schema.Types.ObjectId, ref: 'User' },
       comment: String,
-      date: Date,
+      date: {},
     }],
-    wishList: [{ type: Schema.Types.ObjectId, ref: 'Plant' }],
+    wishList: [{ type: Schema.Types.ObjectId, ref: 'DGPlant' }],
     preferences: {
       plantingSetting: [String],
       soil: {
