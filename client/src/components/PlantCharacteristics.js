@@ -1,38 +1,11 @@
 import React, { Component } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSun, faCloudSun, faCloud } from '@fortawesome/free-solid-svg-icons';
 import '../stylesheets/plantNeeds.css';
+import CharacteristicTopic from '../components/CharacteristicTopic';
+import RHSPlantProperty from '../components/RHSPlantProperty';
 
 
-class PlantCharacteristics extends Component {
+export default class PlantCharacteristics extends Component {
 
-  
-
-  componentDidMount() {
-
-
-    // const { dgSunNeeds, rhsSunNeeds } = this.props;
-    // let sunIcon = <FontAwesomeIcon icon={faSun}/>;
-    // if (dgSunNeeds.length) {
-    //   if (dgSunNeeds[0] === "Full Sun") {
-    //     sunIcon = <FontAwesomeIcon icon={faSun}/>;
-    //   } else if (dgSunNeeds[0] === "Sun to Partial Shade" || dgSunNeeds[0] ===
-    //   "Light Shade") {
-    //     sunIcon = <FontAwesomeIcon icon={faCloudSun}/>
-    //   } else {
-    //     sunIcon = <FontAwesomeIcon icon={faCloud}/>
-    //   }
-    // } else if (rhsSunNeeds.length) {
-    //   if (rhsSunNeeds.sunNeeds[0] === "Partial Shade") {
-    //     sunIcon = <FontAwesomeIcon icon={faCloudSun}/>;
-    //   } else if (rhsSunNeeds.sunNeeds[0] === "Full Shade") {
-    //     sunIcon = <FontAwesomeIcon icon={faCloud}/>;
-    //   }
-    // }
-    // this.setState({
-    //   sunIcon: sunIcon,
-    // })
-  }
   render() {
     console.log('plantCharacteristics props:', this.props)
     const { dgPlantCharacteristics, rhsPlantCharacteristics } = this.props;
@@ -41,50 +14,94 @@ class PlantCharacteristics extends Component {
       <div className="card rounded-edges card-shadow align-self-start mx-4">
         <div className="card-header d-flex justify-content-center">
           <p className="card-header-title my-0 text-center font-weight-bold">
-            Characteristics
+            Plant Characteristics
           </p>
         </div>
       <div className="card-body d-flex flex-column align-items-center">
-        {dgPlantCharacteristics.category.length ? 
-        <h5 className="my-0">Category</h5>
-        <ul className="list-group">
-          {dgPlantCharacteristics.length ? dgPlantCharacteristics.category.map((plantCategory, index) => {
-            return (
-              <li key={index} className="rounded-edges list-group-item d-flex justify-content-center align-items-center my-1 px-5">
-                <span className="plantNeedTopic text-center">{plantCategory}
-                </span>
-              </li>
-            )
-          }): <></> }
+        {dgPlantCharacteristics.class.length ?
+        <div id="class">
+          <h5 className="my-0">Class</h5>
+          <ul className="list-group">
+            {dgPlantCharacteristics.class.map((plantClass, index) => {
+              return <CharacteristicTopic key={index} property={plantClass} />
+            })}
+          </ul>
+        </div> : <></>
         }
-          {rhsPlantCharacteristics.characteristics.habit &&
-          <div className="d-flex flex-column justify-content-center align-items-center">
-            <h5 className="my-3">Habit</h5>
+        {/* {dgPlantCharacteristics.category.length ?
+        <div id='category'>
+          <h5 className="my-0">Class</h5>
+          <ul className="list-group">
+            {dgPlantCharacteristics.class.map((plantClass, index) => {
+              return <CharacteristicTopic key={index} property={plantClass} />
+            })}
+          </ul>
+        </div> : <></>
+        } */}
+        {dgPlantCharacteristics.category.length ?
+        <div id='category'>
+          <h5 className="my-0">Category</h5>
+          <ul className="list-group">
+            {dgPlantCharacteristics.category.map((plantClass, index) => {
+              return <CharacteristicTopic key={index} property={plantClass} />
+            })}
+          </ul>
+        </div> : <></>
+        }
+        {rhsPlantCharacteristics.characteristics.habit ?
+        // <RHSPlantProperty property={rhsPlantCharacteristics.habit} />
+        <div id='habit'>
+          <h5 className="my-0">Habit</h5>
+          <ul className="list-group">
+            <CharacteristicTopic property={rhsPlantCharacteristics.characteristics.habit} />
+          </ul>
+        </div> 
+        : <></>
+        }
+        {dgPlantCharacteristics.danger.length ?
+        <div id='danger'>
+          <h5 className="my-0">Danger</h5>
+          <ul className="list-group">
+            {dgPlantCharacteristics.danger.map((plantDanger, index) => {
+              return <CharacteristicTopic key={index} property={plantDanger} />
+            })}
+          </ul>
+        </div> : <></>}
+        {rhsPlantCharacteristics.characteristics.toxicity ?
+        // <RHSPlantProperty property={rhsPlantCharacteristics.toxicity} />
+        <div id='toxicity'>
+          <h5 className="my-0">Toxicity</h5>
+          <ul className="list-group">
+            <CharacteristicTopic property={rhsPlantCharacteristics.characteristics.toxicity} />
+          </ul>
+        </div> 
+        : <></>}
+        {
+          rhsPlantCharacteristics.characteristics.hardiness ?
+          // <RHSPlantProperty property={rhsPlantCharacteristics.characteristics.hardiness} title='Hardiness' />
+          <div id='hardiness'>
+            <h5 className="my-0">Hardiness</h5>
             <ul className="list-group">
-              {rhsPlantCharacteristics.characteristics.habit.map((plantHabit, index) => (
-                  <li key={index} className="rounded-edges list-group-item d-flex justify-content-between align-items-center text-center my-1 px-5">
-                    <span className="sunNeedReq text-center">{plantHabit}</span>
-                  </li>))}
+              <CharacteristicTopic property={rhsPlantCharacteristics.characteristics.hardiness} />
             </ul>
-          </div>
-          }
-          {rhsPlantCharacteristics.characteristics.foliage && 
-          <div className="rounded-edges d-flex flex-column justify-content-center align-items-center">
-            <h5 className="my-3">Foliage</h5>
-            <ul className="list-group rounded-edges">
-              {rhsPlantCharacteristics.characteristics.foliage.map((plantFoliage, index) => (
-                  <li key={index} className="rounded-edges list-group-item d-flex justify-content-between align-items-center text-center my-1 px-5">
-                    <span className="sunNeedReq text-center">{plantFoliage}</span>
-                  </li>))}
+          </div> 
+        : <></>
+        }
+        {
+          rhsPlantCharacteristics.characteristics.fragrance ?
+          // <RHSPlantProperty property={rhsPlantCharacteristics.characteristics.fragrance} title='Fragrance' />
+          <div id='fragrance'>
+            <h5 className="my-0">Fragrance</h5>
+            <ul className="list-group">
+              <CharacteristicTopic property={rhsPlantCharacteristics.characteristics.fragrance} />
             </ul>
-          </div>
-          }
-          
-        </ul>
+          </div> 
+        : <></>
+        }
       </div>
     </div>
     )
   }
 }
 
-export default PlantColour;
+// export default plantCharacteristics;

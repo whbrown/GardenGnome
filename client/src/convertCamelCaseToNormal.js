@@ -7,4 +7,5 @@ const convertCamelCaseToNormal = string => {
   });
   return convertedString.slice(0, 1).toUpperCase() + convertedString.slice(1);
 };
-console.log(convertCamelCaseToNormal('plantCommonName'));
+
+export default convertCamelCaseToNormal;

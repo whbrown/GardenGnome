@@ -12,7 +12,8 @@ import Carousel from '../components/Carousel';
 import WaterNeeds from '../components/WaterNeeds';
 import SunNeeds from '../components/SunNeeds';
 import SoilNeeds from '../components/SoilNeeds';
-// import PlantCharacteristics from '../components/PlantCharacteristics';
+import PlantCharacteristics from '../components/PlantCharacteristics';
+import PlantColour from '../components/PlantColour';
 
 export default class PlantDetails extends Component {
 
@@ -48,10 +49,12 @@ export default class PlantDetails extends Component {
           {dgInfo.plantLatinName ?
           <PlantCard>
               <Carousel images={[dgInfo.plantImageURL].concat(dgInfo.additionalPhotos.map((photo) => photo.replace(/_tn\.jpg/, '.jpg')))} />
+              
               <WaterNeeds waterRequirements={dgInfo.waterRequirements} genus={dgInfo.taxonomicInfo.plantGenus.match(/\w+/)[0]} moistureTypes={rhsInfo.soil.moistureTypes}/>
               <SunNeeds dgSunNeeds={dgInfo.sunExposure} rhsSunNeeds={rhsInfo.sunlight}/>
               <SoilNeeds rhsSoilNeeds={rhsInfo.soil} />
-              {/* <PlantCharacteristics rhsPlantCharacteristics={{}} dgPlantCharacteristics={} /> */}
+              <PlantCharacteristics dgPlantCharacteristics={dgInfo} rhsPlantCharacteristics={rhsInfo} />
+              <PlantColour rhsColours={rhsInfo.colour} dgColours={{bloomColour: dgInfo.bloomColor, foliageColour: dgInfo.foliageColor, bloomTime: dgInfo.bloomTime, bloomShape: dgInfo.bloomShape, bloomSize: dgInfo.bloomSize }} />
               <PlantDetail>
 
                 {JSON.stringify(rhsInfo)}

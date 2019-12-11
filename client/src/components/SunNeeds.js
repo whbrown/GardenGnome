@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSun, faCloudSun, faCloud } from '@fortawesome/free-solid-svg-icons';
 import '../stylesheets/plantNeeds.css';
+import CharacteristicTopic from '../components/CharacteristicTopic';
 
 
 class SunNeeds extends Component {
@@ -19,31 +20,6 @@ class SunNeeds extends Component {
     }
   }
 
-  componentDidMount() {
-
-
-    // const { dgSunNeeds, rhsSunNeeds } = this.props;
-    // let sunIcon = <FontAwesomeIcon icon={faSun}/>;
-    // if (dgSunNeeds.length) {
-    //   if (dgSunNeeds[0] === "Full Sun") {
-    //     sunIcon = <FontAwesomeIcon icon={faSun}/>;
-    //   } else if (dgSunNeeds[0] === "Sun to Partial Shade" || dgSunNeeds[0] ===
-    //   "Light Shade") {
-    //     sunIcon = <FontAwesomeIcon icon={faCloudSun}/>
-    //   } else {
-    //     sunIcon = <FontAwesomeIcon icon={faCloud}/>
-    //   }
-    // } else if (rhsSunNeeds.length) {
-    //   if (rhsSunNeeds.sunNeeds[0] === "Partial Shade") {
-    //     sunIcon = <FontAwesomeIcon icon={faCloudSun}/>;
-    //   } else if (rhsSunNeeds.sunNeeds[0] === "Full Shade") {
-    //     sunIcon = <FontAwesomeIcon icon={faCloud}/>;
-    //   }
-    // }
-    // this.setState({
-    //   sunIcon: sunIcon,
-    // })
-  }
   render() {
     console.log('sunNeeds props:', this.props)
     const { dgSunNeeds, rhsSunNeeds } = this.props;
@@ -60,17 +36,16 @@ class SunNeeds extends Component {
         <ul className="list-group">
           {dgSunNeeds.length ? dgSunNeeds.map((sunNeed, index) => {
             return (
-              <li key={index} className="rounded-edges list-group-item d-flex justify-content-center align-items-center my-1 px-5">
-                <span className="sunExposureReq">{sunNeed}
-                </span>
-                {this.pairIcon({sunNeed})}
-              </li>
+              <CharacteristicTopic index={index} sunNeed={sunNeed} sunPairIcon={this.pairIcon} />
+              // <li key={index} className="rounded-edges list-group-item d-flex justify-content-center align-items-center my-1 px-5">
+              //   <span className="sunExposureReq">{sunNeed}
+              //   </span>
+              //   {this.pairIcon({sunNeed})}
+              // </li>
             )
-          }): rhsSunNeeds.sunNeeds.map((sunNeed, index) => {
+          }) : rhsSunNeeds.sunNeeds.map((sunNeed, index) => {
             return (
-              <li key={index} className="rounded-edges list-group-item d-flex justify-content-center align-items-center my-1 px-5">
-                <span className="sunExposureReq">{sunNeed} {this.pairIcon({sunNeed})}</span>
-              </li>
+              <CharacteristicTopic index={index} sunNeed={sunNeed} sunPairIcon={this.pairIcon} />
             )
           })}
           {rhsSunNeeds.aspect &&
@@ -78,9 +53,8 @@ class SunNeeds extends Component {
             <h5 className="my-3">Aspect</h5>
             <ul className="list-group">
               {rhsSunNeeds.aspect.map((aspect, index) => (
-                  <li key={index} className="rounded-edges list-group-item d-flex justify-content-between align-items-center text-center my-1 px-5">
-                    <span className="sunNeedReq">{aspect}</span>
-                  </li>))}
+                  <CharacteristicTopic index={index} property={aspect} />
+                ))}
             </ul>
           </div>
           }
@@ -89,9 +63,8 @@ class SunNeeds extends Component {
             <h5 className="my-3">Exposure</h5>
             <ul className="list-group rounded-edges">
               {rhsSunNeeds.exposure.map((exposure, index) => (
-                  <li key={index} className="rounded-edges list-group-item d-flex justify-content-between align-items-center text-center my-1 px-5">
-                    <span className="sunNeedReq">{exposure}</span>
-                  </li>))}
+                  <CharacteristicTopic key={index} property={exposure} />
+                ))}
             </ul>
           </div>
           }
