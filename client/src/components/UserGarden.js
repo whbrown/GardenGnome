@@ -20,8 +20,12 @@ class UserGarden extends Component {
 
   followUser = () => {
     axios
-      .patch(`/api/user/${this.props.match.params.id}/follow`)
-      .then((followedUser) => { console.log("SUCESSFUL FOLLOW!!!", followedUser) })
+      .patch(`/api/user/${this.props.match.params.id}/following`)
+      .then((yourUpdatedData) => { console.log("TargetUser added to your 'following' array: ", yourUpdatedData) })
+      .then(() => {
+        axios.patch(`/api/user/${this.props.match.params.id}/follow`)
+          .then((followedUserData) => { console.log("Added yourself to TargetUser's 'followers' array: ", followedUserData) })
+      })
   }
 
   renderMyGarden = () => {
@@ -35,12 +39,17 @@ class UserGarden extends Component {
 
   // // Do a componentDidMount where you do a GET request for all the garden plants
   componentDidUpdate(prevProps) {
-    if (prevProps.match.params.id !== this.props.match.params.id) {
+    if (prevProps.match.params.id !== this.props.match.params.id
+      // || prevProps.targetUser.followers !== this.props.targetUser.followers
+    ) {
       this.renderMyGarden()
     }
   }
 
+
+
   render() {
+    console.log("CURRENT PROP", this.props.targetUser)
     return (
       <div style={{ marginBottom: "80px", padding: "1rem" }}>
         <BackButton src="../../assets/back-arrow.svg" alt="back-arrow" onClick={this.handleClick} />
@@ -53,10 +62,14 @@ class UserGarden extends Component {
           </div>
           <div>
             <div>
-              <H3>Followers (x)</H3>
-              <H3>Following (x)</H3>
+              <H3>Followers ({this.props.targetUser.followers && this.props.targetUser.followers.length})</H3>
+              <H3>Following ({this.props.targetUser.following && this.props.targetUser.following.length})</H3>
             </div>
-            <button onClick={this.followUser}>Follow</button>
+            {/* Conditional rendering of button - prevent you from following yourself */}
+            {this.props.match.params.id !== this.props.user._id &&
+              // both follows user AND re-renders the garden
+              < button onClick={() => { this.followUser(); this.renderMyGarden() }}>Follow</button>
+            }
           </div>
         </UserCard>
         <div style={{ width: "100%", display: "flex", justifyContent: "space-around" }}>
@@ -71,8 +84,7 @@ class UserGarden extends Component {
           </Link>
         </div>
         {this.props.children}
-      </div >
-    )
+      </div >)
   }
 }
 

@@ -100,7 +100,7 @@ class App extends Component {
           <Route exact path="/user/:id/plants"
             // OPTION FOR SEXIER CODE: Set a state property where you trigger to render a choice of the 3 children of UserGarden
             render={props => (
-              <UserGarden {...props} targetUser={this.state.targetUser} setTargetUser={this.setTargetUser}>
+              <UserGarden {...props} targetUser={this.state.targetUser} setTargetUser={this.setTargetUser} user={this.state.user}>
                 <UserPlants {...props} targetUser={this.state.targetUser} setTargetUser={this.setTargetUser} />
               </UserGarden>
             )} />

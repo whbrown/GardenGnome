@@ -46,7 +46,23 @@ router.get('/:id/comments', (req, res) =>
     })
 );
 
-/* ------------------------------------------------------------ FOLLOW A USER ----------------------------------------------------------- */
+/* ----------------------------------------------- ADD TARGET-USER TO MY "FOLLOWING" ARRAY ---------------------------------------------- */
+router.patch('/:id/following', (req, res) =>
+  User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $push: { following: req.params.id },
+    },
+    { new: true }
+  ).then(user => {
+    res.status(200).json(user);
+  })
+    .catch(err => {
+      res.status(500).json(err);
+    })
+)
+
+/* -------------------------------------------- ADD MYSELF TO TARGET-USER'S "FOLLOWERS" ARRAY ------------------------------------------- */
 router.patch('/:id/follow', (req, res) =>
   User.findByIdAndUpdate(
     req.params.id,
@@ -61,5 +77,6 @@ router.patch('/:id/follow', (req, res) =>
       res.status(500).json(err);
     })
 )
+
 
 module.exports = router;
