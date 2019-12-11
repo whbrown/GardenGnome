@@ -3,12 +3,11 @@ import '../stylesheets/plantNeeds.css';
 import CharacteristicTopic from '../components/CharacteristicTopic';
 
 const RHSPlantProperty = props => {
-  console.log('rhsplantproperties:', this.props);
   return props.property ?
     <div id={props.property.toLowerCase()}>
-      <h5 className="my-0">{this.props.title}</h5>
-      <ul className="list-group">
-        <CharacteristicTopic property={props.property} />
+      {props.title ? <h5 className="my-0">{props.title}</h5> : <></>}
+      <ul className="list-group ">
+        <li className="rounded-edges list-group-item d-flex justify-content-center align-items-center my-1 px-5 plant-characteristic">{props.property}</li>
       </ul>
     </div> : <></>
 }  

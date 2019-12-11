@@ -77,18 +77,19 @@ class WaterNeeds extends Component {
       axios.get(`/api/plants/search/genus=${this.props.genus}&waterRequirements=true`)
       .then((res) => {
         console.log('res.data', res.data);
-        this.setState({
-          
-        })
+        
         return [res.data.waterRequirements[0], this.quantifyWaterNeeds(res.data.waterRequirements)];
       })
       .then(([waterRequirements, quantifiedWaterNeeds]) => {
         console.log('quantifiedWaterNeeds', quantifiedWaterNeeds)
         this.setState({
           formattedWaterRequirements: this.formatWaterRequirements(waterRequirements),
-          formattedMoistureType: this.formatMoistureMsg(this.props.moistureTypes),
           quantifiedWaterNeeds: quantifiedWaterNeeds,
           frequencyMessage: this.frequencyMessage(quantifiedWaterNeeds)
+        }, () => {
+          if (this.props.moistureTypes) {
+            this.setState({formattedMoistureType: this.formatMoistureMsg(this.props.moistureTypes)})
+          }
         });
       })
         
@@ -96,8 +97,13 @@ class WaterNeeds extends Component {
       const quantifiedWaterNeeds = this.quantifyWaterNeeds(this.props.waterRequirements)
       this.setState({
         formattedWaterRequirements: this.formatWaterRequirements(this.props.waterRequirements[0]),
-        formattedMoistureType: this.formatMoistureMsg(this.props.moistureTypes),
         frequencyMessage: this.frequencyMessage(quantifiedWaterNeeds)
+      }, () => {
+        if (this.props.moistureTypes) {
+          this.setState({
+            formattedMoistureType: this.formatMoistureMsg(this.props.moistureTypes),
+          })
+        }
       })
     }
     // parseNeeds(this.props.waterRequirements);

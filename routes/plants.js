@@ -9,7 +9,6 @@ const colours = require('../utils/colours.json');
 
 const router = express.Router();
 
-
 /* ------------------------------------------------------ Return your whole garden ------------------------------------------------------ */
 // * GET /api/plants/mygarden
 router.get('/mygarden', (req, res) =>
@@ -101,7 +100,13 @@ const plantVsQueryLevenschteinDistance = (plant, query) => {
 router.get('/search/genus=:genus&waterRequirements=true', (req, res) => {
   console.log('triggered water request route');
   const { genus } = req.params;
-  DGPlant.findOne({ 'taxonomicInfo.plantGenus': new RegExp(`^${genus}`, 'i'), 'waterRequirements.0': { $exists: true } }, { waterRequirements: 1, taxonomicInfo: 1 }).then((plant) => {
+  DGPlant.findOne(
+    {
+      'taxonomicInfo.plantGenus': { $regex: `^${genus}`, $options: 'i' },
+      'waterRequirements.0': { $exists: true },
+    },
+    { waterRequirements: 1, taxonomicInfo: 1 }
+  ).then(plant => {
     console.log('water request processed: ', plant);
     return res.json(plant);
   });
@@ -114,13 +119,17 @@ router.get('/search/id=:id&latinName=:latinName', (req, res) => {
   const plantId = req.params.id;
   const plantLatinName = req.params.latinName;
   let matchType = [];
-  const [, genus, species, ..._] = plantLatinName.trim().match(/(^\w+) ?(x \w+|\w+)?/);
+  const [, genus, species, ..._] = plantLatinName
+    .trim()
+    .match(/(^\w+) ?(x \w+|\w+)?/);
   console.log(
     'trimmed and matched latin name',
     plantLatinName.trim().match(/(^\w+) ?(x \w+|\w+)?/)
   );
-  const latinNameRegex = species === undefined ? new RegExp(`${genus}`, 'i') : new RegExp(`${genus} ${species}`, 'i');
-  console.log(latinNameRegex);
+  const latinNameRegex =
+    species === undefined
+      ? new RegExp(`^${genus}`, 'i')
+      : new RegExp(`^${genus} ${species}`, 'i');
   return Promise.all([
     Plant.findOne({
       plantLatinName: latinNameRegex,
@@ -128,9 +137,8 @@ router.get('/search/id=:id&latinName=:latinName', (req, res) => {
     DGPlant.findById(plantId),
   ])
     .then(([rhsInfo, dgInfo]) => {
-      const genusRegex = new RegExp(`${genus.trim()}`, 'i');
+      const genusRegex = new RegExp(`^${genus.trim()}`, 'i');
       if (!rhsInfo) {
-        console.log('genus:', genusRegex);
         matchType = ['genus'];
         return Promise.all([
           Plant.findOne({ plantLatinName: genusRegex }).sort({
@@ -140,9 +148,43 @@ router.get('/search/id=:id&latinName=:latinName', (req, res) => {
         ]);
       }
       matchType = ['genus', 'species'];
-      return [rhsInfo, dgInfo];
+      return [rhsInfo, dgInfo, matchType];
     })
-    .then(([rhsInfo, dgInfo]) => res.json({ rhsInfo, dgInfo, matchType }))
+    .then(([rhsInfo, dgInfo, matchType]) => {
+      if (!rhsInfo) {
+        matchType = ['family'];
+        const familyRegex = new RegExp(
+          `^${dgInfo.taxonomicInfo.plantFamily.match(/^\w+/)[0]}`,
+          'i'
+        );
+        return Promise.all([
+          Plant.findOne({ 'furtherDetails.family': familyRegex }).sort({
+            detailsPercentage: -1,
+          }),
+          dgInfo,
+          matchType,
+        ]);
+      }
+      return [rhsInfo, dgInfo, matchType];
+    })
+    .then(([rhsInfo, dgInfo, matchType]) => {
+      if (!rhsInfo) {
+        matchType = ['catchAll'];
+        const catchAllRegex = new RegExp(`^i`, 'i');
+        return Promise.all([
+          Plant.findOne({ 'furtherDetails.family': catchAllRegex }).sort({
+            detailsPercentage: -1,
+          }),
+          dgInfo,
+          matchType,
+        ]);
+      }
+      return [rhsInfo, dgInfo, matchType];
+    })
+    .then(([rhsInfo, dgInfo, matchType]) =>
+      // console.log([rhsInfo, dgInfo]);
+      res.json({ rhsInfo, dgInfo, matchType })
+    )
     .catch(err => {
       console.error(err);
       return res.status(500).json(err);

@@ -32,7 +32,8 @@ class App extends Component {
     searchQuery: ``,
     selectedPlantInfo: {
       rhsInfo: {},
-      dgInfo: {}
+      dgInfo: {},
+      matchType: null,
     }
   }
 
@@ -58,6 +59,8 @@ class App extends Component {
   setSelectedPlantInfo = (selectedPlantInfo) => {
     return this.setState({
       selectedPlantInfo: selectedPlantInfo,
+    }, () => {
+      console.log('appjs selectectedplantinfo state', this.state.selectedPlantInfo)
     });
   }
 

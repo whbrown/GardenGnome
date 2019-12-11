@@ -8,17 +8,24 @@ import convertCamelCaseToNormal from '../convertCamelCaseToNormal';
 export default class PlantColour extends Component {
   
   formatRHSColours = (season) => {
-    console.log(season);
+    let count = 0;
     const { rhsColours } = this.props;
-    return ['Foliage', 'Fruit', 'Flower'].map((type, index) => {
+    const colorsByType = ['Foliage', 'Fruit', 'Flower'].map((type, index) => {
       if (rhsColours[season][type.toLowerCase()].length) {
         console.log(type);
-      return <><h6>{type}</h6><ul>{rhsColours[season][type.toLowerCase()].map((colour) => <li>{colour}</li>)}</ul></>
+      return <><h6>{type}</h6><ul className="list-group">{rhsColours[season][type.toLowerCase()].map((colour) => {
+        count++;
+        return <li className="rounded-edges list-group-item">{colour}</li>
+      })}</ul></>
       } else {
         return <></>
       }
     })
-    
+    if (count > 0) {
+      return colorsByType;
+    } else {
+      return <li className="rounded-edges list-group-item">None</li>
+    }
   }
 
 
@@ -44,6 +51,7 @@ export default class PlantColour extends Component {
               <h5 className="my-0">{convertCamelCaseToNormal(colourProp)}</h5>
                 <ul className="list-group">
                   {dgColours[colourProp].map((prop, index) => {
+                    
                     return <CharacteristicTopic key={index} property={prop} />
                   })}
                 </ul>

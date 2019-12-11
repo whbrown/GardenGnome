@@ -14,6 +14,7 @@ import SunNeeds from '../components/SunNeeds';
 import SoilNeeds from '../components/SoilNeeds';
 import PlantCharacteristics from '../components/PlantCharacteristics';
 import PlantColour from '../components/PlantColour';
+import AdditionalDetails from '../components/AdditionalDetails';
 
 export default class PlantDetails extends Component {
 
@@ -26,10 +27,13 @@ export default class PlantDetails extends Component {
     console.log('PlantDetails.props.match.params', this.props.match.params)
     const { id, latinName } = this.props.match.params;
     await axios.get(`../api/plants/search/id=${id}&latinName=${latinName}`).then((res) => {
+      console.log('waterneeds res: ', res.data)
       const selectedPlantInfo = {
         rhsInfo: res.data.rhsInfo,
-        dgInfo: res.data.dgInfo
+        dgInfo: res.data.dgInfo,
+        matchType: res.data.matchType
       }
+      console.log('selectedPlantInfo', selectedPlantInfo);
       return this.props.setSelectedPlantInfo(selectedPlantInfo);
     });
     // if (this.props.selectedPlant._id) {
@@ -38,9 +42,9 @@ export default class PlantDetails extends Component {
   }
 
   render() {
-    console.log(this.props)
+    console.log('plant details props', this.props)
     // console.log('this.state:', this.state);
-    const { dgInfo, rhsInfo } = this.props.selectedPlantInfo;
+    const { dgInfo, rhsInfo, matchType } = this.props.selectedPlantInfo;
 
     return (
       <DetailsContainer>
@@ -49,7 +53,7 @@ export default class PlantDetails extends Component {
           {dgInfo.plantLatinName ?
           <PlantCard>
               <Carousel images={[dgInfo.plantImageURL].concat(dgInfo.additionalPhotos.map((photo) => photo.replace(/_tn\.jpg/, '.jpg')))} />
-              
+              {matchType.includes('genus') ? <AdditionalDetails rhsPlantDetails={rhsInfo.furtherDetails} matchType={matchType} /> : <></>}
               <WaterNeeds waterRequirements={dgInfo.waterRequirements} genus={dgInfo.taxonomicInfo.plantGenus.match(/\w+/)[0]} moistureTypes={rhsInfo.soil.moistureTypes}/>
               <SunNeeds dgSunNeeds={dgInfo.sunExposure} rhsSunNeeds={rhsInfo.sunlight}/>
               <SoilNeeds rhsSoilNeeds={rhsInfo.soil} />
