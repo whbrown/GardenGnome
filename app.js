@@ -81,6 +81,9 @@ app.use('/api/auth', authRoutes);
 const plantRoutes = require('./routes/plants');
 app.use('/api/plants', plantRoutes);
 
+const userRoutes = require('./routes/user');
+app.use('/api/user', userRoutes);
+
 app.use('/api', require('./routes/file-upload-routes'));
 
 module.exports = app;

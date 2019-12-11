@@ -14,8 +14,13 @@ const userSchema = new Schema(
       long: Number,
       lat: Number
     },
-    followers: [String],
-    following: [String],
+    followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    comments: [{
+      user: { type: Schema.Types.ObjectId, ref: 'User' },
+      comment: String,
+      date: Date,
+    }],
     wishList: [{ type: Schema.Types.ObjectId, ref: 'Plant' }],
     preferences: {
       plantingSetting: [String],
