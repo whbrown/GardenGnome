@@ -14,7 +14,6 @@ import PlantSearch from "./components/PlantSearch";
 import PlantDetails from "./components/PlantDetails"
 import { ThemeProvider } from 'styled-components';
 import theme from './components/reuse/theme';
-import axios from "axios";
 import UserPlants from "./components/UserPlants"
 import UserComments from "./components/UserComments"
 import UserWishlist from "./components/UserWishlist"
