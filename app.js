@@ -44,7 +44,7 @@ app.use(cookieParser());
 
 // default value for title local
 app.locals.title = 'Garden Gnome server';
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "/client/build"))); // path.join(__dirname, 'public')
 
 app.use(
   session({
@@ -85,5 +85,11 @@ const userRoutes = require('./routes/user');
 app.use('/api/user', userRoutes);
 
 app.use('/api', require('./routes/file-upload-routes'));
+
+
+app.use((req, res) => {
+  // If no routes match, send them the React HTML.
+  res.sendFile(__dirname + "/client/build/index.html");
+});
 
 module.exports = app;
