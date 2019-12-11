@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import LazyLoad from 'react-lazy-load';
+import styled from 'styled-components'
 import axios from 'axios'
 import { useAlert } from 'react-alert'
 import PlantCard from '../components/reuse/PlantCard';
@@ -8,6 +9,12 @@ import CardHeading from '../components/reuse/CardHeading'
 import CardSubheading from '../components/reuse/CardSubheading'
 import ButtonGreen from '../components/reuse/ButtonGreen'
 
+const Img = styled.img`
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 8px;
+`
 
 const PlantList = (props) => {
 
@@ -34,7 +41,7 @@ const PlantList = (props) => {
   // console.log(props.plants.length)
   // console.log('plantList props', props)
   return (
-    <div>
+    <div style={{ marginBottom: "80px" }}>
       {props.filteredPlants ? props.filteredPlants.slice(0, 200).map((plant, index) => {
         const commonName = plant.plantCommonNames.length > 1 ? plant.plantCommonNames[1] : plant.plantCommonNames[0];
         const encodedLatinName = encodeURI(plant.plantLatinName);
@@ -45,7 +52,7 @@ const PlantList = (props) => {
             <Link to={`/plants/id=${plant._id}&latinName=${encodedLatinName}`} >
 
               <LazyLoad offsetVertical={300}>
-                <img src={plant.plantImageURL} style={{ width: "130px", height: "130px", objectFit: "cover", borderRadius: "10px" }} />
+                <Img src={plant.plantImageURL ? plant.plantImageURL : 'https://icon-library.net/images/pngtree-green-leaf-icon-graphic-design-template-vector-png-image_530815.jpg'} />
               </LazyLoad>
             </Link>
             <div style={{ width: "60%" }}>

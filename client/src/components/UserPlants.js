@@ -13,10 +13,10 @@ import PlantCard from './reuse/PlantCard'
 import ButtonGreen from './reuse/ButtonGreen'
 
 const Img = styled.img`
-  width: 120px;
-  height: 100px;
+  width: 130px;
+  height: 130px;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: 8px;
 `
 
 class UserPlants extends Component {
