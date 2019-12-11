@@ -4,7 +4,7 @@ const personalPlantSchema = new Schema(
   {
     name: String,
     owner: { type: Schema.Types.ObjectId, ref: 'User' },
-    plantId: { type: Schema.Types.ObjectId, ref: 'Plant' },
+    plantId: { type: Schema.Types.ObjectId, ref: 'DGPlant' },
     lastWatered: Date,
     lastFertilized: Date,
     comments: [{

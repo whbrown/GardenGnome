@@ -40,26 +40,27 @@ class SearchBar extends Component {
   render() {
     console.log(this.state)
     return (
-      <div className="d-flex flex-column align-items-center col-4">
+      <div className="d-flex flex-column align-items-center">
         {/* <label htmlFor="">Search by name: </label> */}
-        <div class="input-group mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon3"><FontAwesomeIcon icon={faSearch}/></span>
+        <div className="input-group mb-3">
+          <div className="input-group-prepend">
+            <span className="input-group-text" id="basic-addon3"><FontAwesomeIcon icon={faSearch} /></span>
           </div>
           <input
             type="text"
             name="query"
-            class="form-control"
+            className="form-control"
             aria-describedby="basic-addon3"
             id="query"
             onChange={this.handleChange}
             value={this.props.searchQuery}
-            placeholder={"Start typing to search by name..."} />
+            placeholder={"Start typing to search by name..."}
+            style={{ width: "100%" }} />
         </div>
-        {this.state.searching && 
-        <div className="spinner-border text-success" role="status">
-          <span className="sr-only">Loading...</span>
-        </div>
+        {this.state.searching &&
+          <div className="spinner-border text-success" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
         }
       </div>
     );
