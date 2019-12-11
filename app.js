@@ -20,7 +20,7 @@ const MongoStore = require('connect-mongo')(session);
 const appName = require('./package.json').name;
 
 mongoose
-  .connect('mongodb://localhost/gardengnome', { useNewUrlParser: true })
+  .connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome', { useNewUrlParser: true })
   .then(x => {
     console.log(
       `Connected to Mongo! Database name: "${x.connections[0].name}"`
