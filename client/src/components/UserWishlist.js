@@ -17,7 +17,7 @@ const Img = styled.img`
   border-radius: 6px;
 `
 
-class MyPlants extends Component {
+class UserWishlist extends Component {
 
   handleClick = () => {
     axios
@@ -30,10 +30,23 @@ class MyPlants extends Component {
       });
   }
 
+  renderWishlist = () => {
+    axios
+      .get(`/api/user/${this.props.match.params.id}/comments`)
+      .then(response => {
+        this.props.setTargetUser(response.data)
+      })
+  }
+
+  // Do a componentDidMount where you do a GET request for the user
+  componentDidMount() {
+    this.renderWishlist();
+  }
+
   render() {
     return (
       <div>
-        {this.props.user.garden.map(plant => {
+        {this.props.targetUser.garden && this.props.targetUser.garden.map(plant => {
           // Avoids the initial render error where user's plantId is NULL and throws an error
           return (plant.plantId && (
             <PlantCard key={plant._id}>
@@ -53,4 +66,4 @@ class MyPlants extends Component {
   }
 }
 
-export default MyPlants;
+export default UserWishlist;

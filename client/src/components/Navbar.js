@@ -37,11 +37,15 @@ const Navbar = props => {
     props.setUser(null);
   };
 
+  const handleClick = () => {
+    props.history.push(`/user/${props.user._id}/plants`)
+  }
+
   return (
     <Nav className="navbar-nav fixed-bottom container-fluid">
       {props.user ? (
         <>
-          <Link className="nav-item nav-link" to="/mygarden/myplants">
+          <Link className="nav-item nav-link" to={`/user/${props.user._id}/plants`} onClick={handleClick}>
             <Img src="../../assets/leaf.svg" alt="my garden" height="30px" />
             <P>Garden</P >
           </Link>

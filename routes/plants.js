@@ -9,6 +9,7 @@ const colours = require('../utils/colours.json');
 
 const router = express.Router();
 
+
 /* ------------------------------------------------------ Return your whole garden ------------------------------------------------------ */
 // * GET /api/plants/mygarden
 router.get('/mygarden', (req, res) =>
@@ -31,7 +32,7 @@ router.get('/mygarden', (req, res) =>
 );
 
 /* ----------------------------------------------------- Add a plant to your garden ----------------------------------------------------- */
-// * POST /api/plants
+// * POST /api/plants/mygarden
 router.post('/mygarden', (req, res) =>
   PersonalPlant.create({
     name: 'My Abelia Engleriana',
