@@ -62,12 +62,13 @@ class Carousel extends Component {
   render() {
     return (
       <div className="carousel-container" onKeyPress={this.handleKeyPress}>
-        <button className="arrow previous carousel-btn" onClick={this.showPreviousImage}>
       {this.props.images.length > 1 &&
+        <button className="arrow previous carousel-btn" onClick={this.showPreviousImage}>
                 <span>
                   <i className="ion-arrow-left-c">←</i>
-                </span>}
+                </span>
                 </button>
+                }
         <section className="slider">
         {this.props.images.map((image, index) => {
             if (index === 0) {
@@ -76,12 +77,13 @@ class Carousel extends Component {
             return <img src={image} key={index} className="carousel-img" />
           })}
         </section>
-              <button className="next arrow carousel-btn" onClick={this.showNextImage}>
         {this.props.images.length > 1 &&
-                <span>
-                  <i className="ion-arrow-right-c">→</i>
-                </span>}
-              </button>
+            <button className="next arrow carousel-btn" onClick={this.showNextImage}>
+              <span>
+                <i className="ion-arrow-right-c">→</i>
+              </span> 
+            </button>
+                }
       </div>
     )
   }

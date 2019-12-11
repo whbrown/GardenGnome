@@ -1,0 +1,17 @@
+.sunExposureReq {
+  margin-right: 1em;
+}
+
+.sunNeedReq, .soilNeedReq, .plantNeedTopic {
+  text-align: center;
+  align-self: center;
+  justify-self: center;
+}
+
+.rounded-edges {
+  border-radius: 20px;
+}
+
+.card-shadow {
+  box-shadow: 1px 2px 10px 0 rgba(94,47,59,0.2);
+}

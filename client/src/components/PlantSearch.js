@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import PlantList from "./PlantList";
 import SearchBar from "./SearchBar";
-import BackButton from './reuse/BackButton'
+import BackButton from './reuse/BackButton';
 
 class PlantSearch extends Component {
 
@@ -23,11 +23,11 @@ class PlantSearch extends Component {
   render() {
     // console.log('plantSearch props', this.props);
     return (
-      <div className="plants-container">
+      <div className="plants-container container">
         <BackButton src="../../assets/back-arrow.svg" alt="back-arrow" onClick={this.handleClick} />
         <h2>Find a plant</h2>
-        <SearchBar getPlants={this.getPlants} setQuery={this.props.setQuery} searchQuery={this.props.searchQuery} setFilteredPlants={this.props.setFilteredPlants}/>
-        <PlantList filteredPlants={this.props.filteredPlants} />
+        <SearchBar getPlants={this.getPlants} setQuery={this.props.setQuery} searchQuery={this.props.searchQuery} setFilteredPlants={this.props.setFilteredPlants} className="row"/>
+        <PlantList filteredPlants={this.props.filteredPlants} className="row" />
       </div >
     );
   }

@@ -10,6 +10,9 @@ import DetailsContainer from '../components/reuse/DetailsContainer';
 import PlantDetail from '../components/reuse/PlantDetail';
 import Carousel from '../components/Carousel';
 import WaterNeeds from '../components/WaterNeeds';
+import SunNeeds from '../components/SunNeeds';
+import SoilNeeds from '../components/SoilNeeds';
+// import PlantCharacteristics from '../components/PlantCharacteristics';
 
 export default class PlantDetails extends Component {
 
@@ -17,12 +20,11 @@ export default class PlantDetails extends Component {
     this.props.history.goBack();
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     // change to use props.match instead of state
     console.log('PlantDetails.props.match.params', this.props.match.params)
     const { id, latinName } = this.props.match.params;
     await axios.get(`../api/plants/search/id=${id}&latinName=${latinName}`).then((res) => {
-      console.log(res.data);
       const selectedPlantInfo = {
         rhsInfo: res.data.rhsInfo,
         dgInfo: res.data.dgInfo
@@ -35,7 +37,7 @@ export default class PlantDetails extends Component {
   }
 
   render() {
-    // console.log(this.props)
+    console.log(this.props)
     // console.log('this.state:', this.state);
     const { dgInfo, rhsInfo } = this.props.selectedPlantInfo;
 
@@ -46,9 +48,12 @@ export default class PlantDetails extends Component {
           {dgInfo.plantLatinName ?
           <PlantCard>
               <Carousel images={[dgInfo.plantImageURL].concat(dgInfo.additionalPhotos.map((photo) => photo.replace(/_tn\.jpg/, '.jpg')))} />
-              <WaterNeeds waterRequirements={dgInfo.waterRequirements} genus={dgInfo.taxonomicInfo.plantGenus.match(/\w+/)[0]}/>
-          
+              <WaterNeeds waterRequirements={dgInfo.waterRequirements} genus={dgInfo.taxonomicInfo.plantGenus.match(/\w+/)[0]} moistureTypes={rhsInfo.soil.moistureTypes}/>
+              <SunNeeds dgSunNeeds={dgInfo.sunExposure} rhsSunNeeds={rhsInfo.sunlight}/>
+              <SoilNeeds rhsSoilNeeds={rhsInfo.soil} />
+              {/* <PlantCharacteristics rhsPlantCharacteristics={{}} dgPlantCharacteristics={} /> */}
               <PlantDetail>
+
                 {JSON.stringify(rhsInfo)}
               </PlantDetail>
               <PlantDetail>

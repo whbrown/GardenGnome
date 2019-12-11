@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PlantCard from '../components/reuse/PlantCard';
+import LazyLoad from 'react-lazy-load';
 
 
 class PlantList extends Component {
@@ -16,10 +17,10 @@ class PlantList extends Component {
     // console.log('plantList props', this.props)
     return (
       <div>
-        {this.props.filteredPlants ? this.props.filteredPlants.slice(0, 5).map((plant, index) => {
+        {this.props.filteredPlants ? this.props.filteredPlants.slice(0, 200).map((plant, index) => {
           const commonName = plant.plantCommonNames.length > 1 ? plant.plantCommonNames[1] : plant.plantCommonNames[0];
           const encodedLatinName = encodeURI(plant.plantLatinName);
-          console.log(encodedLatinName);
+          // console.log(encodedLatinName);
           return (
             <Link to={`/plants/id=${plant._id}&latinName=${encodedLatinName}`} key={plant._id}>
               <PlantCard>
@@ -27,7 +28,9 @@ class PlantList extends Component {
                   {`${index}.`} {plant.plantLatinName}
                 </h3>
                 <h4>{commonName}</h4>
-                <img src={plant.plantImageURL} />
+                <LazyLoad offsetVertical={300}>
+                  <img src={plant.plantImageURL} />
+                </LazyLoad>
                 {/* <p>{plant.plantImageURL}</p> */}
               </PlantCard>
             </Link>)
