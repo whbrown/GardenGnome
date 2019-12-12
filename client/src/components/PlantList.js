@@ -41,8 +41,19 @@ const PlantList = (props) => {
       .post(`/api/plants/addtogarden`, { plantId: plantId, commonName: commonName })
       .then(updatedUser => {
         console.log("Successfully added to garden and here's the new user info: ", updatedUser)
-        // props.setUser(updatedUser.data)
         alert.show('Added to garden!', { type: 'success' })
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  let addToWishlist = (plantId, commonName) => {
+    axios
+      .post(`/api/plants/addtowishlist`, { plantId: plantId, commonName: commonName })
+      .then(updatedUser => {
+        console.log("Successfully added to WISHLIST and here's the new user info: ", updatedUser)
+        alert.show('Added to WISHLIST!', { type: 'success' })
       })
       .catch(err => {
         console.log(err);
@@ -78,15 +89,20 @@ const PlantList = (props) => {
                 color="default"
                 size="small"
                 className={classes.button}
-                startIcon={<EcoIcon />}>
+                startIcon={<EcoIcon />}
+                style={{ width: "93%", height: "25px", margin: "3px 10px", fontSize: "0.6rem", backgroundColor: "green", color: "white" }}
+              >
                 Add to my garden
               </Button>
               <Button
+                onClick={() => addToWishlist(plant._id, commonName)}
                 variant="contained"
                 color="default"
                 size="small"
                 className={classes.button}
-                startIcon={<RedeemIcon />}>
+                startIcon={<RedeemIcon />}
+                style={{ width: "93%", height: "25px", margin: "3px 10px", fontSize: "0.6rem" }}
+              >
                 Save to wishlist
               </Button>
             </div>

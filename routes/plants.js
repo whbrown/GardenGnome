@@ -22,7 +22,6 @@ router.get('/mygarden', (req, res) =>
       },
     })
     .then(user => {
-      console.log('HELLOOOO?:', user);
       res.status(200).json(user);
     })
     .catch(err => {
@@ -30,17 +29,44 @@ router.get('/mygarden', (req, res) =>
     })
 );
 
+/* ----------------------------------------------------- Add a plant to your WISHLIST ----------------------------------------------------- */
+// * POST /api/plants/addtowishlist
+router.post('/addtowishlist', (req, res) => {
+  // Update the user's document by adding the new plant into their garden array
+  return User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $push: { wishList: req.body.plantId },
+    },
+    { new: true }
+  )
+    // Populate the array of plants in garden for use on the front end
+    .populate({
+      path: 'wishList',
+      // model: "PersonalPlant",
+      populate: {
+        path: "plantId"
+      }
+    })
+    .then(user => {
+      console.log('NEW USER WITH NEW PLANT ADDED TO WISHLIST: ==> ', user);
+      res.json(user);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    })
+}
+)
+
 /* ----------------------------------------------------- Add a plant to your garden ----------------------------------------------------- */
 // * POST /api/plants/addtogarden
 router.post('/addtogarden', (req, res) => {
-  console.log(req.body);
   PersonalPlant.create({
     name: req.body.commonName,
     owner: req.user._id,
     plantId: req.body.plantId,
   })
     .then(personalPlant => {
-
       console.clear()
       console.log("PERSONAL PLANT")
       console.log(personalPlant)
@@ -66,7 +92,6 @@ router.post('/addtogarden', (req, res) => {
         })
     }
     )
-
     .catch(err => {
       res.status(500).json(err);
     })

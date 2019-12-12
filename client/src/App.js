@@ -111,7 +111,7 @@ class App extends Component {
               <Route exact path="/user/:id/wishlist"
                 render={props => (
                   <UserGarden {...props} targetUser={this.state.targetUser} setTargetUser={this.setTargetUser} user={this.state.user} >
-                    <UserWishlist {...props} targetUser={this.state.targetUser} setTargetUser={this.setTargetUser} />
+                    <UserWishlist {...props} targetUser={this.state.targetUser} setTargetUser={this.setTargetUser} user={this.state.user} />
                   </UserGarden>
                 )} />
               <Route path="/gnomes"

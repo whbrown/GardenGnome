@@ -32,7 +32,7 @@ class UserWishlist extends Component {
 
   renderWishlist = () => {
     axios
-      .get(`/api/user/${this.props.match.params.id}/comments`)
+      .get(`/api/user/${this.props.match.params.id}/wishlist`)
       .then(response => {
         this.props.setTargetUser(response.data)
       })
@@ -46,7 +46,7 @@ class UserWishlist extends Component {
   render() {
     return (
       <div>
-        {this.props.targetUser.garden && this.props.targetUser.garden.map(plant => {
+        {this.props.targetUser.wishList && this.props.targetUser.wishList.map(plant => {
           // Avoids the initial render error where user's plantId is NULL and throws an error
           return (plant.plantId && (
             <PlantCard key={plant._id}>
@@ -55,12 +55,10 @@ class UserWishlist extends Component {
                 <CardHeading> {plant.name}</CardHeading>
                 <h4>{plant.plantId.plantCommonName}</h4>
               </div>
-            </PlantCard>)
+            </PlantCard>
+          )
           )
         })}
-        {/* Placeholder button which  */}
-        <button onClick={this.handleClick}>Add plant to my garden</button>
-        {/* "For each" loop through all the users plants here to display CARDS? of each plant*/}
       </div >
     )
   }
