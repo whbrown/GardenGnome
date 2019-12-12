@@ -8,8 +8,8 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
 (async () => {
   // add { headless: false } as launch param
   const browser = await puppeteer.launch();
-  const mostRecentPlant = await Plant.findOne({}).sort({ RHSID: -1 });
-  for (let RHSID = mostRecentPlant.RHSID + 1; RHSID < 1000000; RHSID++) {
+  const mostRecentPlant = await Plant.findOne({}).sort({ created_at: -1 });
+  for (let { RHSID } = mostRecentPlant; RHSID < 1000000; RHSID++) {
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(99999999);
     await page.goto(
