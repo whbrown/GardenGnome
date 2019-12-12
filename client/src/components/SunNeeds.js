@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSun, faCloudSun, faCloud } from '@fortawesome/free-solid-svg-icons';
 import '../stylesheets/plantNeeds.css';
 import CharacteristicTopic from '../components/CharacteristicTopic';
-
+import PlantCardTitle from './PlantCardTitle';
 
 class SunNeeds extends Component {
 
@@ -21,16 +21,12 @@ class SunNeeds extends Component {
   }
 
   render() {
-    console.log('sunNeeds props:', this.props)
+    // console.log('sunNeeds props:', this.props)
     const { dgSunNeeds, rhsSunNeeds } = this.props;
 
     return (
       <div className="card rounded-edges card-shadow align-self-start mx-4">
-        <div className="card-header d-flex justify-content-center">
-          <p className="card-header-title my-0 text-center font-weight-bold">
-            Sunlight Requirements
-          </p>
-        </div>
+        <PlantCardTitle title="Sunlight Requirements"/>
       <div className="card-body d-flex flex-column align-items-center">
         <h5 className="my-0">Sun Needs</h5>
         <ul className="list-group">

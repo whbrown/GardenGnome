@@ -3,6 +3,7 @@ import '../stylesheets/plantNeeds.css';
 import CharacteristicTopic from '../components/CharacteristicTopic';
 import RHSPlantProperty from '../components/RHSPlantProperty';
 import convertCamelCaseToNormal from '../convertCamelCaseToNormal';
+import PlantCardTitle from './PlantCardTitle';
 
 
 export default class PlantColour extends Component {
@@ -12,7 +13,7 @@ export default class PlantColour extends Component {
     const { rhsColours } = this.props;
     const colorsByType = ['Foliage', 'Fruit', 'Flower'].map((type, index) => {
       if (rhsColours[season][type.toLowerCase()].length) {
-        console.log(type);
+        // console.log(type);
       return <><h6>{type}</h6><ul className="list-group">{rhsColours[season][type.toLowerCase()].map((colour) => {
         count++;
         return <li className="rounded-edges list-group-item">{colour}</li>
@@ -30,17 +31,13 @@ export default class PlantColour extends Component {
 
 
   render() {
-    console.log('plantCharacteristics props:', this.props)
+    // console.log('plantCharacteristics props:', this.props)
     const { dgColours, rhsColours } = this.props;
     // console.log('rhsColours', rhsColours);
 
     return (
     <div className="card rounded-edges card-shadow align-self-start mx-4">
-      <div className="card-header d-flex justify-content-center">
-        <p className="card-header-title my-0 text-center font-weight-bold">
-          Colour
-        </p>
-      </div>
+      <PlantCardTitle title="Colour"/>
       <div className="card-body d-flex flex-column align-items-center">
         {Object.values(dgColours).length ? 
         <div>

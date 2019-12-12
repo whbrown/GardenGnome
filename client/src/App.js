@@ -61,7 +61,7 @@ class App extends Component {
     const sanitizedInput = searchQuery.replace(/[<>.,/;:+_*&^%$#@!`~{}[\]|\\]/g, '');
     this.setState({
       searchQuery: sanitizedInput
-    }, () => console.log(this.state.searchQuery))
+    });
   }
 
   setUser = user => {
@@ -73,8 +73,6 @@ class App extends Component {
   setSelectedPlantInfo = (selectedPlantInfo) => {
     return this.setState({
       selectedPlantInfo: selectedPlantInfo,
-    }, () => {
-      console.log('appjs selectectedplantinfo state', this.state.selectedPlantInfo)
     });
   }
 
@@ -85,7 +83,7 @@ class App extends Component {
   }
 
   render() {
-    console.log('appjs state', this.state);
+    // console.log('appjs state', this.state);
     return (
       <AlertProvider template={AlertTemplate} {...options}>
         <ThemeProvider theme={theme}>

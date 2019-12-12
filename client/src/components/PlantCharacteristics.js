@@ -2,21 +2,18 @@ import React, { Component } from "react";
 import '../stylesheets/plantNeeds.css';
 import CharacteristicTopic from '../components/CharacteristicTopic';
 import RHSPlantProperty from '../components/RHSPlantProperty';
+import PlantCardTitle from './PlantCardTitle';
 
 
 export default class PlantCharacteristics extends Component {
 
   render() {
-    console.log('plantCharacteristics props:', this.props)
+    // console.log('plantCharacteristics props:', this.props)
     const { dgPlantCharacteristics, rhsPlantCharacteristics } = this.props;
 
     return (
       <div className="card rounded-edges card-shadow align-self-start mx-4">
-        <div className="card-header d-flex justify-content-center">
-          <p className="card-header-title my-0 text-center font-weight-bold">
-            Plant Characteristics
-          </p>
-        </div>
+        <PlantCardTitle title="Plant Characteristics"/>
       <div className="card-body d-flex flex-column align-items-center">
         {dgPlantCharacteristics.class.length ?
         <div id="class">

@@ -36,7 +36,10 @@ class Following extends Component {
       return this.setState({
         following: res.data.following,
       })
-    }).catch(err=> console.log(err))
+    }).catch(err=> {
+      console.log(err)
+      this.props.history.goBack();
+    })
   }
 
   render() {

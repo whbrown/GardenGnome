@@ -38,7 +38,7 @@ class SearchBar extends Component {
   // method = debounce(() => {
 
   render() {
-    console.log(this.state)
+    // console.log(this.state)
     return (
       <div className="d-flex flex-column align-items-center">
         {/* <label htmlFor="">Search by name: </label> */}

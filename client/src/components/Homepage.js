@@ -10,7 +10,7 @@ class Homepage extends Component {
   };
 
   render() {
-    console.log(this.props.user)
+    // console.log(this.props.user)
     return (
       <div className="homepage" style={{ textAlign: "center" }}>
         <img src="../../assets/gnome.svg" alt="Garden Gnome" style={{ width: "30vw" }} />
