@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import styled from 'styled-components'
 import axios from 'axios'
+import { makeStyles } from '@material-ui/core/styles';
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
+import '../App.css'
 
 /* ---------------------------------------------------------- Styled Components --------------------------------------------------------- */
 import PageHeading from './reuse/PageHeading'
@@ -13,11 +17,18 @@ import PlantCard from './reuse/PlantCard'
 import ButtonGreen from './reuse/ButtonGreen'
 
 const Img = styled.img`
-  width: 130px;
-  height: 130px;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
   border-radius: 8px;
 `
+const useStyles = makeStyles(theme => ({
+  root: {
+    '& > *': {
+      margin: theme.spacing(1),
+    },
+  },
+}));
 
 class UserPlants extends Component {
 
@@ -58,13 +69,15 @@ class UserPlants extends Component {
               <Link to={`/plants/id=${plant.plantId._id}&latinName=${encodedLatinName}`} key={plant._id}>
                 <Img src={plant.plantId.plantImageURL} alt="" />
               </Link>
-              <div style={{ width: "60%" }}>
+              <div style={{ width: "53%", justifyContent: "center" }}>
                 <Link to={`/plants/id=${plant.plantId._id}&latinName=${encodedLatinName}`} key={plant._id}>
                   <CardHeading>{plant.plantId.plantLatinName}</CardHeading>
                   <CardSubheading>{plant.name}</CardSubheading>
                 </Link>
-                <ButtonGreen onClick={() => this.removeFromGarden(plant._id)} type="button" className="btn btn-success">Delete</ButtonGreen>
               </div>
+              <IconButton onClick={() => this.removeFromGarden(plant._id)} aria-label="delete" style={{ padding: 0, margin: 0 }}>
+                <DeleteIcon />
+              </IconButton>
             </PlantCard>
           )
           )

@@ -5,6 +5,7 @@ import './App.css';
 import { transitions, positions, Provider as AlertProvider } from 'react-alert'
 import AlertTemplate from 'react-alert-template-basic'
 
+
 // REACT COMPONENTS:
 import Homepage from "./components/Homepage";
 import Signup from "./components/Signup";
@@ -30,7 +31,7 @@ import UserWishlist from "./components/UserWishlist"
 const options = {
   // you can also just use 'bottom center'
   position: positions.BOTTOM_CENTER,
-  timeout: 1000,
+  timeout: 1500,
   offset: '100px',
   // you can also just use 'scale'
   transition: transitions.SCALE
