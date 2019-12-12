@@ -22,7 +22,7 @@ const PlantList = (props) => {
     axios
       .post(`/api/plants/addtogarden`, { plantId: plantId, commonName: commonName })
       .then(updatedUser => {
-        console.log("Successfully added to garden and here's the new user info: ", updatedUser)
+        // console.log("Successfully added to garden and here's the new user info: ", updatedUser)
         // props.setUser(updatedUser.data)
         alert.show('Added to garden!', { type: 'success' })
       })
@@ -38,7 +38,7 @@ const PlantList = (props) => {
       {props.filteredPlants ? props.filteredPlants.slice(0, 200).map((plant, index) => {
         const commonName = plant.plantCommonNames.length > 1 ? plant.plantCommonNames[1] : plant.plantCommonNames[0];
         const encodedLatinName = encodeURI(plant.plantLatinName);
-        console.log("PLANT INFORMATION: ", plant)
+        // console.log("PLANT INFORMATION: ", plant)
         // console.log(encodedLatinName);
         return (
           <PlantCard key={plant._id}>

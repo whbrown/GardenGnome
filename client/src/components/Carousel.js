@@ -61,7 +61,7 @@ class Carousel extends Component {
 
   render() {
     return (
-      <div className="carousel-container" onKeyPress={this.handleKeyPress}>
+      <div className="carousel-container my-5" style={{width: '100%', display: 'flex'}} onKeyPress={this.handleKeyPress}>
       {this.props.images.length > 1 &&
         <button className="arrow previous carousel-btn" onClick={this.showPreviousImage}>
                 <span>

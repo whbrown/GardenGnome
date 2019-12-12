@@ -40,38 +40,37 @@ router.post('/addtogarden', (req, res) => {
     plantId: req.body.plantId,
   })
     .then(personalPlant => {
-
-      console.clear()
-      console.log("PERSONAL PLANT")
-      console.log(personalPlant)
+      console.clear();
+      console.log('PERSONAL PLANT');
+      console.log(personalPlant);
       // Update the user's document by adding the new plant into their garden array
-      return User.findByIdAndUpdate(
-        req.user._id,
-        {
-          $push: { garden: personalPlant._id },
-        },
-        { new: true }
-      )
-        // Populate the array of plants in garden for use on the front end
-        .populate({
-          path: 'garden',
-          // model: "PersonalPlant",
-          populate: {
-            path: "plantId"
-          }
-        })
-        .then(user => {
-          console.log('NEW USER WITH NEW PLANT ADDED TO GARDEN: ==> ', user);
-          res.json(user);
-        })
-    }
-    )
+      return (
+        User.findByIdAndUpdate(
+          req.user._id,
+          {
+            $push: { garden: personalPlant._id },
+          },
+          { new: true }
+        )
+          // Populate the array of plants in garden for use on the front end
+          .populate({
+            path: 'garden',
+            // model: "PersonalPlant",
+            populate: {
+              path: 'plantId',
+            },
+          })
+          .then(user => {
+            console.log('NEW USER WITH NEW PLANT ADDED TO GARDEN: ==> ', user);
+            res.json(user);
+          })
+      );
+    })
 
     .catch(err => {
       res.status(500).json(err);
-    })
-}
-)
+    });
+});
 
 /* ----------------------------------------------------- Remove a plant from garden ----------------------------------------------------- */
 // * POST /api/plants/removefromgarden
@@ -99,9 +98,8 @@ router.post('/removefromgarden', (req, res) => {
     })
     .catch(err => {
       res.status(500).json(err);
-    })
-}
-)
+    });
+});
 
 /* --------------------------------------------------- LEVENSCHTEIN DISTANCE FUNCTION --------------------------------------------------- */
 const plantVsQueryLevenschteinDistance = (plant, query) => {
@@ -163,10 +161,11 @@ router.get('/search/id=:id&latinName=:latinName', (req, res) => {
     'trimmed and matched latin name',
     plantLatinName.trim().match(/(^\w+) ?(x \w+|\w+)?/)
   );
-  const latinNameRegex =
-    species === undefined
-      ? new RegExp(`^${genus}`, 'i')
-      : new RegExp(`^${genus} ${species}`, 'i');
+  const latinNameRegex = new RegExp(`^${genus} ${species}`, 'i');
+  // const latinNameRegex =
+  //   species === undefined
+  //     ? new RegExp(`^${genus}`, 'i')
+  //     : new RegExp(`^${genus} ${species}`, 'i');
   return Promise.all([
     Plant.findOne({
       plantLatinName: latinNameRegex,
@@ -218,7 +217,7 @@ router.get('/search/id=:id&latinName=:latinName', (req, res) => {
       }
       return [rhsInfo, dgInfo, matchType];
     })
-    .then(([rhsInfo, dgInfo, matchType]) =>
+    .then(([rhsInfo, dgInfo]) =>
       // console.log([rhsInfo, dgInfo]);
       res.json({ rhsInfo, dgInfo, matchType })
     )

@@ -2,21 +2,18 @@ import React, { Component } from "react";
 import '../stylesheets/plantNeeds.css';
 import CharacteristicTopic from '../components/CharacteristicTopic';
 import RHSPlantProperty from '../components/RHSPlantProperty';
+import PlantCardTitle from './PlantCardTitle';
 
 
 export default class PlantCharacteristics extends Component {
 
   render() {
-    console.log('plantCharacteristics props:', this.props)
+    // console.log('plantCharacteristics props:', this.props)
     const { dgPlantCharacteristics, rhsPlantCharacteristics } = this.props;
 
     return (
-      <div className="card rounded-edges card-shadow align-self-start mx-4">
-        <div className="card-header d-flex justify-content-center">
-          <p className="card-header-title my-0 text-center font-weight-bold">
-            Plant Characteristics
-          </p>
-        </div>
+      <div className="card rounded-edges card-shadow mx-4 my-5 plant-card">
+        <PlantCardTitle title="Plant Characteristics"/>
       <div className="card-body d-flex flex-column align-items-center">
         {dgPlantCharacteristics.class.length ?
         <div id="class">
@@ -28,16 +25,6 @@ export default class PlantCharacteristics extends Component {
           </ul>
         </div> : <></>
         }
-        {/* {dgPlantCharacteristics.category.length ?
-        <div id='category'>
-          <h5 className="my-0">Class</h5>
-          <ul className="list-group">
-            {dgPlantCharacteristics.class.map((plantClass, index) => {
-              return <CharacteristicTopic key={index} property={plantClass} />
-            })}
-          </ul>
-        </div> : <></>
-        } */}
         {dgPlantCharacteristics.category.length ?
         <div id='category'>
           <h5 className="my-0">Category</h5>
@@ -58,6 +45,15 @@ export default class PlantCharacteristics extends Component {
         </div> 
         : <></>
         }
+        {dgPlantCharacteristics.otherDetails.length ?
+        <div id='otherDetails'>
+          <h5 className="my-0">Other details</h5>
+          <ul className="list-group">
+            {dgPlantCharacteristics.otherDetails.map((detail, index) => {
+              return <CharacteristicTopic key={index} property={detail} />
+            })}
+          </ul>
+        </div> : <></>}
         {dgPlantCharacteristics.danger.length ?
         <div id='danger'>
           <h5 className="my-0">Danger</h5>
@@ -88,6 +84,7 @@ export default class PlantCharacteristics extends Component {
         : <></>
         }
         {
+          // TODO: limit to only species matches
           rhsPlantCharacteristics.characteristics.fragrance ?
           // <RHSPlantProperty property={rhsPlantCharacteristics.characteristics.fragrance} title='Fragrance' />
           <div id='fragrance'>

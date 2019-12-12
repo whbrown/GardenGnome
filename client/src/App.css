@@ -7,3 +7,12 @@
 .homepage{
 background-image: url('./homepage.png');
 }
+
+
+.card-container {
+  display: flex;
+}
+
+.card-container > * {
+  width: 25%;
+}

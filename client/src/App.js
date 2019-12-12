@@ -16,9 +16,11 @@ import PlantSearch from "./components/PlantSearch";
 import PlantDetails from "./components/PlantDetails"
 import { ThemeProvider } from 'styled-components';
 import theme from './components/reuse/theme';
-import UserPlants from "./components/UserPlants"
-import UserComments from "./components/UserComments"
-import UserWishlist from "./components/UserWishlist"
+import UserPlants from "./components/UserPlants";
+import UserComments from "./components/UserComments";
+import UserWishlist from "./components/UserWishlist";
+import Followers from './components/Followers';
+import Following from './components/Following';
 
 // MAKING PUBLIC FOLDER STATIC?
 // const express = require("express");
@@ -59,7 +61,7 @@ class App extends Component {
     const sanitizedInput = searchQuery.replace(/[<>.,/;:+_*&^%$#@!`~{}[\]|\\]/g, '');
     this.setState({
       searchQuery: sanitizedInput
-    }, () => console.log(this.state.searchQuery))
+    });
   }
 
   setUser = user => {
@@ -71,8 +73,6 @@ class App extends Component {
   setSelectedPlantInfo = (selectedPlantInfo) => {
     return this.setState({
       selectedPlantInfo: selectedPlantInfo,
-    }, () => {
-      console.log('appjs selectectedplantinfo state', this.state.selectedPlantInfo)
     });
   }
 
@@ -83,7 +83,7 @@ class App extends Component {
   }
 
   render() {
-    console.log('appjs state', this.state);
+    // console.log('appjs state', this.state);
     return (
       <AlertProvider template={AlertTemplate} {...options}>
         <ThemeProvider theme={theme}>
@@ -107,6 +107,8 @@ class App extends Component {
                     <UserComments {...props} targetUser={this.state.targetUser} setTargetUser={this.setTargetUser} user={this.state.user} />
                   </UserGarden>
                 )} />
+              <Route exact path="/user/:id/followers" render={props => (<Followers {...props} user={this.state.targetUser} />)}/>
+              <Route exact path="/user/:id/isfollowing" render={props => (<Following {...props} user={this.state.targetUser} />)}/>
               <Route exact path="/user/:id/wishlist"
                 render={props => (
                   <UserGarden {...props} targetUser={this.state.targetUser} setTargetUser={this.setTargetUser} user={this.state.user} >
