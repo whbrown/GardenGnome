@@ -19,12 +19,12 @@ export default class AdditionalDetails extends Component {
         </div>
       <div className="card-body d-flex flex-column align-items-center">
         {
-          matchType.includes('species') && rhsPlantDetails.species ?
+          matchType.includes('species') && rhsPlantDetails.details ?
           // <RHSPlantProperty property={rhsPlantDetails.Details.hardiness} title='Hardiness' />
           <div id='hardiness'>
             <h5 className="my-0">Species Details</h5>
             <ul className="list-group">
-              <RHSPlantProperty property={rhsPlantDetails.species} />
+              <RHSPlantProperty property={rhsPlantDetails.details} />
             </ul>
           </div> 
         : <></>
@@ -40,6 +40,7 @@ export default class AdditionalDetails extends Component {
           </div> 
         : <></>
         }
+        
       </div>
     </div>
     )

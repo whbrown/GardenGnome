@@ -58,6 +58,15 @@ export default class PlantCharacteristics extends Component {
         </div> 
         : <></>
         }
+        {dgPlantCharacteristics.otherDetails.length ?
+        <div id='otherDetails'>
+          <h5 className="my-0">Other details</h5>
+          <ul className="list-group">
+            {dgPlantCharacteristics.otherDetails.map((detail, index) => {
+              return <CharacteristicTopic key={index} property={detail} />
+            })}
+          </ul>
+        </div> : <></>}
         {dgPlantCharacteristics.danger.length ?
         <div id='danger'>
           <h5 className="my-0">Danger</h5>
@@ -88,6 +97,7 @@ export default class PlantCharacteristics extends Component {
         : <></>
         }
         {
+          // TODO: limit to only species matches
           rhsPlantCharacteristics.characteristics.fragrance ?
           // <RHSPlantProperty property={rhsPlantCharacteristics.characteristics.fragrance} title='Fragrance' />
           <div id='fragrance'>

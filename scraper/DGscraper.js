@@ -142,7 +142,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
             const [commentHeader, commentText] = commentBody.children;
             commentContainer.commentHeader = commentHeader.textContent;
             commentContainer.commentText = commentText.firstChild.textContent;
-            schema.plantComments.push(commentContainer);
+            <schema className="plantComments pus"></schema>h(commentContainer);
           });
           return schema;
         };

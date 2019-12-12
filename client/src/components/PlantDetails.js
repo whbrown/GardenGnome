@@ -15,6 +15,8 @@ import SoilNeeds from '../components/SoilNeeds';
 import PlantCharacteristics from '../components/PlantCharacteristics';
 import PlantColour from '../components/PlantColour';
 import AdditionalDetails from '../components/AdditionalDetails';
+import HowToCare from "./HowToCare";
+import HowToGrow from "./HowToGrow";
 
 export default class PlantDetails extends Component {
 
@@ -59,13 +61,8 @@ export default class PlantDetails extends Component {
               <SoilNeeds rhsSoilNeeds={rhsInfo.soil} />
               <PlantCharacteristics dgPlantCharacteristics={dgInfo} rhsPlantCharacteristics={rhsInfo} />
               <PlantColour rhsColours={rhsInfo.colour} dgColours={{bloomColour: dgInfo.bloomColor, foliageColour: dgInfo.foliageColor, bloomTime: dgInfo.bloomTime, bloomShape: dgInfo.bloomShape, bloomSize: dgInfo.bloomSize }} />
-              <PlantDetail>
-
-                {JSON.stringify(rhsInfo)}
-              </PlantDetail>
-              <PlantDetail>
-                {JSON.stringify(dgInfo)}
-              </PlantDetail>
+              {matchType.includes('genus') ? <HowToCare dgPruningInstructions={dgInfo.pruningInstructions} howToCare={{...rhsInfo.howToCare}}/> : <></>}
+              <HowToGrow dgPropagation={dgInfo.propagationMethods} howToGrow={{...rhsInfo.howToGrow}}/>
           </PlantCard> : <H4>Loading ...</H4>}
       </DetailsContainer>
     )
