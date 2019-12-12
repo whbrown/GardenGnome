@@ -12,7 +12,7 @@ router.get('/:id/plants', (req, res) =>
   User.findById(req.params.id)
     .populate({
       path: 'garden',
-      // model: "PersonalPlant",
+      model: "PersonalPlant",
       populate: {
         path: 'plantId',
         // model: "Plant"
@@ -50,7 +50,7 @@ router.get('/:id/comments', (req, res) =>
 /* ------------------------------------------------------ Return USER WISHLIST ------------------------------------------------------ */
 // * GET /api/user/:id/wishlist
 router.get('/:id/wishlist', (req, res) =>
-  User.findById(req.params.id)
+  User.findById(req.user._id)
     .populate({
       path: 'garden',
       // model: "PersonalPlant",
@@ -67,7 +67,7 @@ router.get('/:id/wishlist', (req, res) =>
       }
     })
     .then(user => {
-      res.status(200).json(user);
+      res.json(user);
     })
     .catch(err => {
       res.status(500).json(err);

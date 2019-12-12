@@ -65,8 +65,6 @@ const PlantList = (props) => {
       {props.filteredPlants ? props.filteredPlants.slice(0, 200).map((plant, index) => {
         const commonName = plant.plantCommonNames.length > 1 ? plant.plantCommonNames[1] : plant.plantCommonNames[0];
         const encodedLatinName = encodeURI(plant.plantLatinName);
-        console.log("PLANT INFORMATION: ", plant)
-
         return (
           <PlantCard key={plant._id}>
             <Link to={`/plants/id=${plant._id}&latinName=${encodedLatinName}`} >

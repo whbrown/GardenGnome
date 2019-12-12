@@ -78,6 +78,7 @@ class App extends Component {
   }
 
   setTargetUser = user => {
+    console.log('target user set')
     this.setState({
       targetUser: user
     })
