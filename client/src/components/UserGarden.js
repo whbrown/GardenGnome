@@ -63,6 +63,7 @@ class UserGarden extends Component {
   }
 
   render() {
+    console.log('target user', this.props.targetUser)
     return (
       <div style={{ marginBottom: "80px", padding: "1rem" }}>
         <BackButton src="../../assets/back-arrow.svg" alt="back-arrow" onClick={this.handleClick} />
@@ -75,8 +76,8 @@ class UserGarden extends Component {
           </div>
           <div>
             <div>
-              <H3>Followers ({this.props.targetUser.followers && this.props.targetUser.followers.length})</H3>
-              <H3>Following ({this.props.targetUser.following && this.props.targetUser.following.length})</H3>
+              <Link to={`/user/${this.props.targetUser._id}/followers`}><H3>Followers ({this.props.targetUser.followers && this.props.targetUser.followers.length})</H3></Link>
+              <Link to={`/user/${this.props.targetUser._id}/isfollowing`}><H3>Following ({this.props.targetUser.following && this.props.targetUser.following.length})</H3></Link>
             </div>
             {/* Conditional rendering of button - prevent you from following yourself */}
             {this.props.targetUser.followers && (this.props.match.params.id !== this.props.user._id) &&
