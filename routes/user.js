@@ -87,7 +87,7 @@ router.get('/:id/comments', (req, res) =>
 /* ------------------------------------------------------ Return USER WISHLIST ------------------------------------------------------ */
 // * GET /api/user/:id/wishlist
 router.get('/:id/wishlist', (req, res) =>
-  User.findById(req.user._id)
+  User.findById(req.params.id)
     .populate({
       path: 'garden',
       // model: "PersonalPlant",
@@ -177,7 +177,7 @@ router.patch('/:id/following', (req, res) =>
         // model: "Plant"
       },
     })
-
+    .populate('comments.user')
     .then(user => {
       res.status(200).json(user);
     })
@@ -203,6 +203,7 @@ router.patch('/:id/follow', (req, res) =>
         // model: "Plant"
       },
     })
+    .populate('comments.user')
     .then(user => {
       res.status(200).json(user);
     })
@@ -228,6 +229,7 @@ router.patch('/:id/unfollowing', (req, res) =>
         // model: "Plant"
       },
     })
+    .populate('comments.user')
     .then(user => {
       res.status(200).json(user);
     })
@@ -253,6 +255,7 @@ router.patch('/:id/unfollow', (req, res) =>
         // model: "Plant"
       },
     })
+    .populate('comments.user')
     .then(user => {
       res.status(200).json(user);
     })

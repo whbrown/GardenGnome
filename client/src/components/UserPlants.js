@@ -10,13 +10,9 @@ import Fab from '@material-ui/core/Fab';
 import '../App.css'
 
 /* ---------------------------------------------------------- Styled Components --------------------------------------------------------- */
-import PageHeading from './reuse/PageHeading'
-import H3 from './reuse/H3'
-import H4 from './reuse/H4'
 import CardHeading from './reuse/CardHeading'
 import CardSubheading from './reuse/CardSubheading'
 import PlantCard from './reuse/PlantCard'
-import ButtonGreen from './reuse/ButtonGreen'
 
 const Img = styled.img`
   width: 120px;
@@ -62,31 +58,33 @@ class UserPlants extends Component {
     console.log("CURRENT USER: ", this.props.targetUser)
     return (
       <div>
-        {this.props.targetUser.garden && this.props.targetUser.garden.map(plant => {
-          console.log("EACH USER's PLANT: ", plant)
-          const encodedLatinName = encodeURI(plant.plantId.plantLatinName);
-          // Avoids the initial render error where user's plantId is NULL and throws an error
-          return (plant.plantId && (
-            <PlantCard key={plant._id}>
-              <Link to={`/plants/id=${plant.plantId._id}&latinName=${encodedLatinName}`} key={plant._id}>
-                <Img src={plant.plantId.plantImageURL} alt="" />
-              </Link>
-              <div style={{ width: "53%", justifyContent: "center" }}>
+        {this.props.targetUser.garden && (this.props.targetUser.garden.length == 0 ?
+          <p style={{ margin: "20px" }}>No plants to show</p> : this.props.targetUser.garden.map(plant => {
+            const encodedLatinName = encodeURI(plant.plantId.plantLatinName);
+            // Avoids the initial render error where user's plantId is NULL and throws an error
+            return (plant.plantId && (
+              <PlantCard key={plant._id}>
                 <Link to={`/plants/id=${plant.plantId._id}&latinName=${encodedLatinName}`} key={plant._id}>
-                  <CardHeading>{plant.plantId.plantLatinName}</CardHeading>
-                  <CardSubheading>{plant.name}</CardSubheading>
+                  <Img src={plant.plantId.plantImageURL} alt="" />
                 </Link>
-              </div>
-              <IconButton onClick={() => this.removeFromGarden(plant._id)} aria-label="delete" style={{ padding: 0, margin: 0 }}>
-                <DeleteIcon />
-              </IconButton>
-            </PlantCard>
-          )
-          )
-        })}
+                <div style={{ width: "53%", justifyContent: "center" }}>
+                  <Link to={`/plants/id=${plant.plantId._id}&latinName=${encodedLatinName}`} key={plant._id}>
+                    <CardHeading>{plant.plantId.plantLatinName}</CardHeading>
+                    <CardSubheading>{plant.name}</CardSubheading>
+                  </Link>
+                </div>
+                <IconButton onClick={() => this.removeFromGarden(plant._id)} aria-label="delete" style={{ padding: 0, margin: 0 }}>
+                  <DeleteIcon />
+                </IconButton>
+              </PlantCard>
+            )
+            )
+          })
+        )
+        }
         {this.props.match.params.id == this.props.user._id &&
           //   <button>Add plant to my garden</button>
-          <Fab color="primary" aria-label="add" style={{ backgroundColor: "green" }}>
+          <Fab color="primary" aria-label="add" style={{ backgroundColor: "green", margin: "20px 0 0 15px" }}>
             <Link to="/plants/search" style={{ textDecoration: 'none', color: "white" }}>
               <AddIcon />
             </Link>

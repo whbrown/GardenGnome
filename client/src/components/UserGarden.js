@@ -1,15 +1,12 @@
 import React, { Component } from "react";
-import { Route } from 'react-router-dom';
 import { Link } from "react-router-dom";
-import styled from 'styled-components'
 import axios from 'axios'
-import UserPlants from './UserPlants'
 import PageHeading from './reuse/PageHeading'
 import H3 from './reuse/H3'
 import H4 from './reuse/H4'
-import H5 from './reuse/CardHeading'
 import UserCard from './reuse/UserCard'
 import BackButton from './reuse/BackButton'
+import Button from '@material-ui/core/Button';
 
 class UserGarden extends Component {
 
@@ -67,14 +64,17 @@ class UserGarden extends Component {
     return (
       <div style={{ marginBottom: "80px", padding: "1rem" }}>
         <BackButton src="../../assets/back-arrow.svg" alt="back-arrow" onClick={this.handleClick} />
-        <PageHeading textAlign="left" margin="(65px 0 0 0)">Garden</PageHeading>
-        <UserCard>
-          <img src={this.props.targetUser.imageUrl} alt="" style={{ height: "80px" }} />
-          <div>
+        <div style={{ display: "flex" }}>
+          <img src="../../assets/leaf.svg" alt="my garden" style={{ height: "30px", width: "30px", objectFit: "contain", margin: "5px 10px" }} />
+          <PageHeading textAlign="left">Garden</PageHeading>
+        </div>
+        <UserCard style={{ display: "flex", justifyContent: "space-between" }}>
+          <img src={this.props.targetUser.imageUrl} alt="" style={{ height: "80px", width: "80px", objectFit: "contain", borderRadius: "10px" }} />
+          <div style={{ width: "90px", display: "flex", flexDirection: "column", justifyContent: "space-evenly" }}>
             <H3>User:</H3>
             <H4 textAlign="left">{this.props.targetUser.username}</H4>
           </div>
-          <div>
+          <div style={{ textAlign: "center" }}>
             <div>
               <Link to={`/user/${this.props.targetUser._id}/followers`}><H3>Followers ({this.props.targetUser.followers && this.props.targetUser.followers.length})</H3></Link>
               <Link to={`/user/${this.props.targetUser._id}/isfollowing`}><H3>Following ({this.props.targetUser.following && this.props.targetUser.following.length})</H3></Link>
@@ -82,7 +82,11 @@ class UserGarden extends Component {
             {/* Conditional rendering of button - prevent you from following yourself */}
             {this.props.targetUser.followers && (this.props.match.params.id !== this.props.user._id) &&
               // both follows/unfollows user AND re-renders the garden
-              (this.props.targetUser.followers.includes(this.props.user._id) ? < button onClick={() => { this.unfollowUser() }}>Unfollow</button> : < button onClick={() => { this.followUser() }}>Follow</button>
+              (this.props.targetUser.followers.includes(this.props.user._id) ?
+                // < button onClick={() => { this.unfollowUser() }}>Unfollow</button>
+                <Button variant="contained" color="outlined" component="span" style={{ borderRadius: "15px", height: "30px", width: "100px", marginTop: "5px" }} onClick={() => { this.unfollowUser() }}>Unfollow</Button>
+                :
+                <Button variant="contained" color="primary" component="span" style={{ borderRadius: "15px", height: "30px", width: "100px", marginTop: "5px" }} onClick={() => { this.followUser() }}>Follow</Button>
               )
             }
           </div>

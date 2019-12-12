@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import LazyLoad from 'react-lazy-load';
 import styled from 'styled-components'
@@ -15,8 +15,6 @@ import '../App.css'
 import PlantCard from '../components/reuse/PlantCard';
 import CardHeading from '../components/reuse/CardHeading'
 import CardSubheading from '../components/reuse/CardSubheading'
-import ButtonGreen from '../components/reuse/ButtonGreen'
-import { use } from "bcrypt/promises";
 
 const Img = styled.img`
   width: 130px;
