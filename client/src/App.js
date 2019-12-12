@@ -5,6 +5,7 @@ import './App.css';
 import { transitions, positions, Provider as AlertProvider } from 'react-alert'
 import AlertTemplate from 'react-alert-template-basic'
 
+
 // REACT COMPONENTS:
 import Homepage from "./components/Homepage";
 import Signup from "./components/Signup";
@@ -32,7 +33,7 @@ import Following from './components/Following';
 const options = {
   // you can also just use 'bottom center'
   position: positions.BOTTOM_CENTER,
-  timeout: 1000,
+  timeout: 1500,
   offset: '100px',
   // you can also just use 'scale'
   transition: transitions.SCALE
@@ -77,6 +78,7 @@ class App extends Component {
   }
 
   setTargetUser = user => {
+    console.log('target user set')
     this.setState({
       targetUser: user
     })
@@ -112,7 +114,7 @@ class App extends Component {
               <Route exact path="/user/:id/wishlist"
                 render={props => (
                   <UserGarden {...props} targetUser={this.state.targetUser} setTargetUser={this.setTargetUser} user={this.state.user} >
-                    <UserWishlist {...props} targetUser={this.state.targetUser} setTargetUser={this.setTargetUser} />
+                    <UserWishlist {...props} targetUser={this.state.targetUser} setTargetUser={this.setTargetUser} user={this.state.user} />
                   </UserGarden>
                 )} />
               <Route path="/gnomes"

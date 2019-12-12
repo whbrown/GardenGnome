@@ -1,29 +1,26 @@
 import React, { Component } from "react";
-import { Route } from 'react-router-dom';
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+import styled from 'styled-components'
 import axios from 'axios'
-import PageHeading from './reuse/PageHeading'
-import H3 from './reuse/H3'
-import H4 from './reuse/H4'
 import CardHeading from './reuse/CardHeading'
 import PlantCard from './reuse/PlantCard'
-import styled from 'styled-components'
-
+import CardSubheading from './reuse/CardSubheading'
+import DeleteIcon from '@material-ui/icons/Delete'
+import IconButton from '@material-ui/core/IconButton';
 
 const Img = styled.img`
   width: 120px;
-  height: 100px;
+  height: 120px;
   object-fit: cover;
   border-radius: 6px;
 `
-
 class UserWishlist extends Component {
 
-  handleClick = () => {
+  removeFromWishlist = (plantId) => {
     axios
-      .post("/api/plants/mygarden")
+      .post("/api/plants/removefromwishlist", { plantId: plantId })
       .then(response => {
-        this.props.setUser(response.data)
+        this.props.setTargetUser(response.data)
       })
       .catch(err => {
         console.log(err);
@@ -32,9 +29,10 @@ class UserWishlist extends Component {
 
   renderWishlist = () => {
     axios
-      .get(`/api/user/${this.props.match.params.id}/comments`)
+      .get(`/api/user/${this.props.match.params.id}/wishlist`)
       .then(response => {
         this.props.setTargetUser(response.data)
+        console.log("CURRENT USER AND THIER WISHLIST STATE>>> ", response.data)
       })
   }
 
@@ -44,23 +42,30 @@ class UserWishlist extends Component {
   }
 
   render() {
+    console.log("TARGET USER's wishlist on wishlist page: ", this.props.targetUser.wishList)
     return (
-      <div>
-        {this.props.targetUser.garden && this.props.targetUser.garden.map(plant => {
+      < div >
+        {this.props.targetUser.wishList && this.props.targetUser.wishList.map((plant, index) => {
           // Avoids the initial render error where user's plantId is NULL and throws an error
           return (plant.plantId && (
-            <PlantCard key={plant._id}>
-              <Img src={plant.plantId.plantImageURL} alt="" />
-              <div>
-                <CardHeading> {plant.name}</CardHeading>
-                <h4>{plant.plantId.plantCommonName}</h4>
+            <PlantCard key={index}>
+              <Link to={`/plants/id=${plant.plantId._id}&latinName=${encodeURI(plant.plantId.plantLatinName)}`}>
+                <Img src={plant.plantId.plantImageURL} alt="" />
+              </Link>
+              <div style={{ width: "53%", justifyContent: "center" }}>
+                <Link to={`/plants/id=${plant._id}&latinName=${encodeURI(plant.plantId.plantLatinName)}`}>
+                  <CardHeading>{plant.plantId.plantLatinName}</CardHeading>
+                  <CardSubheading>{plant.name}</CardSubheading>
+                </Link>
               </div>
-            </PlantCard>)
+              <IconButton onClick={() => this.removeFromWishlist(plant._id)} aria-label="delete" style={{ padding: 0, margin: 0 }}>
+                <DeleteIcon />
+              </IconButton>
+            </PlantCard>
           )
-        })}
-        {/* Placeholder button which  */}
-        <button onClick={this.handleClick}>Add plant to my garden</button>
-        {/* "For each" loop through all the users plants here to display CARDS? of each plant*/}
+          )
+        })
+        }
       </div >
     )
   }

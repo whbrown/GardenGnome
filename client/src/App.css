@@ -16,3 +16,7 @@ background-image: url('./homepage.png');
 .card-container > * {
   width: 25%;
 }
+
+Button:focus {
+  outline: none;
+}
