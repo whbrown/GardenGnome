@@ -12,7 +12,7 @@ export default class PlantCharacteristics extends Component {
     const { dgPlantCharacteristics, rhsPlantCharacteristics } = this.props;
 
     return (
-      <div className="card rounded-edges card-shadow align-self-start mx-4">
+      <div className="card rounded-edges card-shadow mx-4 my-5 plant-card">
         <PlantCardTitle title="Plant Characteristics"/>
       <div className="card-body d-flex flex-column align-items-center">
         {dgPlantCharacteristics.class.length ?
@@ -25,16 +25,6 @@ export default class PlantCharacteristics extends Component {
           </ul>
         </div> : <></>
         }
-        {/* {dgPlantCharacteristics.category.length ?
-        <div id='category'>
-          <h5 className="my-0">Class</h5>
-          <ul className="list-group">
-            {dgPlantCharacteristics.class.map((plantClass, index) => {
-              return <CharacteristicTopic key={index} property={plantClass} />
-            })}
-          </ul>
-        </div> : <></>
-        } */}
         {dgPlantCharacteristics.category.length ?
         <div id='category'>
           <h5 className="my-0">Category</h5>

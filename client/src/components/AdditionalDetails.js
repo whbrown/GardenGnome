@@ -11,7 +11,7 @@ export default class AdditionalDetails extends Component {
     // console.log('matchType', matchType);
 
     return (
-      <div className="card rounded-edges card-shadow align-self-start mx-4">
+      <div className="card rounded-edges card-shadow mx-4 my-5 plant-card">
         <PlantCardTitle title="Description"/>
       <div className="card-body d-flex flex-column align-items-center">
         {

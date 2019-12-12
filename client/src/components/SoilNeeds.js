@@ -8,7 +8,7 @@ class SoilNeeds extends Component {
     // console.log('sunNeeds props:', this.props)
     const { rhsSoilNeeds } = this.props;
     return (
-      <div className="card card-shadow rounded-edges">
+      <div className="card rounded-edges card-shadow mx-4 my-5 plant-card">
         <PlantCardTitle title="Soil Requirements" />
       <div className="rounded-edges card-body d-flex flex-column align-items-center rounded-edges">
       <h5 className="my-3 text-center">Soil Type{rhsSoilNeeds.soilTypes.length > 1 && <>s</>}</h5>

@@ -12,8 +12,8 @@ export default class HowToCare extends Component {
     const { howToCare, dgPruningInstructions } = this.props;
 
     return (
-      <div className="card rounded-edges card-shadow align-self-start mx-4">
-        <PlantCardTitle title={'How to care'} />
+      <div className="card rounded-edges card-shadow mx-4 my-5 plant-card">
+        <PlantCardTitle title={'How to Care'} />
       <div className="card-body d-flex flex-column align-items-center">
         {
           howToCare.pruning ?

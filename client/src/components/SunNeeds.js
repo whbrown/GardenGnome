@@ -25,7 +25,7 @@ class SunNeeds extends Component {
     const { dgSunNeeds, rhsSunNeeds } = this.props;
 
     return (
-      <div className="card rounded-edges card-shadow align-self-start mx-4">
+      <div className="card rounded-edges card-shadow mx-4 my-5 plant-card">
         <PlantCardTitle title="Sunlight Requirements"/>
       <div className="card-body d-flex flex-column align-items-center">
         <h5 className="my-0">Sun Needs</h5>

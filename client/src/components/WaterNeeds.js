@@ -4,6 +4,7 @@ import WaterNeedsStyled from './reuse/WaterNeedsStyled';
 import H4 from './reuse/H4';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTint } from '@fortawesome/free-solid-svg-icons';
+import PlantCardTitle from './PlantCardTitle';
 
 class WaterNeeds extends Component {
   state = {
@@ -111,11 +112,20 @@ class WaterNeeds extends Component {
   render() {
     console.log('water needs state:', this.props);
     return (
-      <WaterNeedsStyled quantifiedWaterNeeds={this.state.quantifiedWaterNeeds}>
-         <H4 className='topicTitle'><FontAwesomeIcon icon={faTint}/> Water</H4>
-  <p>This plant should be watered <span className='waterFrequency'>{this.state.frequencyMessage}</span>{this.state.formattedMoistureType ? <span>, and the soil kept <span className='soilMoisture'>{this.state.formattedMoistureType}</span></span> : ''}</p>.
-  {this.props.waterRequirements.length ? <p>{this.state.formattedWaterRequirements}</p> : ''}
-      </WaterNeedsStyled>
+      <div className="card rounded-edges card-shadow mx-4 my-5 plant-card">
+        <PlantCardTitle title={<><FontAwesomeIcon icon={faTint}/>&emsp;Water</>} />
+        <div className="rounded-edges card-body d-flex flex-column align-items-center rounded-edges">
+          <ul className="rounded-edges list-group">
+            <div className="rounded-edges card-body d-flex flex-column align-items-center rounded-edges">
+              <WaterNeedsStyled quantifiedWaterNeeds={this.state.quantifiedWaterNeeds}>
+                <H4 className='topicTitle'></H4>
+                <p>This plant should be watered <span className='waterFrequency'>{this.state.frequencyMessage}</span>{this.state.formattedMoistureType ? <span>, and the soil kept <span className='soilMoisture'>{this.state.formattedMoistureType}</span></span> : ''}</p>
+                {this.props.waterRequirements.length ? <p>{this.state.formattedWaterRequirements}</p> : ''}
+              </WaterNeedsStyled>
+            </div>
+          </ul>
+        </div>
+      </div>
     )
   }
 }
