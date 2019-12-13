@@ -134,9 +134,11 @@ class UserPlants extends Component {
                     <CardSubheading>{plant.name}</CardSubheading>
                   </Link>
                 </div>
-                <IconButton onClick={() => this.removeFromGarden(plant._id)} aria-label="delete" style={{ padding: 0, margin: 0 }}>
-                  <DeleteIcon />
-                </IconButton>
+                {this.props.match.params.id == this.props.user._id &&
+                  <IconButton onClick={() => this.removeFromGarden(plant._id)} aria-label="delete" style={{ padding: 0, margin: 0 }}>
+                    <DeleteIcon />
+                  </IconButton>
+                }
                 <div style={{width: '100%', display: 'flex', justifyContent: 'center',}}>
                   <button className="learn-more" style={{alignSelf: 'center', justifySelf: 'center', margin: "1em"}} onClick={() => this.toggleCompanions(plant.plantId)}>Show Companions</button>
                 </div>
