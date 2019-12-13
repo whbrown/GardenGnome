@@ -62,7 +62,7 @@ const PlantList = (props) => {
   return (
     <div style={{ marginBottom: "80px" }}>
       {props.filteredPlants ? props.filteredPlants.slice(0, 200).map((plant, index) => {
-        const commonName = plant.plantCommonNames.length > 1 ? plant.plantCommonNames[1] : plant.plantCommonNames[0];
+        const commonName = plant.plantCommonNames.length > 2 ? `${plant.plantCommonNames[1]}, ${plant.plantCommonNames[2]}` : plant.plantCommonNames.length > 2 ? `${plant.plantCommonNames[0]}, ${plant.plantCommonNames[1]}` : plant.plantCommonNames[0];
         const encodedLatinName = encodeURI(plant.plantLatinName);
         return (
           <PlantCard key={plant._id}>

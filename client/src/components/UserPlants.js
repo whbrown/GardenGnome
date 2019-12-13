@@ -34,6 +34,11 @@ const useStyles = makeStyles(theme => ({
 
 class UserPlants extends Component {
 
+  state = {
+    companionInfo: [],
+    renderedCompanionInfo: false,
+  }
+
   removeFromGarden = (plantId) => {
     axios
       .post("/api/plants/removefromgarden", { plantId: plantId })
@@ -53,21 +58,48 @@ class UserPlants extends Component {
       })
   }
 
-  // Do a componentDidMount where you do a GET request for the user
-  componentDidMount() {
-    this.renderMyGarden();
+  findCompanions = (plant) => {
+    console.log('axios get plant._id', plant._id);
+    axios.get(`/api/plants/search/companions/${plant._id}`).then((res) => {
+      console.log('companion res', res.data)
+    }).catch(err => console.log(err))
   }
 
+  // Do a componentDidMount where you do a GET request for the user
+  async componentDidMount() {
+    await this.renderMyGarden();
+    console.log('user plants props !', this.props);
+  }
+
+  // componentDidUpdate() {
+  //   console.log('update', this.props);
+  //   let companionRes = [];
+  //   if (!this.state.renderedCompanionInfo) {
+  //     this.props.targetUser.garden.map(plant => {
+  //       (async () => {
+  //         // console.log(this.prop)
+  //         console.log('plant', plant.plantId._id);
+  //         const companion = await this.findCompanions(plant.plantId);
+  //         await companionRes.push(companion);
+  //       })()
+  //     })
+  //   }
+  // }
+
+
   render() {
-    console.log("CURRENT USER: ", this.props.targetUser)
+    let companionInfo = {};
+    // console.log("CURRENT USER: ", this.props.targetUser)
     return (
       <div>
         {this.props.targetUser.garden && this.props.targetUser.garden.map(plant => {
-          console.log("EACH USER's PLANT: ", plant)
+          // console.log("EACH USER's PLANT: ", plant)
+          // gonna error on first render due to it being before return
           const encodedLatinName = encodeURI(plant.plantId.plantLatinName);
           // Avoids the initial render error where user's plantId is NULL and throws an error
           return (plant.plantId && (
-            <PlantCard key={plant._id}>
+            <>
+            <PlantCard key={plant._id} id={`${plant._id}`}>
               <Link to={`/plants/id=${plant.plantId._id}&latinName=${encodedLatinName}`} key={plant._id}>
                 <Img src={plant.plantId.plantImageURL} alt="" />
               </Link>
@@ -81,6 +113,13 @@ class UserPlants extends Component {
                 <DeleteIcon />
               </IconButton>
             </PlantCard>
+            {/* <PlantCard>
+               <div className={`${companionInfo}-${plant.plantId._id}`}>
+               {console.log('companionInfo', companionInfo)}
+                  {companionInfo[plant.plantId._id] ? <>found</> : <></>}
+               </div>
+            </PlantCard> */}
+            </>
           )
           )
         })}
