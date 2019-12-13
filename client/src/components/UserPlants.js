@@ -88,39 +88,6 @@ class UserPlants extends Component {
     // console.log("CURRENT USER: ", this.props.targetUser)
     return (
       <div>
-<<<<<<< HEAD
-        {this.props.targetUser.garden && this.props.targetUser.garden.map(plant => {
-          // console.log("EACH USER's PLANT: ", plant)
-          // gonna error on first render due to it being before return
-          const encodedLatinName = encodeURI(plant.plantId.plantLatinName);
-          // Avoids the initial render error where user's plantId is NULL and throws an error
-          return (plant.plantId && (
-            <>
-            <PlantCard key={plant._id} id={`${plant._id}`}>
-              <Link to={`/plants/id=${plant.plantId._id}&latinName=${encodedLatinName}`} key={plant._id}>
-                <Img src={plant.plantId.plantImageURL} alt="" />
-              </Link>
-              <div style={{ width: "53%", justifyContent: "center" }}>
-                <Link to={`/plants/id=${plant.plantId._id}&latinName=${encodedLatinName}`} key={plant._id}>
-                  <CardHeading>{plant.plantId.plantLatinName}</CardHeading>
-                  <CardSubheading>{plant.name}</CardSubheading>
-                </Link>
-              </div>
-              <IconButton onClick={() => this.removeFromGarden(plant._id)} aria-label="delete" style={{ padding: 0, margin: 0 }}>
-                <DeleteIcon />
-              </IconButton>
-            </PlantCard>
-            {/* <PlantCard>
-               <div className={`${companionInfo}-${plant.plantId._id}`}>
-               {console.log('companionInfo', companionInfo)}
-                  {companionInfo[plant.plantId._id] ? <>found</> : <></>}
-               </div>
-            </PlantCard> */}
-            </>
-          )
-          )
-        })}
-=======
         {this.props.targetUser.garden && (this.props.targetUser.garden.length == 0 ?
           <p style={{ margin: "20px" }}>No plants to show</p> : this.props.targetUser.garden.map(plant => {
             // Avoids the initial render error where user's plantId is NULL and throws an error
@@ -144,7 +111,6 @@ class UserPlants extends Component {
           })
         )
         }
->>>>>>> 5b7d442213724f7a7306cb0404915c77709d147b
         {this.props.match.params.id == this.props.user._id &&
           //   <button>Add plant to my garden</button>
           <Fab color="primary" aria-label="add" style={{ backgroundColor: "green", margin: "20px 0 0 15px" }} className="fadeIn flicker">
