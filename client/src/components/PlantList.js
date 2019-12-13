@@ -63,7 +63,7 @@ const PlantList = (props) => {
         const commonName = plant.plantCommonNames.length > 1 ? plant.plantCommonNames[1] : plant.plantCommonNames[0];
         const encodedLatinName = encodeURI(plant.plantLatinName);
         return (
-          <PlantCard key={plant._id}>
+          <PlantCard key={plant._id} className="fadeIn easeIn">
             <Link to={`/plants/id=${plant._id}&latinName=${encodedLatinName}`} >
               <LazyLoad offsetVertical={300}>
                 <Img src={plant.plantImageURL ? plant.plantImageURL : 'https://icon-library.net/images/pngtree-green-leaf-icon-graphic-design-template-vector-png-image_530815.jpg'} />

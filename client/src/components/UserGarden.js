@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from 'axios'
+import "../App.css"
 import PageHeading from './reuse/PageHeading'
 import H3 from './reuse/H3'
 import H4 from './reuse/H4'
@@ -62,7 +63,7 @@ class UserGarden extends Component {
   render() {
     console.log('target user', this.props.targetUser)
     return (
-      <div style={{ marginBottom: "80px", padding: "1rem" }}>
+      <div style={{ marginBottom: "80px", padding: "1rem" }} className="fadeIn">
         <BackButton src="../../assets/back-arrow.svg" alt="back-arrow" onClick={this.handleClick} />
         <div style={{ display: "flex" }}>
           <img src="../../assets/leaf.svg" alt="my garden" style={{ height: "30px", width: "30px", objectFit: "contain", margin: "5px 10px" }} />

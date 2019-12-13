@@ -24,7 +24,7 @@ class PlantSearch extends Component {
   render() {
     // console.log('plantSearch props', this.props);
     return (
-      <div className="plants-container container" style={{ marginBottom: "80px", padding: "1rem" }}>
+      <div className="plants-container container" style={{ marginBottom: "80px", padding: "1rem" }} className="fadeIn">
         <BackButton src="../../assets/back-arrow.svg" alt="back-arrow" onClick={this.handleClick} />
         <div style={{ display: "flex" }}>
           <img src="../../assets/search.svg" alt="my garden" style={{ height: "30px", width: "30px", objectFit: "contain", margin: "5px 10px" }} />

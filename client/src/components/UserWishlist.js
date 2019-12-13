@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import styled from 'styled-components'
 import axios from 'axios'
+import "../App.css"
 import CardHeading from './reuse/CardHeading'
 import PlantCard from './reuse/PlantCard'
 import CardSubheading from './reuse/CardSubheading'
@@ -51,7 +52,7 @@ class UserWishlist extends Component {
           <p style={{ margin: "20px" }}>No plants to show</p> : this.props.targetUser.wishList.map((plant, index) => {
             // Avoids the initial render error where user's plantId is NULL and throws an error
             return (plant.plantId && (
-              <PlantCard key={index}>
+              <PlantCard key={index} className="fadeIn">
                 <Link to={`/plants/id=${plant.plantId._id}&latinName=${encodeURI(plant.plantId.plantLatinName)}`}>
                   <Img src={plant.plantId.plantImageURL ? plant.plantId.plantImageURL : 'https://icon-library.net/images/pngtree-green-leaf-icon-graphic-design-template-vector-png-image_530815.jpg'} alt="" />
                 </Link>
@@ -72,7 +73,7 @@ class UserWishlist extends Component {
         }
         {this.props.match.params.id == this.props.user._id &&
           //   <button>Add plant to my garden</button>
-          <Fab color="primary" aria-label="add" style={{ backgroundColor: "green", margin: "20px 0 0 15px" }}>
+          <Fab color="primary" aria-label="add" style={{ backgroundColor: "green", margin: "20px 0 0 15px" }} className="fadeIn flicker">
             <Link to="/plants/search" style={{ textDecoration: 'none', color: "white" }}>
               <AddIcon />
             </Link>

@@ -44,7 +44,7 @@ class Gnomes extends Component {
 
   render() {
     return (
-      <div style={{ marginBottom: "80px", padding: "1rem" }}>
+      <div style={{ marginBottom: "80px", padding: "1rem" }} className="fadeIn">
         <BackButton src="../../assets/back-arrow.svg" alt="back-arrow" onClick={this.handleClick} />
         <div style={{ display: "flex" }}>
           <img src="../../assets/gnome.svg" alt="my garden" style={{ height: "30px", width: "30px", objectFit: "contain", margin: "5px 10px" }} />
@@ -53,7 +53,7 @@ class Gnomes extends Component {
         {this.state.gnomes.map(user => {
           return (
             <Link to={`/user/${user._id}/plants`}>
-              <ProfileCard>
+              <ProfileCard className="easeIn fadeIn">
                 <Img src={user.imageUrl} alt="profile picture" />
                 <div style={{ margin: "0 20px" }}>
                   <CardHeading>{user.username}</CardHeading>
