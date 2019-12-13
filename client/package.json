@@ -6,6 +6,8 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
     "@fortawesome/free-solid-svg-icons": "^5.11.2",
     "@fortawesome/react-fontawesome": "^0.1.8",
+    "@material-ui/core": "^4.7.2",
+    "@material-ui/icons": "^4.5.1",
     "awesome-debounce-promise": "^2.1.0",
     "axios": "^0.19.0",
     "bcryptjs": "^2.4.3",
@@ -21,6 +23,7 @@
     "react-lazy-load": "^3.0.13",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
+    "react-transition-group": "^4.3.0",
     "styled-components": "^4.4.1"
   },
   "proxy": "http://localhost:5555",

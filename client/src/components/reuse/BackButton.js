@@ -1,10 +1,9 @@
 import styled from 'styled-components'
 
 const BackButton = styled.img`
-  width: 40px;
+  width: 30px;
   align-self: flex-start;
-  margin-left: 1em;
-  margin-top: 1em;
+  margin: 1em 1em;
 `
 
 export default BackButton

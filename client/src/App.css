@@ -5,5 +5,68 @@
 }
 
 .homepage{
-background-image: url('./homepage.png');
+background-image: 'https://images.unsplash.com/photo-1515150144380-bca9f1650ed9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80';
+}
+
+
+.card-container {
+  display: flex;
+}
+
+.card-container > * {
+  width: 25%;
+}
+
+Button:focus {
+  outline: none;
+}
+
+/* ----------------------------------------------------------FADE IN ANIMATION ---------------------------------------------------------- */
+
+.fadeIn {
+  animation-name: example;
+  animation-duration: 1s;
+}
+/* Standard syntax */
+@keyframes example {
+  from {opacity: 0}
+  to {opacity: 1}
+}
+
+/* ----------------------------------------------------------FADE OUT ANIMATION ---------------------------------------------------------- */
+
+.fadeOut {
+  animation-name: fadeOut;
+  animation-duration: 1s;
+}
+/* Standard syntax */
+@keyframes fadeOut {
+  from {opacity: 1}
+  to {opacity: 0}
+}
+
+
+/* ---------------------------------------------------------- FLICKER ANIMATION --------------------------------------------------------- */
+
+@keyframes flickerAnimation {
+  0%   { opacity:1; }
+  25%  { opacity:0.3; }
+  100% { opacity:1; }
+}
+
+.flicker {
+   animation: flickerAnimation 2s infinite;
+}
+
+/* --------------------------------------------------------- ZOOM IN ANIMATION -------------------------------------------------------- */
+
+@keyframes easeIn {
+  0% { transform: scale(0.9); animation-timing-function: cubic-bezier(0.33333, 0.66667, 0.66667, 1) }
+  100% { transform: scale(1.0) }
+}
+
+.easeIn {
+  animation: ease-in;
+  animation-name: easeIn;
+  animation-duration: 0.5s;
 }

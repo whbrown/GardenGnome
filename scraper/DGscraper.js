@@ -14,9 +14,9 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
   // add { headless: false } as launch param
 
   // ! update plants 1 thru 380 (they have img: https://davesgarden.comhttps://davesgarden.com/guides/pf/thumbnail.php?image=2004/08/21/ownedbycats/c4e384.jpg&widht=700&height=312)
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ headless: false });
   const mostRecentPlant = await DGPlant.findOne({}).sort({ DGID: -1 });
-  for (let DGID = mostRecentPlant.DGID + 1; DGID < 252200; DGID++) {
+  for (let DGID = 1; DGID < 252200; DGID++) {
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(99999999);
     page.setJavaScriptEnabled(false);
@@ -142,7 +142,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
             const [commentHeader, commentText] = commentBody.children;
             commentContainer.commentHeader = commentHeader.textContent;
             commentContainer.commentText = commentText.firstChild.textContent;
-            <schema className="plantComments pus"></schema>h(commentContainer);
+            // <schema className="plantComments pus"></schema>h(commentContainer);
           });
           return schema;
         };
@@ -189,16 +189,17 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/gardengnome');
         }
         // * // * // * //
       });
-      DGPlant.create({ ...plantData, DGID: Number(DGID) })
-        .then(() => {
-          // console.dir(plantData);
-          console.dir(`success: ${DGID}`);
-          page.close();
-        })
-        .catch(e => {
-          console.dir(e);
-          page.close();
-        });
+      // DGPlant.create({ ...plantData, DGID: Number(DGID) })
+      //   .then(() => {
+      //     // console.dir(plantData);
+      //     console.dir(`success: ${DGID}`);
+      //     page.close();
+      //   })
+      //   .catch(e => {
+      //     console.dir(e);
+      //     page.close();
+      //   });
+      page.close();
     } catch (e) {
       console.log(e);
       page.close();

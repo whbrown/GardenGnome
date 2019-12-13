@@ -36,7 +36,7 @@ class Following extends Component {
       return this.setState({
         following: res.data.following,
       })
-    }).catch(err=> {
+    }).catch(err => {
       console.log(err)
       this.props.history.goBack();
     })
@@ -48,29 +48,28 @@ class Following extends Component {
     return (
       <div style={{ marginBottom: "80px", padding: "1rem" }}>
         {/* PLACEHOLDER ---- back arrow to be a navigation function */}
-      <BackButton src="../../assets/back-arrow.svg" alt="back-arrow" onClick={() => this.props.history.goBack()}/>
-      <PageHeading textAlign="left" margin="(65px 0 0 0)">{user.username} is following:</PageHeading>
-      {this.state.following.map(user => {
-        return (
-          <Link to={`/user/${user._id}/plants`}>
-            <ProfileCard>
-              <Img src={user.imageUrl} alt="profile picture" />
-              <div>
-                <CardHeading>{user.username}</CardHeading>
-                <CardText>Garden Size: ({user.garden.length})</CardText>
-                <div style={{ display: "flex" }}>
-                  <CardSubheading>Seeking:</CardSubheading>
-                  <CardText>Rose</CardText>
+        <BackButton src="../../assets/back-arrow.svg" alt="back-arrow" onClick={() => this.props.history.goBack()} />
+        <PageHeading textAlign="left" margin="(65px 0 0 0)">{user.username} is following:</PageHeading>
+        {this.state.following.map(user => {
+          return (
+            <Link to={`/user/${user._id}/plants`}>
+              <ProfileCard>
+                <Img src={user.imageUrl} alt="profile picture" />
+                <div style={{ margin: "0 20px" }}>
+                  <CardHeading>{user.username}</CardHeading>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <CardText>Garden Size:</CardText>
+                    <CardText>({user.garden.length})</CardText>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <CardSubheading>Wishlist:</CardSubheading>
+                    <CardSubheading>({user.wishList.length})</CardSubheading>
+                  </div>
                 </div>
-                <div style={{ display: "flex" }}>
-                  <CardSubheading>Offering:</CardSubheading>
-                  <CardText>-</CardText>
-                </div>
-              </div>
-            </ProfileCard>
-          </Link>)
-    })}
-        
+              </ProfileCard>
+            </Link>)
+        })}
+
 
       </div>
     )

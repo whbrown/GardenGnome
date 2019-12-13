@@ -6,7 +6,7 @@ const DGPlant = require('../models/DGPlant');
 const PersonalPlant = require('../models/PersonalPlant');
 const getLevenshteinDistance = require('../utils/getLevenshteinDistance');
 const colours = require('../utils/colours.json');
-
+const CompanionPlant = require('../models/CompanionPlant');
 const router = express.Router();
 
 /* ------------------------------------------------------ Return your whole garden ------------------------------------------------------ */
@@ -22,7 +22,6 @@ router.get('/mygarden', (req, res) =>
       },
     })
     .then(user => {
-      console.log('HELLOOOO?:', user);
       res.status(200).json(user);
     })
     .catch(err => {
@@ -30,43 +29,120 @@ router.get('/mygarden', (req, res) =>
     })
 );
 
-/* ----------------------------------------------------- Add a plant to your garden ----------------------------------------------------- */
-// * POST /api/plants/addtogarden
-router.post('/addtogarden', (req, res) => {
-  console.log(req.body);
+/* ----------------------------------------------------- Add a plant to your WISHLIST ----------------------------------------------------- */
+// * POST /api/plants/addtowishlist
+router.post('/addtowishlist', (req, res) => {
   PersonalPlant.create({
     name: req.body.commonName,
     owner: req.user._id,
     plantId: req.body.plantId,
   })
     .then(personalPlant => {
-      console.clear();
-      console.log('PERSONAL PLANT');
-      console.log(personalPlant);
+      console.clear()
+      console.log("PERSONAL PLANT")
+      console.log(personalPlant)
       // Update the user's document by adding the new plant into their garden array
-      return (
-        User.findByIdAndUpdate(
-          req.user._id,
-          {
-            $push: { garden: personalPlant._id },
-          },
-          { new: true }
-        )
-          // Populate the array of plants in garden for use on the front end
-          .populate({
-            path: 'garden',
-            // model: "PersonalPlant",
-            populate: {
-              path: 'plantId',
-            },
-          })
-          .then(user => {
-            console.log('NEW USER WITH NEW PLANT ADDED TO GARDEN: ==> ', user);
-            res.json(user);
-          })
-      );
-    })
+      return User.findByIdAndUpdate(
+        req.user._id,
+        {
+          $push: { wishList: personalPlant._id },
+        },
+        { new: true }
+      )
+        .populate({
+          path: 'garden',
+          // model: "PersonalPlant",
+          populate: {
+            path: "plantId"
+          }
+        })
+        // Populate the array of plants in wishlist for use on the front end
+        .populate({
+          path: 'wishList',
+          populate: {
+            path: "plantId"
+          }
+        })
+        .then(user => {
+          console.log('NEW USER WITH NEW PLANT ADDED TO WISHLIST: ==> ', user);
+          res.json(user);
+        })
+        .catch(err => {
+          res.status(500).json(err);
+        })
+    }
+    )
+})
 
+/* ----------------------------------------------------- Remove a plant from WISHLIST ----------------------------------------------------- */
+// * POST /api/plants/removefromwishlist
+router.post('/removefromwishlist', (req, res) => {
+  // Update the user's document by removing plant from wishlist array
+  User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $pull: { wishList: req.body.plantId },
+    },
+    { new: true }
+  )
+    .populate({
+      path: 'garden',
+      // model: "PersonalPlant",
+      populate: {
+        path: "plantId"
+      }
+    })
+    // Populate the array of plants in wishlist for use on the front end
+    .populate({
+      path: 'wishList',
+      populate: {
+        path: 'plantId',
+      },
+    })
+    .then(user => {
+      // console.log('NEW USER WITH PLANT REMOVED FROM WISHLIST: ==> ', user);
+      res.json(user);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    })
+}
+)
+
+/* ----------------------------------------------------- Add a plant to your garden ----------------------------------------------------- */
+// * POST /api/plants/addtogarden
+router.post('/addtogarden', (req, res) => {
+  PersonalPlant.create({
+    name: req.body.commonName,
+    owner: req.user._id,
+    plantId: req.body.plantId,
+  })
+    .then(personalPlant => {
+      console.clear()
+      console.log("PERSONAL PLANT")
+      console.log(personalPlant)
+      // Update the user's document by adding the new plant into their garden array
+      return User.findByIdAndUpdate(
+        req.user._id,
+        {
+          $push: { garden: personalPlant._id },
+        },
+        { new: true }
+      )
+        // Populate the array of plants in garden for use on the front end
+        .populate({
+          path: 'garden',
+          // model: "PersonalPlant",
+          populate: {
+            path: "plantId"
+          }
+        })
+        .then(user => {
+          console.log('NEW USER WITH NEW PLANT ADDED TO GARDEN: ==> ', user);
+          res.json(user);
+        })
+    }
+    )
     .catch(err => {
       res.status(500).json(err);
     });
@@ -130,6 +206,34 @@ const plantVsQueryLevenschteinDistance = (plant, query) => {
     })
   );
 };
+
+router.get('/search/companions/:id', (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  DGPlant.findById(id).then((plant) => {
+    let names = [];
+    names = names.concat(plant.plantCommonNames.map((name) => name.match(/\w+/g))).flat()
+    console.log(names);
+    
+    return names.find((name) => {
+      const companionResponse = (async () => {
+        const nameRegex = new RegExp(`\\b${name}\\b`, 'i')
+        console.log(nameRegex);
+        const companionResponse = await CompanionPlant.findOne({ commonName: nameRegex });
+        // if (companionResponse.length) return companionResponse;
+        // console.log(companionResponse);
+        if (companionResponse) {
+          // console.log(c)
+          res.status(200).json({companionResponse, userPlantId: id });
+        }
+        // return companionResponse;
+      })()
+      // console.log(companionResponse);
+      return companionResponse;
+      // if (companionResponse.length) return companionResponse;
+    })
+  }).catch(err => console.log(err))
+})
 
 // * GET /api/plants/search/genus=:genus&waterRequirements=true
 router.get('/search/genus=:genus&waterRequirements=true', (req, res) => {
@@ -342,6 +446,7 @@ router.get('/search/:q', (req, res) => {
         });
       console.log(`query returned ${plants.length} results.`);
       console.timeEnd('sort results');
+      console.log(plants.slice(0, 20))
       return res.json(plants.slice(0, 200));
     })
     .catch(err => {

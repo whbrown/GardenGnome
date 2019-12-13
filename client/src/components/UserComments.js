@@ -1,15 +1,13 @@
-import React, { Component } from "react";
-import { Route } from 'react-router-dom';
+import React, {
+  Component, useState, useEffect
+} from "react";
 import '../App.css';
-
-// import { Link } from "react-router-dom";
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 import axios from 'axios'
-import PageHeading from './reuse/PageHeading'
 import CardText from './reuse/CardText'
-import H3 from './reuse/H3'
-import H4 from './reuse/H4'
 import CardHeading from './reuse/CardHeading'
-import PlantCard from './reuse/PlantCard'
+import UserCard from './reuse/UserCard'
 import styled from 'styled-components'
 
 
@@ -23,7 +21,8 @@ const Img = styled.img`
 class UserComments extends Component {
 
   state = {
-    comment: ""
+    comment: "",
+    fade:true
   }
 
   handleClick = () => {
@@ -47,11 +46,13 @@ class UserComments extends Component {
 
   addComment = (event) => {
     event.preventDefault()
-    console.log("THIS STATE after adding comment: ", this.state)
     axios
       .put(`/api/user/${this.props.match.params.id}/comment`, { comment: this.state.comment })
       .then(targetUser => {
         console.log("ADDED COMMENT to TARGET USER: ", targetUser)
+        this.setState({
+          comment: ""
+        });
         this.props.setTargetUser(targetUser.data)
       })
   }
@@ -61,7 +62,6 @@ class UserComments extends Component {
     axios
       .put(`/api/user/${this.props.match.params.id}/deletecomment`, { commentId: id })
       .then(targetUser => {
-        console.log("REMOVED COMMENT from MY page: ", targetUser)
         this.props.setTargetUser(targetUser.data)
       })
   }
@@ -82,28 +82,35 @@ class UserComments extends Component {
       <div className="container">
         {this.props.match.params.id !== this.props.user._id &&
           <form onSubmit={this.addComment} style={{ display: "flex", flexDirection: "column" }}>
-            <label htmlFor="">Add comment:</label>
-            <textarea type="text" name="comment" value={this.state.comment} onChange={this.commentHandler} />
-            <button type="submit">Add Comment</button>
+            <textarea type="text" name="comment" value={this.state.comment} onChange={this.commentHandler} style={{ borderRadius: "10px", marginTop: "20px" }} />
+            <button type="submit" style={{ border: "none", borderRadius: "15px", height: "30px", width: "100%", marginTop: "10px", backgroundColor: "green", color: "white" }} >Add Comment</button>
           </form>
         }
         {this.props.targetUser.comments && (this.props.targetUser.comments.length == 0 ?
-          <p>No comments</p> : this.props.targetUser.comments.map(comment => {
+          <p style={{ margin: "20px" }}>No comments</p> : this.props.targetUser.comments.map(comment => {
             // Avoids the initial render error where user's plantId is NULL and throws an error
             return (
-              <div className="row" key={comment._id}>
+              <div className="row easeIn" key={comment._id}>
                 <div className="col-md-8">
                   <div className="comments-list">
-                    <div className="media">
-                      <a className="media-left" href="#">
+                    <div className="media" >
+                      <UserCard className="media-body" style={{ margin: "10px 0 0 0" }}>
                         <img src={comment.user.imageUrl} style={{ width: "60px", height: "60px", backgroundColor: "white", borderRadius: "50%", objectFit: "contain" }} />
-                      </a>
-                      <div className="media-body">
-                        <h4 className="media-heading user_name">{comment.user.username}</h4>
-                        <CardText>{comment.comment}</CardText>
-                        <CardText>{comment.date.slice(0, 10)}</CardText>
-                        {this.props.match.params.id == this.props.user._id && <button onClick={() => this.deleteComment(comment._id)}>Delete Comment</button>}
-                      </div>
+                        <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+                          <div>
+                            <div style={{ display: "flex" }}>
+                              <CardHeading className="media-heading user_name">{comment.user.username}</CardHeading>
+                              <CardText style={{ margin: "6px 10px" }}>{comment.date.slice(0, 10)}</CardText>
+                            </div>
+                            <CardText>{comment.comment}</CardText>
+                          </div>
+                          {this.props.match.params.id == this.props.user._id &&
+                            <IconButton onClick={() => this.deleteComment(comment._id)} aria-label="delete" style={{ padding: 0, margin: "10px" }}>
+                              <DeleteIcon />
+                            </IconButton>
+                          }
+                        </div>
+                      </UserCard>
                     </div>
                   </div>
                 </div>
@@ -116,5 +123,105 @@ class UserComments extends Component {
     )
   }
 }
+
+// const UserComments = props => {
+//   const [comment, setComment] = useState('')
+//   const [inProp, setInProp] = useState(false)
+//   const { children, value, index, ...other } = props;
+//   const { id } = props.match.params
+
+//   const handleClick = () => {
+//     axios
+//       .post("/api/plants/mygarden")
+//       .then(response => {
+//         props.setUser(response.data)
+//       })
+//       .catch(err => {
+//         console.log(err);
+//       });
+//   }
+
+//   const renderComments = () => {
+//     axios
+//       .get(`/api/user/${id}/comments`)
+//       .then(response => {
+//         props.setTargetUser(response.data)
+//       })
+//   }
+
+//   const addComment = (event) => {
+//     event.preventDefault()
+//     axios
+//       .put(`/api/user/${id}/comment`, { comment })
+//       .then(targetUser => {
+//         console.log("ADDED COMMENT to TARGET USER: ", targetUser)
+//         setComment("")
+//         props.setTargetUser(targetUser.data)
+//       })
+//   }
+
+//   const deleteComment = (commentId) => {
+//     console.log("IDDDDD", commentId)
+//     axios
+//       .put(`/api/user/${id}/deletecomment`, { commentId })
+//       .then(targetUser => {
+//         props.setTargetUser(targetUser.data)
+//       })
+//   }
+
+//   const commentHandler = event => {
+//     setComment(event.target.value)
+//   }
+
+//   useEffect(() => {
+//     // COMPONENT DID MOUNT -> EMPTY ARRAY< CHECK ONCE
+//     renderComments()
+//   }, [])
+
+//   return (
+//     <div className="container">
+//       {id !== props.user._id &&
+//         <form onSubmit={addComment} style={{ display: "flex", flexDirection: "column" }}>
+//           <textarea type="text" name="comment" value={comment} onChange={commentHandler} style={{ borderRadius: "10px", marginTop: "20px" }} />
+//           <button type="submit" onClick={() => setInProp(true)}
+//             style={{ border: "none", borderRadius: "15px", height: "30px", width: "100%", marginTop: "10px", backgroundColor: "green", color: "white" }} >Add Comment</button>
+//         </form>
+//       }
+//       {props.targetUser.comments && (props.targetUser.comments.length == 0 ?
+//         <p style={{ margin: "20px" }}>No comments</p> : props.targetUser.comments.map(el => {
+//           // Avoids the initial render error where user's plantId is NULL and throws an error
+//           return (
+//             <div className="row easeIn" key={el._id}>
+//               <div className="col-md-8">
+//                 <div className="comments-list">
+//                   <div className="media" >
+//                     <UserCard className="media-body" style={{ margin: "10px 0 0 0" }}>
+//                       <img src={el.user.imageUrl} style={{ width: "60px", height: "60px", backgroundColor: "white", borderRadius: "50%", objectFit: "contain" }} />
+//                       <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+//                         <div>
+//                           <div style={{ display: "flex" }}>
+//                             <CardHeading className="media-heading user_name">{el.user.username}</CardHeading>
+//                             <CardText style={{ margin: "6px 10px" }}>{el.date.slice(0, 10)}</CardText>
+//                           </div>
+//                           <CardText>{el.comment}</CardText>
+//                         </div>
+//                         {id == props.user._id &&
+//                           <IconButton onClick={() => deleteComment(el._id)} aria-label="delete" style={{ padding: 0, margin: "10px" }}>
+//                             <DeleteIcon />
+//                           </IconButton>
+//                         }
+//                       </div>
+//                     </UserCard>
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
+//           )
+//         })
+//       )
+//       }
+//     </div >
+//   )
+// }
 
 export default UserComments;

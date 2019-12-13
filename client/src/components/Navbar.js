@@ -57,10 +57,6 @@ const Navbar = props => {
             <Img src="../../assets/search.svg" alt="search plants" height="30px" />
             <P>Search</P >
           </Link>
-          <Link className="nav-item nav-link" to="/">
-            <Img src="../../assets/star.svg" alt="discover" height="30px" />
-            <P>Discover</P >
-          </Link>
           <Link className="nav-item nav-link" to="/" onClick={handleLogout}>
             <Img src="../../assets/logout.svg" alt="" height="30px" />
             <P>Logout</P >
@@ -68,10 +64,10 @@ const Navbar = props => {
         </>
       ) : (
           <>
-            <Link className="nav-item nav-link" to="/">
+            {/* <Link className="nav-item nav-link" to="/">
               <Img src="../../assets/star.svg" alt="discover" height="30px" />
               <P>Discover</P >
-            </Link>
+            </Link> */}
             <Link className="nav-item nav-link" to="/">
               <Img src="../../assets/search.svg" alt="search plants" height="30px" />
               <P>Search</P >

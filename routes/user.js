@@ -12,7 +12,7 @@ router.get('/:id/plants', (req, res) =>
   User.findById(req.params.id)
     .populate({
       path: 'garden',
-      // model: "PersonalPlant",
+      model: "PersonalPlant",
       populate: {
         path: 'plantId',
         // model: "Plant"
@@ -64,7 +64,7 @@ router.get('/:id/isfollowing', (req, res) => {
 });
 
 /* ------------------------------------------------------ Return USER comments ------------------------------------------------------ */
-// * GET /api/user/:id/plants
+// * GET /api/user/:id/comments
 router.get('/:id/comments', (req, res) =>
   User.findById(req.params.id)
     .populate({
@@ -78,6 +78,33 @@ router.get('/:id/comments', (req, res) =>
     .populate('comments.user')
     .then(user => {
       res.status(200).json(user);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    })
+);
+
+/* ------------------------------------------------------ Return USER WISHLIST ------------------------------------------------------ */
+// * GET /api/user/:id/wishlist
+router.get('/:id/wishlist', (req, res) =>
+  User.findById(req.params.id)
+    .populate({
+      path: 'garden',
+      // model: "PersonalPlant",
+      populate: {
+        path: 'plantId',
+        // model: "Plant"
+      }
+    })
+    .populate({
+      path: 'wishList',
+      // model: "PersonalPlant",
+      populate: {
+        path: "plantId"
+      }
+    })
+    .then(user => {
+      res.json(user);
     })
     .catch(err => {
       res.status(500).json(err);
@@ -150,7 +177,7 @@ router.patch('/:id/following', (req, res) =>
         // model: "Plant"
       },
     })
-
+    .populate('comments.user')
     .then(user => {
       res.status(200).json(user);
     })
@@ -176,6 +203,7 @@ router.patch('/:id/follow', (req, res) =>
         // model: "Plant"
       },
     })
+    .populate('comments.user')
     .then(user => {
       res.status(200).json(user);
     })
@@ -201,6 +229,7 @@ router.patch('/:id/unfollowing', (req, res) =>
         // model: "Plant"
       },
     })
+    .populate('comments.user')
     .then(user => {
       res.status(200).json(user);
     })
@@ -226,6 +255,7 @@ router.patch('/:id/unfollow', (req, res) =>
         // model: "Plant"
       },
     })
+    .populate('comments.user')
     .then(user => {
       res.status(200).json(user);
     })

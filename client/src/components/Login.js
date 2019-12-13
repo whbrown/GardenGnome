@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { login } from "../services/auth";
+import BackButton from './reuse/BackButton'
+import "../App.css"
 
 class Login extends Component {
   state = {
@@ -13,6 +15,10 @@ class Login extends Component {
       [event.target.name]: event.target.value
     });
   };
+
+  handleClick = () => {
+    this.props.history.goBack()
+  }
 
   handleSubmit = event => {
     event.preventDefault();
@@ -35,7 +41,8 @@ class Login extends Component {
 
   render() {
     return (
-      <div>
+      <div style={{ marginBottom: "80px", padding: "1rem" }} className="fadeIn">
+        <BackButton src="../../assets/back-arrow.svg" alt="back-arrow" onClick={this.handleClick} />
         <h2>Login</h2>
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
@@ -59,14 +66,14 @@ class Login extends Component {
               onChange={this.handleChange}
             />
           </div>
-          <div className="form-group form-check">
+          {/* <div className="form-group form-check">
             <input type="checkbox" className="form-check-input" id="geolocationCheck" />
             <label className="form-check-label" for="geolocationCheck">Use my current location</label>
-          </div>
+          </div> */}
           {this.state.error && (
             <p variant="danger">{this.state.error}</p>
           )}
-          <button type="submit" className="btn btn-primary">Submit</button>
+          <button type="submit" style={{ border: "none", borderRadius: "15px", height: "30px", width: "150px", marginTop: "10px", backgroundColor: "green", color: "white" }} >Submit</button>
         </form>
       </div>
     );

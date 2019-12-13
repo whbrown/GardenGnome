@@ -36,7 +36,7 @@ export default class PlantColour extends Component {
     // console.log('rhsColours', rhsColours);
 
     return (
-    <div className="card rounded-edges card-shadow align-self-start mx-4">
+    <div className="card rounded-edges card-shadow mx-4 my-5 plant-card">
       <PlantCardTitle title="Colour"/>
       <div className="card-body d-flex flex-column align-items-center">
         {Object.values(dgColours).length ? 

@@ -31,7 +31,8 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "puppeteer": "^2.0.0",
-    "serve-favicon": "^2.5.0"
+    "serve-favicon": "^2.5.0",
+    "tabletojson": "^1.0.4"
   },
   "devDependencies": {
     "nodemon": "^1.12.1"
