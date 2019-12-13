@@ -31,6 +31,10 @@
   align-items: flex-start;
 }
 
+table li {
+  list-style: none;
+}
+
 @media (min-width: 1001px) {
   .plant-card {
     width: 25%;
