@@ -139,12 +139,9 @@ class UserPlants extends Component {
                     <DeleteIcon />
                   </IconButton>
                 }
-<<<<<<< HEAD
                 <div style={{width: '100%', display: 'flex', justifyContent: 'center',}}>
                   <button className="learn-more" style={{alignSelf: 'center', justifySelf: 'center', margin: "1em"}} onClick={() => this.toggleCompanions(plant.plantId)}>Show Companions</button>
                 </div>
-=======
->>>>>>> 17328265eed177ba4f7ba34a5157bf644db83a4c
               </PlantCard>
               </div>
             )
