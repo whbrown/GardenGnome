@@ -62,9 +62,11 @@ class UserWishlist extends Component {
                     <CardSubheading>{plant.name}</CardSubheading>
                   </Link>
                 </div>
-                <IconButton onClick={() => this.removeFromWishlist(plant._id)} aria-label="delete" style={{ padding: 0, margin: 0 }}>
-                  <DeleteIcon />
-                </IconButton>
+                {this.props.match.params.id == this.props.user._id &&
+                  <IconButton onClick={() => this.removeFromWishlist(plant._id)} aria-label="delete" style={{ padding: 0, margin: 0 }}>
+                    <DeleteIcon />
+                  </IconButton>
+                }
               </PlantCard>
             )
             )
