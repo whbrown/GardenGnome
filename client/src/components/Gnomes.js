@@ -44,28 +44,26 @@ class Gnomes extends Component {
 
   render() {
     return (
-      <div style={{ marginBottom: "80px", padding: "1rem" }}>
-        {/* PLACEHOLDER ---- back arrow to be a navigation function */}
+      <div style={{ marginBottom: "80px", padding: "1rem" }} className="fadeIn">
         <BackButton src="../../assets/back-arrow.svg" alt="back-arrow" onClick={this.handleClick} />
-        <PageHeading textAlign="left" margin="(65px 0 0 0)">Local Gnomes</PageHeading>
+        <div style={{ display: "flex" }}>
+          <img src="../../assets/gnome.svg" alt="my garden" style={{ height: "30px", width: "30px", objectFit: "contain", margin: "5px 10px" }} />
+          <PageHeading textAlign="left" margin="(65px 0 0 0)">Local Gnomes</PageHeading>
+        </div>
         {this.state.gnomes.map(user => {
-          console.log("USER INFORMATION FOR EACH CARD: ", user)
           return (
             <Link to={`/user/${user._id}/plants`}>
-              <ProfileCard>
+              <ProfileCard className="easeIn fadeIn">
                 <Img src={user.imageUrl} alt="profile picture" />
-                <div>
-                  {/* ALL THIS is placeholder items which should be replaced with a MAP function of all the profiles in the user's KM vicinity */}
-                  {/* Perhaps add a simple garden icon which changes depending on how many plants the user has in their garden */}
+                <div style={{ margin: "0 20px" }}>
                   <CardHeading>{user.username}</CardHeading>
-                  <CardText>Garden Size: ({user.garden.length})</CardText>
-                  <div style={{ display: "flex" }}>
-                    <CardSubheading>Seeking:</CardSubheading>
-                    <CardText>Rose</CardText>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <CardText>Garden Size: </CardText>
+                    <CardText>({user.garden.length})</CardText>
                   </div>
-                  <div style={{ display: "flex" }}>
-                    <CardSubheading>Offering:</CardSubheading>
-                    <CardText>-</CardText>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <CardSubheading>Wishlist:</CardSubheading>
+                    <CardSubheading>({user.wishList.length})</CardSubheading>
                   </div>
                 </div>
               </ProfileCard>

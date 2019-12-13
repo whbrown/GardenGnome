@@ -35,7 +35,7 @@ class Followers extends Component {
       return this.setState({
         followers: res.data.followers,
       })
-    }).catch(err=> console.log(err))
+    }).catch(err => console.log(err))
   }
 
   render() {
@@ -43,30 +43,28 @@ class Followers extends Component {
     const { user } = this.props;
     return (
       <div style={{ marginBottom: "80px", padding: "1rem" }}>
-        {/* PLACEHOLDER ---- back arrow to be a navigation function */}
-      <BackButton src="../../assets/back-arrow.svg" alt="back-arrow" onClick={() => this.props.history.goBack()}/>
-      <PageHeading textAlign="left" margin="(65px 0 0 0)">{user.username}'s followers:</PageHeading>
-      {this.state.followers.map(follower => {
-        return (
-          <Link to={`/user/${follower._id}/plants`}>
-            <ProfileCard>
-              <Img src={follower.imageUrl} alt="profile picture" />
-              <div>
-                <CardHeading>{follower.username}</CardHeading>
-                <CardText>Garden Size: ({follower.garden.length})</CardText>
-                <div style={{ display: "flex" }}>
-                  <CardSubheading>Seeking:</CardSubheading>
-                  <CardText>Rose</CardText>
+        <BackButton src="../../assets/back-arrow.svg" alt="back-arrow" onClick={() => this.props.history.goBack()} />
+        <PageHeading textAlign="left" margin="(65px 0 0 0)">{user.username}'s followers:</PageHeading>
+        {this.state.followers.map(follower => {
+          return (
+            <Link to={`/user/${follower._id}/plants`}>
+              <ProfileCard>
+                <Img src={follower.imageUrl} alt="profile picture" />
+                <div style={{ margin: "0 20px" }}>
+                  <CardHeading>{follower.username}</CardHeading>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <CardText>Garden Size:</CardText>
+                    <CardText>({follower.garden.length})</CardText>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <CardSubheading>Wishlist:</CardSubheading>
+                    <CardSubheading>({follower.wishList.length})</CardSubheading>
+                  </div>
                 </div>
-                <div style={{ display: "flex" }}>
-                  <CardSubheading>Offering:</CardSubheading>
-                  <CardText>-</CardText>
-                </div>
-              </div>
-            </ProfileCard>
-          </Link>)
-    })}
-        
+              </ProfileCard>
+            </Link>)
+        })}
+
 
       </div>
     )

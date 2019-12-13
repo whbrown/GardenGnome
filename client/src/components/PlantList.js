@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import LazyLoad from 'react-lazy-load';
 import styled from 'styled-components'
@@ -15,8 +15,6 @@ import '../App.css'
 import PlantCard from '../components/reuse/PlantCard';
 import CardHeading from '../components/reuse/CardHeading'
 import CardSubheading from '../components/reuse/CardSubheading'
-import ButtonGreen from '../components/reuse/ButtonGreen'
-import { use } from "bcrypt/promises";
 
 const Img = styled.img`
   width: 130px;
@@ -65,7 +63,7 @@ const PlantList = (props) => {
         const commonName = plant.plantCommonNames.length > 2 ? `${plant.plantCommonNames[1]}, ${plant.plantCommonNames[2]}` : plant.plantCommonNames.length > 2 ? `${plant.plantCommonNames[0]}, ${plant.plantCommonNames[1]}` : plant.plantCommonNames[0];
         const encodedLatinName = encodeURI(plant.plantLatinName);
         return (
-          <PlantCard key={plant._id}>
+          <PlantCard key={plant._id} className="fadeIn easeIn">
             <Link to={`/plants/id=${plant._id}&latinName=${encodedLatinName}`} >
               <LazyLoad offsetVertical={300}>
                 <Img src={plant.plantImageURL ? plant.plantImageURL : 'https://icon-library.net/images/pngtree-green-leaf-icon-graphic-design-template-vector-png-image_530815.jpg'} />
