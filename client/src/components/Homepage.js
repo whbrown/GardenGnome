@@ -36,8 +36,8 @@ class Homepage extends Component {
       <Home className="fadeIn Homepage" style={{ textAlign: "center", marginBottom: "80px", padding: "1rem" }} >
         <img src="../../assets/gnome.svg" alt="Garden Gnome" style={{ width: "300px", marginTop: "80px" }} />
         <h1 style={{ color: "Green", fontWeight: "bolder" }}>Gnome</h1>
-        <p style={{ color: "#333", fontWeight: "400", margin: '0 3em' }}>Your pocket guide to growing healthy and happy plants. </p>
-        <p style={{ color: "#333", fontWeight: "400", margin: '0 3em' }}>Access our database of over 300,000 plants and their in-depth information on care and maintenance</p>
+        <p style={{ color: "#333", fontWeight: "600", margin: '0 3em' }}>Your pocket guide to growing healthy and happy plants. </p>
+        <p style={{ color: "#333", fontWeight: "500", margin: '0 3em' }}>Access our database of over 300,000 plants and <span style={{fontWeight: '600'}}>search</span> for in-depth information on care and maintenance.</p>
         {!this.props.user && // only show if logged out
           <div style={{ display: "flex", flexDirection: "column", paddingBottom: '4em' }}>
             <Link to="/login">
