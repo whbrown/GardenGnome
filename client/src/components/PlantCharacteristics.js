@@ -35,15 +35,16 @@ export default class PlantCharacteristics extends Component {
           </ul>
         </div> : <></>
         }
-        {rhsPlantCharacteristics.characteristics.habit ?
-        // <RHSPlantProperty property={rhsPlantCharacteristics.habit} />
-        <div id='habit'>
-          <h5 className="my-0">Habit</h5>
-          <ul className="list-group">
-            <CharacteristicTopic property={rhsPlantCharacteristics.characteristics.habit} />
-          </ul>
-        </div> 
-        : <></>
+        {
+          rhsPlantCharacteristics.characteristics &&
+            rhsPlantCharacteristics.characteristics.habit ?
+            <div id='habit'>
+              <h5 className="my-0">Habit</h5>
+              <ul className="list-group">
+                <CharacteristicTopic property={rhsPlantCharacteristics.characteristics.habit} />
+              </ul>
+            </div> 
+            : <></>
         }
         {dgPlantCharacteristics.otherDetails.length ?
         <div id='otherDetails'>
@@ -63,7 +64,7 @@ export default class PlantCharacteristics extends Component {
             })}
           </ul>
         </div> : <></>}
-        {rhsPlantCharacteristics.characteristics.toxicity ?
+        {rhsPlantCharacteristics.characteristics && rhsPlantCharacteristics.characteristics.toxicity ?
         // <RHSPlantProperty property={rhsPlantCharacteristics.toxicity} />
         <div id='toxicity'>
           <h5 className="my-0">Toxicity</h5>
@@ -72,7 +73,7 @@ export default class PlantCharacteristics extends Component {
           </ul>
         </div> 
         : <></>}
-        {
+        { rhsPlantCharacteristics.characteristics &&
           rhsPlantCharacteristics.characteristics.hardiness ?
           // <RHSPlantProperty property={rhsPlantCharacteristics.characteristics.hardiness} title='Hardiness' />
           <div id='hardiness'>
@@ -85,6 +86,7 @@ export default class PlantCharacteristics extends Component {
         }
         {
           // TODO: limit to only species matches
+          rhsPlantCharacteristics.characteristics &&
           rhsPlantCharacteristics.characteristics.fragrance ?
           // <RHSPlantProperty property={rhsPlantCharacteristics.characteristics.fragrance} title='Fragrance' />
           <div id='fragrance'>

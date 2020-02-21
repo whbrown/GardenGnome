@@ -9,13 +9,13 @@ class SearchBar extends Component {
     searching: false,
   }
   // debounces the axios requests to plant database, resolving only the last promise stored up to 500ms after last input, whereupon the GET request is then made
-  searchAPIDebounced = AwesomeDebouncePromise(this.props.getPlants, 500);
+  searchAPIDebounced = AwesomeDebouncePromise(this.props.getPlants, 600);
 
   handleChange = async event => {
     // Changes parent's state property - "searchQuery"
     await this.props.setQuery(event.target.value);
     if (this.props.searchQuery) {
-      console.log('searchQuery', this.props.searchQuery);
+      // console.log('searchQuery', this.props.searchQuery);
     // Parent's axios request based on searchQuery
       await this.setState({
         searching: true
@@ -27,16 +27,6 @@ class SearchBar extends Component {
       })
     }
   }
-
-  // handleSubmit = event => {
-  //   event.preventDefault();
-  //   axios.get('/api/plants', {
-
-  //   })
-  // }
-
-
-  // method = debounce(() => {
 
   render() {
     // console.log(this.state)

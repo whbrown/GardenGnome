@@ -25,9 +25,10 @@ export default class PlantDetails extends Component {
     this.props.history.goBack();
   }
 
-  async componentDidMount() {
+  async componentDidMount(prevProps) {
     // change to use props.match instead of state
     console.log('PlantDetails.props.match.params', this.props.match.params)
+    window.scrollTo(0, 0);
     const { id, latinName } = this.props.match.params;
     await axios.get(`../api/plants/search/id=${id}&latinName=${latinName}`).then((res) => {
       console.log('waterneeds res: ', res.data)

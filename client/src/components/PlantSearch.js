@@ -12,13 +12,13 @@ class PlantSearch extends Component {
   }
 
   getPlants = (searchQuery) => {
-    console.log('send axios database query', searchQuery);
     // return fetch("/api/plants/" + encodeURIComponent(searchQuery))
     if (searchQuery) {
+      console.log('send axios database query', searchQuery);
       return axios.get("/api/plants/search/" + encodeURIComponent(searchQuery));
     }
   };
-
+  
   componentDidMount() {
     this.getPlants();
   }
