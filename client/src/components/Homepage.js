@@ -14,11 +14,11 @@ const Home = styled.div`
   height: 90vh;
   overflow: scroll;
   img {
-    width: 30vh;
+    width: 300px;
   }
   @media (min-width: 1000px) {
     img {
-      width: 30vh;
+      width: 300px;
     }
   }
 `
@@ -33,8 +33,8 @@ class Homepage extends Component {
   render() {
     // console.log(this.props.user)
     return (
-      <Home className="fadeIn Homepage" style={{ textAlign: "center" }} >
-        <img src="../../assets/gnome.svg" alt="Garden Gnome" style={{ marginTop: "80px" }} />
+      <Home className="fadeIn Homepage" style={{ textAlign: "center", marginBottom: "80px", padding: "1rem" }} >
+        <img src="../../assets/gnome.svg" alt="Garden Gnome" style={{ width: "300px", marginTop: "80px" }} />
         <h1 style={{ color: "Green", fontWeight: "bolder" }}>Gnome</h1>
         <p style={{ color: "#333", fontWeight: "400", margin: '0 3em' }}>Your pocket guide to growing healthy and happy plants. </p>
         <p style={{ color: "#333", fontWeight: "400", margin: '0 3em' }}>Access our database of over 300,000 plants and their in-depth information on care and maintenance</p>
