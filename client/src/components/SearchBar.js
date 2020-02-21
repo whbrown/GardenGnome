@@ -14,8 +14,9 @@ class SearchBar extends Component {
   handleChange = async event => {
     // Changes parent's state property - "searchQuery"
     await this.props.setQuery(event.target.value);
-    // Parent's axios request based on searchQuery
     if (this.props.searchQuery) {
+      console.log('searchQuery', this.props.searchQuery);
+    // Parent's axios request based on searchQuery
       await this.setState({
         searching: true
       })
