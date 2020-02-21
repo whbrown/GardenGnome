@@ -13,7 +13,7 @@ const Home = styled.div`
   background-color: hsla(0,0%,100%,0.7);
   background-blend-mode: overlay;
   height: 90vh;
-  overflow: hidden;
+  overflow: scroll;
   img {
     width: 30vh;
   }
