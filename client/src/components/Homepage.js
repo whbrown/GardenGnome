@@ -15,19 +15,11 @@ const Home = styled.div`
   height: 90vh;
   overflow: hidden;
   img {
-<<<<<<< HEAD
-    width: 300px;
-  }
-  @media (min-width: 1000px) {
-    img {
-      width: 400px;
-=======
     width: 30vh;
   }
   @media (min-width: 1000px) {
     img {
       width: 30vh;
->>>>>>> heroku-build
     }
   }
 `
