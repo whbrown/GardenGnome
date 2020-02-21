@@ -25,7 +25,7 @@ class Homepage extends Component {
     // console.log(this.props.user)
     return (
       <Home className="fadeIn Homepage" style={{ textAlign: "center", marginBottom: "80px", padding: "1rem" }} >
-        <img src="../../assets/gnome.svg" alt="Garden Gnome" style={{ width: "40vw", marginTop: "80px" }} />
+        <img src="../../assets/gnome.svg" alt="Garden Gnome" style={{ width: "300px", marginTop: "80px" }} />
         <h1 style={{ color: "Green", fontWeight: "bolder" }}>Gnome</h1>
         <p style={{ color: "#333", fontWeight: "400" }}>Your pocket guide to growing healthy and happy plants. </p>
         <p style={{ color: "#333", fontWeight: "400" }}>Access our database of over 300,000 plants and their in-depth information on care and maintenance</p>
