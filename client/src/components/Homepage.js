@@ -44,7 +44,7 @@ class Homepage extends Component {
               <button type="button" style={{ border: "none", borderRadius: "15px", height: "30px", width: "150px", marginTop: "20px", backgroundColor: "green", color: "white" }} >Login</button>
             </Link>
             <Link to="/signup">
-              <button type="button" style={{ border: "none", borderRadius: "15px", height: "30px", width: "150px", margin: '1em 20em', backgroundColor: "#1976D2", color: "white" }} >Signup</button>
+              <button type="button" style={{ border: "none", borderRadius: "15px", height: "30px", width: "150px", marginTop: "20px", backgroundColor: "#1976D2", color: "white" }} >Signup</button>
             </Link>
           </div>
         }
