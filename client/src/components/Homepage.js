@@ -15,11 +15,19 @@ const Home = styled.div`
   height: 90vh;
   overflow: hidden;
   img {
+<<<<<<< HEAD
     width: 300px;
   }
   @media (min-width: 1000px) {
     img {
       width: 400px;
+=======
+    width: 30vh;
+  }
+  @media (min-width: 1000px) {
+    img {
+      width: 30vh;
+>>>>>>> heroku-build
     }
   }
 `
@@ -37,10 +45,10 @@ class Homepage extends Component {
       <Home className="fadeIn Homepage" style={{ textAlign: "center" }} >
         <img src="../../assets/gnome.svg" alt="Garden Gnome" style={{ marginTop: "80px" }} />
         <h1 style={{ color: "Green", fontWeight: "bolder" }}>Gnome</h1>
-        <p style={{ color: "#333", fontWeight: "400" }}>Your pocket guide to growing healthy and happy plants. </p>
-        <p style={{ color: "#333", fontWeight: "400" }}>Access our database of over 300,000 plants and their in-depth information on care and maintenance</p>
+        <p style={{ color: "#333", fontWeight: "400", margin: '0 3em' }}>Your pocket guide to growing healthy and happy plants. </p>
+        <p style={{ color: "#333", fontWeight: "400", margin: '0 3em' }}>Access our database of over 300,000 plants and their in-depth information on care and maintenance</p>
         {!this.props.user && // only show if logged out
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ display: "flex", flexDirection: "column", paddingBottom: '4em' }}>
             <Link to="/login">
               <button type="button" style={{ border: "none", borderRadius: "15px", height: "30px", width: "150px", marginTop: "20px", backgroundColor: "green", color: "white" }} >Login</button>
             </Link>
