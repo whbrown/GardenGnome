@@ -7,6 +7,7 @@ const PersonalPlant = require('../models/PersonalPlant');
 const getLevenshteinDistance = require('../utils/getLevenshteinDistance');
 const colours = require('../utils/colours.json');
 const CompanionPlant = require('../models/CompanionPlant');
+
 const router = express.Router();
 
 /* ------------------------------------------------------ Return your whole garden ------------------------------------------------------ */
@@ -36,13 +37,13 @@ router.post('/addtowishlist', (req, res) => {
     name: req.body.commonName,
     owner: req.user._id,
     plantId: req.body.plantId,
-  })
-    .then(personalPlant => {
-      console.clear()
-      console.log("PERSONAL PLANT")
-      console.log(personalPlant)
-      // Update the user's document by adding the new plant into their garden array
-      return User.findByIdAndUpdate(
+  }).then(personalPlant => {
+    console.clear();
+    console.log('PERSONAL PLANT');
+    console.log(personalPlant);
+    // Update the user's document by adding the new plant into their garden array
+    return (
+      User.findByIdAndUpdate(
         req.user._id,
         {
           $push: { wishList: personalPlant._id },
@@ -53,15 +54,15 @@ router.post('/addtowishlist', (req, res) => {
           path: 'garden',
           // model: "PersonalPlant",
           populate: {
-            path: "plantId"
-          }
+            path: 'plantId',
+          },
         })
         // Populate the array of plants in wishlist for use on the front end
         .populate({
           path: 'wishList',
           populate: {
-            path: "plantId"
-          }
+            path: 'plantId',
+          },
         })
         .then(user => {
           console.log('NEW USER WITH NEW PLANT ADDED TO WISHLIST: ==> ', user);
@@ -70,9 +71,9 @@ router.post('/addtowishlist', (req, res) => {
         .catch(err => {
           res.status(500).json(err);
         })
-    }
-    )
-})
+    );
+  });
+});
 
 /* ----------------------------------------------------- Remove a plant from WISHLIST ----------------------------------------------------- */
 // * POST /api/plants/removefromwishlist
@@ -89,8 +90,8 @@ router.post('/removefromwishlist', (req, res) => {
       path: 'garden',
       // model: "PersonalPlant",
       populate: {
-        path: "plantId"
-      }
+        path: 'plantId',
+      },
     })
     // Populate the array of plants in wishlist for use on the front end
     .populate({
@@ -105,9 +106,8 @@ router.post('/removefromwishlist', (req, res) => {
     })
     .catch(err => {
       res.status(500).json(err);
-    })
-}
-)
+    });
+});
 
 /* ----------------------------------------------------- Add a plant to your garden ----------------------------------------------------- */
 // * POST /api/plants/addtogarden
@@ -118,31 +118,32 @@ router.post('/addtogarden', (req, res) => {
     plantId: req.body.plantId,
   })
     .then(personalPlant => {
-      console.clear()
-      console.log("PERSONAL PLANT")
-      console.log(personalPlant)
+      console.clear();
+      console.log('PERSONAL PLANT');
+      console.log(personalPlant);
       // Update the user's document by adding the new plant into their garden array
-      return User.findByIdAndUpdate(
-        req.user._id,
-        {
-          $push: { garden: personalPlant._id },
-        },
-        { new: true }
-      )
-        // Populate the array of plants in garden for use on the front end
-        .populate({
-          path: 'garden',
-          // model: "PersonalPlant",
-          populate: {
-            path: "plantId"
-          }
-        })
-        .then(user => {
-          console.log('NEW USER WITH NEW PLANT ADDED TO GARDEN: ==> ', user);
-          res.json(user);
-        })
-    }
-    )
+      return (
+        User.findByIdAndUpdate(
+          req.user._id,
+          {
+            $push: { garden: personalPlant._id },
+          },
+          { new: true }
+        )
+          // Populate the array of plants in garden for use on the front end
+          .populate({
+            path: 'garden',
+            // model: "PersonalPlant",
+            populate: {
+              path: 'plantId',
+            },
+          })
+          .then(user => {
+            console.log('NEW USER WITH NEW PLANT ADDED TO GARDEN: ==> ', user);
+            res.json(user);
+          })
+      );
+    })
     .catch(err => {
       res.status(500).json(err);
     });
@@ -209,31 +210,37 @@ const plantVsQueryLevenschteinDistance = (plant, query) => {
 
 router.get('/search/companions/:id', (req, res) => {
   const { id } = req.params;
-  console.log(id);
-  DGPlant.findById(id).then((plant) => {
-    let names = [];
-    names = names.concat(plant.plantCommonNames.map((name) => name.match(/\w+/g))).flat()
-    console.log(names);
-    
-    return names.find((name) => {
-      const companionResponse = (async () => {
-        const nameRegex = new RegExp(`\\b${name}\\b`, 'i')
-        console.log(nameRegex);
-        const companionResponse = await CompanionPlant.findOne({ commonName: nameRegex });
-        // if (companionResponse.length) return companionResponse;
+  // console.log(id);
+  DGPlant.findById(id)
+    .then(plant => {
+      let names = [];
+      names = names
+        .concat(plant.plantCommonNames.map(name => name.match(/\w+/g)))
+        .flat();
+      // console.log(names);
+
+      return names.find(name => {
+        const companionResponse = (async () => {
+          const nameRegex = new RegExp(`\\b${name}\\b`, 'i');
+          // console.log(nameRegex);
+          const companionResponse = await CompanionPlant.findOne({
+            commonName: nameRegex,
+          });
+          // if (companionResponse.length) return companionResponse;
+          // console.log(companionResponse);
+          if (companionResponse) {
+            // console.log(c)
+            res.status(200).json({ companionResponse, userPlantId: id });
+          }
+          // return companionResponse;
+        })();
         // console.log(companionResponse);
-        if (companionResponse) {
-          // console.log(c)
-          res.status(200).json({companionResponse, userPlantId: id });
-        }
-        // return companionResponse;
-      })()
-      // console.log(companionResponse);
-      return companionResponse;
-      // if (companionResponse.length) return companionResponse;
+        return companionResponse;
+        // if (companionResponse.length) return companionResponse;
+      });
     })
-  }).catch(err => console.log(err))
-})
+    .catch(err => console.log(err));
+});
 
 // * GET /api/plants/search/genus=:genus&waterRequirements=true
 router.get('/search/genus=:genus&waterRequirements=true', (req, res) => {
@@ -357,7 +364,7 @@ router.get('/search/:q', (req, res) => {
   }
   // const queryWords = searchQuery.trim().split(' ');
   let processedSearchQuery = searchQuery.trim();
-  console.log('processed search query is', processedSearchQuery);
+  // console.log('processed search query is', processedSearchQuery);
   // console.log('split query:', searchQuery.trim().split(' ')[0]);
   // let searchRegExp = new RegExp(searchQuery, 'i');
   const splitQuery = processedSearchQuery.split(' ');
@@ -446,7 +453,7 @@ router.get('/search/:q', (req, res) => {
         });
       console.log(`query returned ${plants.length} results.`);
       console.timeEnd('sort results');
-      console.log(plants.slice(0, 20))
+      // console.log(plants.slice(0, 20));
       return res.json(plants.slice(0, 200));
     })
     .catch(err => {

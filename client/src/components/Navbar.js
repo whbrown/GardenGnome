@@ -68,7 +68,7 @@ const Navbar = props => {
               <Img src="../../assets/star.svg" alt="discover" height="30px" />
               <P>Discover</P >
             </Link> */}
-            <Link className="nav-item nav-link" to="/">
+            <Link className="nav-item nav-link" to="/plants/search">
               <Img src="../../assets/search.svg" alt="search plants" height="30px" />
               <P>Search</P >
             </Link>
